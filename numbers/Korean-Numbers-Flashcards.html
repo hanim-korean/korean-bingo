@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Korean Numbers – Flashcards</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&family=DM+Sans:wght@400;500;700&family=DM+Mono&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --coral: #E8604C;
+    --teal: #2E9E8A;
+    --slate: #3D4A5C;
+    --gold: #C8902A;
+    --purple: #7C5CBF;
+    --bg: #F7F5F2;
+    --card-bg: #FFFFFF;
+    --text: #1A1A2E;
+    --muted: #6B7280;
+    --border: #E5E7EB;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 20px 60px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--slate);
+    letter-spacing: -0.5px;
+  }
+  header p {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 5px;
+  }
+
+  /* category pills */
+  .cats {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 28px;
+  }
+  .cat-btn {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all .2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .cat-btn.active { color: white; }
+  .cat-btn[data-cat="all"]    { border-color: var(--slate);  color: var(--slate); }
+  .cat-btn[data-cat="sino"]   { border-color: var(--coral);  color: var(--coral); }
+  .cat-btn[data-cat="pure"]   { border-color: var(--teal);   color: var(--teal);  }
+  .cat-btn[data-cat="time"]   { border-color: var(--slate);  color: var(--slate); }
+  .cat-btn[data-cat="age"]    { border-color: var(--gold);   color: var(--gold);  }
+  .cat-btn[data-cat="phone"]  { border-color: var(--purple); color: var(--purple);}
+  .cat-btn[data-cat="all"].active    { background: var(--slate);  border-color: var(--slate); }
+  .cat-btn[data-cat="sino"].active   { background: var(--coral);  border-color: var(--coral); }
+  .cat-btn[data-cat="pure"].active   { background: var(--teal);   border-color: var(--teal);  }
+  .cat-btn[data-cat="time"].active   { background: var(--slate);  border-color: var(--slate); }
+  .cat-btn[data-cat="age"].active    { background: var(--gold);   border-color: var(--gold);  }
+  .cat-btn[data-cat="phone"].active  { background: var(--purple); border-color: var(--purple);}
+
+  /* progress */
+  .progress-wrap {
+    width: 100%;
+    max-width: 540px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .progress-bar {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--coral);
+    transition: width .4s ease;
+  }
+  .progress-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    white-space: nowrap;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* card */
+  .card-scene {
+    width: 100%;
+    max-width: 540px;
+    height: 320px;
+    perspective: 1000px;
+    cursor: pointer;
+    margin-bottom: 24px;
+  }
+  .card-inner {
+    width: 100%; height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform .5s cubic-bezier(.4,0,.2,1);
+  }
+  .card-inner.flipped { transform: rotateY(180deg); }
+
+  .card-face {
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 36px;
+    box-shadow: 0 4px 24px rgba(0,0,0,.08), 0 1px 4px rgba(0,0,0,.05);
+  }
+  .card-front {
+    background: var(--card-bg);
+    border: 2px solid var(--border);
+  }
+  .card-back {
+    background: var(--card-bg);
+    border: 2px solid var(--border);
+    transform: rotateY(180deg);
+  }
+
+  .card-tag {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 10px;
+    color: white;
+  }
+  .tag-sino   { background: var(--coral); }
+  .tag-pure   { background: var(--teal); }
+  .tag-time   { background: var(--slate); }
+  .tag-age    { background: var(--gold); }
+  .tag-phone  { background: var(--purple); }
+
+  .card-hint {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .card-question {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 64px;
+    font-weight: 700;
+    color: var(--slate);
+    text-align: center;
+    line-height: 1.1;
+  }
+  .card-question.en {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 36px;
+  }
+  .card-sub {
+    font-size: 15px;
+    color: var(--muted);
+    margin-top: 10px;
+    font-weight: 500;
+  }
+
+  .card-answer-main {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 52px;
+    font-weight: 700;
+    color: var(--coral);
+    text-align: center;
+    line-height: 1.1;
+  }
+  .card-answer-rom {
+    font-family: 'DM Mono', monospace;
+    font-size: 20px;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+  .card-answer-pron {
+    font-size: 16px;
+    color: var(--teal);
+    font-weight: 600;
+    margin-top: 6px;
+  }
+  .card-answer-note {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 10px;
+    text-align: center;
+    max-width: 340px;
+    line-height: 1.5;
+  }
+
+  /* nav buttons */
+  .nav {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .nav-btn {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: white;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all .2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .nav-btn:hover { border-color: var(--coral); color: var(--coral); transform: scale(1.05); }
+  .flip-btn {
+    padding: 12px 32px;
+    border-radius: 24px;
+    background: var(--slate);
+    color: white;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all .2s;
+  }
+  .flip-btn:hover { background: var(--coral); transform: scale(1.02); }
+
+  /* keyboard hint */
+  .kbd-hint {
+    margin-top: 20px;
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+  }
+  kbd {
+    background: var(--border);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🇰🇷 Korean Numbers</h1>
+  <p>Click a card to reveal the answer · Use arrow keys to navigate</p>
+</header>
+
+<div class="cats">
+  <button class="cat-btn active" data-cat="all">All</button>
+  <button class="cat-btn" data-cat="sino">Sino-Korean</button>
+  <button class="cat-btn" data-cat="pure">Pure Korean</button>
+  <button class="cat-btn" data-cat="time">Time</button>
+  <button class="cat-btn" data-cat="age">Age</button>
+  <button class="cat-btn" data-cat="phone">Phone</button>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
+  <div class="progress-label" id="prog-label">1 / 1</div>
+</div>
+
+<div class="card-scene" id="card-scene" onclick="flipCard()">
+  <div class="card-inner" id="card-inner">
+    <div class="card-face card-front" id="card-front">
+      <span class="card-tag" id="card-tag-f"></span>
+      <span class="card-hint">tap to reveal</span>
+      <div class="card-question" id="card-q"></div>
+      <div class="card-sub" id="card-sub"></div>
+    </div>
+    <div class="card-face card-back" id="card-back">
+      <span class="card-tag" id="card-tag-b"></span>
+      <span class="card-hint">tap to flip back</span>
+      <div class="card-answer-main" id="card-ans"></div>
+      <div class="card-answer-rom" id="card-rom"></div>
+      <div class="card-answer-pron" id="card-pron"></div>
+      <div class="card-answer-note" id="card-note"></div>
+    </div>
+  </div>
+</div>
+
+<div class="nav">
+  <button class="nav-btn" onclick="prev()">←</button>
+  <button class="flip-btn" onclick="flipCard()">Flip Card</button>
+  <button class="nav-btn" onclick="next()">→</button>
+</div>
+
+<div class="kbd-hint">
+  <kbd>Space</kbd> flip &nbsp; <kbd>←</kbd><kbd>→</kbd> navigate &nbsp; <kbd>S</kbd> shuffle
+</div>
+
+<script>
+const ALL_CARDS = [
+  // ── SINO-KOREAN ──
+  { cat:'sino', q:'1', qs:'What is 1 in Sino-Korean?', a:'일', rom:'il', pron:'[일]', note:'' },
+  { cat:'sino', q:'2', qs:'What is 2 in Sino-Korean?', a:'이', rom:'i', pron:'[이]', note:'⚠ "i" not "ee" in standard romanization' },
+  { cat:'sino', q:'3', qs:'What is 3 in Sino-Korean?', a:'삼', rom:'sam', pron:'[삼]', note:'' },
+  { cat:'sino', q:'4', qs:'What is 4 in Sino-Korean?', a:'사', rom:'sa', pron:'[사]', note:'' },
+  { cat:'sino', q:'5', qs:'What is 5 in Sino-Korean?', a:'오', rom:'o', pron:'[오]', note:'' },
+  { cat:'sino', q:'6', qs:'What is 6 in Sino-Korean?', a:'육', rom:'yuk', pron:'[육]', note:'⚠ Becomes [유] before 월 → 6월 = [유월]' },
+  { cat:'sino', q:'7', qs:'What is 7 in Sino-Korean?', a:'칠', rom:'chil', pron:'[칠]', note:'' },
+  { cat:'sino', q:'8', qs:'What is 8 in Sino-Korean?', a:'팔', rom:'pal', pron:'[팔]', note:'' },
+  { cat:'sino', q:'9', qs:'What is 9 in Sino-Korean?', a:'구', rom:'gu', pron:'[구]', note:'' },
+  { cat:'sino', q:'10', qs:'What is 10 in Sino-Korean?', a:'십', rom:'sip [sib]', pron:'[십]', note:'받침 ㅂ → sounds like [b] before vowels: 십일 → [시빌]' },
+  { cat:'sino', q:'16', qs:'How do you say 16?', a:'십육', rom:'sib-yuk', pron:'[심뉵]', note:'ㄴ insertion: 십 + 육 → 심뉵' },
+  { cat:'sino', q:'20', qs:'How do you say 20 in Sino-Korean?', a:'이십', rom:'i-sib', pron:'[이십]', note:'' },
+  { cat:'sino', q:'100', qs:'How do you say 100?', a:'백', rom:'baek', pron:'[백]', note:'' },
+  { cat:'sino', q:'1,000', qs:'How do you say 1,000?', a:'천', rom:'cheon', pron:'[천]', note:'' },
+  { cat:'sino', q:'10,000', qs:'How do you say 10,000?\n(unique Korean unit!)', a:'만', rom:'man', pron:'[만]', note:'Korean counts in 만(10,000) units, not 1,000s' },
+
+  // ── PURE KOREAN ──
+  { cat:'pure', q:'하나', qs:'하나 = ?', a:'1', rom:'ha-na', pron:'[하나]', note:'Before a counter: 하나 → 한 (한 개, 한 명)' },
+  { cat:'pure', q:'둘', qs:'둘 = ?', a:'2', rom:'dul', pron:'[둘]', note:'Before a counter: 둘 → 두 (두 개, 두 명)' },
+  { cat:'pure', q:'셋', qs:'셋 = ?', a:'3', rom:'set', pron:'[셋]', note:'Before a counter: 셋 → 세 (세 개, 세 시)' },
+  { cat:'pure', q:'넷', qs:'넷 = ?', a:'4', rom:'net', pron:'[넷]', note:'Before a counter: 넷 → 네 (네 개, 네 시)' },
+  { cat:'pure', q:'다섯', qs:'다섯 = ?', a:'5', rom:'da-seot', pron:'[다섯]', note:'' },
+  { cat:'pure', q:'여섯', qs:'여섯 = ?', a:'6', rom:'yeo-seot', pron:'[여섯]', note:'' },
+  { cat:'pure', q:'일곱', qs:'일곱 = ?', a:'7', rom:'il-gop', pron:'[일곱]', note:'' },
+  { cat:'pure', q:'여덟', qs:'여덟 = ?', a:'8', rom:'yeo-deol', pron:'[여덟]', note:'ㄼ 받침 → final sound [l]' },
+  { cat:'pure', q:'아홉', qs:'아홉 = ?', a:'9', rom:'a-hop', pron:'[아홉]', note:'' },
+  { cat:'pure', q:'열', qs:'열 = ?', a:'10', rom:'yeol', pron:'[열]', note:'' },
+  { cat:'pure', q:'스물', qs:'스물 = ? (and when to use 스무?)', a:'20', rom:'seu-mul', pron:'[스물]', note:'스물 = standalone\n스무 + noun (스무 살 ✔ / 스물 살 ✗)' },
+  { cat:'pure', q:'서른', qs:'서른 = ?', a:'30', rom:'seo-reun', pron:'[서른]', note:'' },
+  { cat:'pure', q:'마흔', qs:'마흔 = ?', a:'40', rom:'ma-heun', pron:'[마흔]', note:'' },
+  { cat:'pure', q:'쉰', qs:'쉰 = ?', a:'50', rom:'swin', pron:'[쉰]', note:'' },
+  { cat:'pure', q:'예순', qs:'예순 = ?', a:'60', rom:'ye-sun', pron:'[예순]', note:'' },
+  { cat:'pure', q:'일흔', qs:'일흔 = ?', a:'70', rom:'il-heun', pron:'[일흔]', note:'' },
+  { cat:'pure', q:'여든', qs:'여든 = ?', a:'80', rom:'yeo-deun', pron:'[여든]', note:'' },
+  { cat:'pure', q:'아흔', qs:'아흔 = ?', a:'90', rom:'a-heun', pron:'[아흔]', note:'' },
+
+  // ── TIME ──
+  { cat:'time', q:'3:45', qs:'How do you say 3:45?', a:'세 시\n사십오 분', rom:'se si / sa-sib-o bun', pron:'[세 시 사시보 분]', note:'Hours = Pure Korean · Minutes = Sino-Korean' },
+  { cat:'time', q:'12:00', qs:'How do you say 12 o\'clock?', a:'열두 시', rom:'yeol-du si', pron:'[열두 시]', note:'열두 = 열(10) + 두(2) in Pure Korean form' },
+  { cat:'time', q:'30분', qs:'30분 in Korean numbers?', a:'삼십 분', rom:'sam-sib bun', pron:'[삼십 분]', note:'Minutes always use Sino-Korean' },
+  { cat:'time', q:'시 vs 시간', qs:'What\'s the difference?', a:'시 ≠ 시간', rom:'si / si-gan', pron:'', note:'시 = point in time (세 시에 만나요)\n시간 = duration (세 시간 걸려요)' },
+  { cat:'time', q:'6월', qs:'How do you pronounce 6월?', a:'유월', rom:'yu-wol', pron:'[유월] ✔\n[육월] ✗', note:'육 → 유 before 월 (exception!)' },
+  { cat:'time', q:'10월', qs:'How do you pronounce 10월?', a:'시월', rom:'si-wol', pron:'[시월] ✔\n[십월] ✗', note:'십 → 시 before 월 (exception!)' },
+
+  // ── AGE ──
+  { cat:'age', q:'스무 살\nvs\n이십 세', qs:'Which is more formal for age 20?', a:'이십 세', rom:'i-sib se', pron:'[이십 세]', note:'살 = everyday speech\n세 = formal / official (hospital, documents)' },
+  { cat:'age', q:'쉰두 살', qs:'쉰두 살 = ?', a:'52살', rom:'swin-du sal', pron:'[쉰두 살]', note:'쉰(50) + 두(2) + 살' },
+  { cat:'age', q:'환갑', qs:'환갑 = ?', a:'60세', rom:'hwan-gap', pron:'[환갑]', note:'Important traditional milestone — 60th birthday celebration' },
+  { cat:'age', q:'칠순', qs:'칠순 = ?', a:'70세', rom:'chil-sun', pron:'[칠순]', note:'고희(古稀) is the literary/formal term for 70' },
+
+  // ── PHONE ──
+  { cat:'phone', q:'010', qs:'How do you read 010 in a phone number?', a:'공일공', rom:'gong-il-gong', pron:'[공일공]', note:'Phone numbers: use 공 for 0, not 영' },
+  { cat:'phone', q:'213', qs:'Reading 213 — how to avoid confusion?', a:'이 일 삼', rom:'i il sam', pron:'', note:'Say each digit separately: 이·일·삼\nNOT 이백십삼 (that\'s a number, not a phone digit)' },
+  { cat:'phone', q:'영 vs 공', qs:'When to use 영 vs 공 for zero?', a:'영 → math\n공 → phone', rom:'yeong / gong', pron:'', note:'영(零): math, scores (영 대 영)\n공: phone, room numbers (공일공-xxxx)' },
+  { cat:'phone', q:'010-2345-6789', qs:'Read this phone number aloud', a:'공일공\n이삼사오\n육칠팔구', rom:'gong-il-gong / i-sam-sa-o / yuk-chil-pal-gu', pron:'', note:'Each segment read as individual digits' },
+];
+
+let filtered = [...ALL_CARDS];
+let idx = 0;
+let isFlipped = false;
+let currentCat = 'all';
+
+function getColorForCat(cat) {
+  return { sino:'#E8604C', pure:'#2E9E8A', time:'#3D4A5C', age:'#C8902A', phone:'#7C5CBF' }[cat] || '#3D4A5C';
+}
+
+function renderCard() {
+  if (!filtered.length) return;
+  const c = filtered[idx];
+  const color = getColorForCat(c.cat);
+  const label = { sino:'Sino-Korean', pure:'Pure Korean', time:'Time', age:'Age', phone:'Phone Numbers' }[c.cat] || c.cat;
+
+  document.getElementById('card-tag-f').textContent = label;
+  document.getElementById('card-tag-f').className = 'card-tag tag-' + c.cat;
+  document.getElementById('card-tag-b').textContent = label;
+  document.getElementById('card-tag-b').className = 'card-tag tag-' + c.cat;
+
+  const qEl = document.getElementById('card-q');
+  qEl.textContent = c.q;
+  qEl.className = 'card-question' + (/[a-zA-Z]/.test(c.q) ? ' en' : '');
+  document.getElementById('card-sub').textContent = c.qs || '';
+
+  document.getElementById('card-ans').textContent = c.a;
+  document.getElementById('card-ans').style.color = color;
+  document.getElementById('card-rom').textContent = c.rom || '';
+  document.getElementById('card-pron').textContent = c.pron || '';
+  document.getElementById('card-note').textContent = c.note || '';
+
+  // progress
+  const pct = filtered.length > 1 ? (idx / (filtered.length - 1)) * 100 : 100;
+  document.getElementById('prog').style.width = pct + '%';
+  document.getElementById('prog').style.background = color;
+  document.getElementById('prog-label').textContent = (idx+1) + ' / ' + filtered.length;
+
+  // reset flip
+  isFlipped = false;
+  document.getElementById('card-inner').classList.remove('flipped');
+}
+
+function flipCard() {
+  isFlipped = !isFlipped;
+  document.getElementById('card-inner').classList.toggle('flipped', isFlipped);
+}
+
+function next() {
+  idx = (idx + 1) % filtered.length;
+  renderCard();
+}
+function prev() {
+  idx = (idx - 1 + filtered.length) % filtered.length;
+  renderCard();
+}
+
+function shuffle() {
+  for (let i = filtered.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
+  }
+  idx = 0;
+  renderCard();
+}
+
+document.querySelectorAll('.cat-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentCat = btn.dataset.cat;
+    filtered = currentCat === 'all' ? [...ALL_CARDS] : ALL_CARDS.filter(c => c.cat === currentCat);
+    idx = 0;
+    renderCard();
+  });
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') next();
+  else if (e.key === 'ArrowLeft') prev();
+  else if (e.key === ' ') { e.preventDefault(); flipCard(); }
+  else if (e.key === 's' || e.key === 'S') shuffle();
+});
+
+renderCard();
+</script>
+</body>
+</html>
