@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Korean Number System · by Hanim Lee</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;900&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --coral:   #E8604C;
+    --coral-l: #FEF1EF;
+    --teal:    #2E9E8A;
+    --teal-l:  #E8F7F5;
+    --slate:   #3D4A5C;
+    --slate-l: #F4F6F8;
+    --gold:    #C8902A;
+    --gold-l:  #FDF7EC;
+    --purple:  #7C5CBF;
+    --purple-l:#F5F2FC;
+    --cyan:    #0EA5A0;
+    --cyan-l:  #E0F4F2;
+    --navy:    #1A1A2E;
+    --border:  #E5E7EB;
+    --muted:   #6B7280;
+    --text:    #1A1A2E;
+    --bg:      #FAFAFA;
+    --white:   #FFFFFF;
+    --radius:  10px;
+    --shadow:  0 2px 12px rgba(0,0,0,.07);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .ko { font-family: 'Noto Sans KR', sans-serif; }
+  .mono { font-family: 'DM Mono', monospace; }
+
+  /* ── SITE HEADER ── */
+  .site-header {
+    background: var(--slate);
+    padding: 28px 5vw 22px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 16px rgba(0,0,0,.18);
+  }
+  .site-header h1 {
+    color: #fff;
+    font-size: clamp(18px, 3vw, 26px);
+    font-weight: 900;
+    letter-spacing: -.3px;
+  }
+  .site-header .sub {
+    color: #94A3B8;
+    font-size: 11px;
+    margin-top: 3px;
+    letter-spacing: .3px;
+  }
+  .site-header .by {
+    color: var(--coral);
+    font-size: 12px;
+    font-weight: 700;
+    text-align: right;
+  }
+
+  /* ── NAV TABS ── */
+  .nav-tabs {
+    background: var(--white);
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    overflow-x: auto;
+    padding: 0 5vw;
+    gap: 0;
+    scrollbar-width: none;
+  }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+  .nav-tab {
+    padding: 13px 18px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all .2s;
+    user-select: none;
+    font-family: 'DM Sans', sans-serif;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+  .nav-tab:hover { color: var(--slate); }
+  .nav-tab.active { color: var(--slate); border-bottom-color: var(--slate); }
+  .nav-tab[data-color="coral"].active { color: var(--coral); border-bottom-color: var(--coral); }
+  .nav-tab[data-color="teal"].active  { color: var(--teal);  border-bottom-color: var(--teal); }
+  .nav-tab[data-color="gold"].active  { color: var(--gold);  border-bottom-color: var(--gold); }
+  .nav-tab[data-color="cyan"].active  { color: var(--cyan);  border-bottom-color: var(--cyan); }
+  .nav-tab[data-color="purple"].active{ color: var(--purple);border-bottom-color: var(--purple); }
+
+  /* ── MAIN CONTENT ── */
+  main { padding: 32px 5vw 60px; max-width: 1100px; margin: 0 auto; }
+
+  /* ── SECTION PANELS ── */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ── SECTION HEADER ── */
+  .sec-header {
+    border-radius: var(--radius);
+    padding: 11px 18px;
+    color: white;
+    font-size: 16px;
+    font-weight: 900;
+    margin-bottom: 24px;
+    letter-spacing: .1px;
+  }
+  .sh-coral  { background: var(--coral); }
+  .sh-teal   { background: var(--teal); }
+  .sh-slate  { background: var(--slate); }
+  .sh-gold   { background: var(--gold); }
+  .sh-purple { background: var(--purple); }
+  .sh-cyan   { background: var(--cyan); }
+
+  /* ── SUBSECTION LABEL ── */
+  .sub-lbl {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 10px;
+  }
+
+  /* ── TWO-COL GRID ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 680px) {
+    .two-col { grid-template-columns: 1fr; }
+  }
+
+  /* ── CHIPS ── */
+  .chips-wrap {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
+    padding: 14px 18px;
+    border-radius: var(--radius);
+    margin-bottom: 24px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .chips-wrap::-webkit-scrollbar { display: none; }
+  .chips-wrap.coral-bg { background: var(--coral-l); }
+  .chips-wrap.teal-bg  { background: var(--teal-l); }
+  .chip {
+    padding: 6px 13px;
+    border-radius: 6px;
+    font-size: 17px;
+    font-weight: 700;
+    color: white;
+    white-space: nowrap;
+    font-family: 'Noto Sans KR', sans-serif;
+    flex-shrink: 0;
+  }
+  .chip-c { background: var(--coral); }
+  .chip-t { background: var(--teal); }
+
+  /* ── DATA TABLE ── */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .data-table thead th {
+    padding: 7px 10px;
+    text-align: left;
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    background: var(--slate-l);
+    border-bottom: 2px solid var(--border);
+  }
+  .data-table tbody td {
+    padding: 6px 10px;
+    border-bottom: 1px solid #F0F2F5;
+    vertical-align: middle;
+  }
+  .data-table tbody tr:last-child td { border-bottom: none; }
+  .data-table tbody tr:hover td { background: #FAFBFC; }
+  .td-num { font-weight: 700; color: var(--muted); font-size: 11.5px; }
+  .td-ko  { font-family: 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 17px; color: var(--navy); }
+  .td-ko-sm { font-family: 'Noto Sans KR', sans-serif; font-weight: 600; font-size: 15px; }
+  .td-rom { color: var(--slate); font-size: 12px; }
+  .td-pr  { color: var(--muted); font-size: 11px; }
+  .td-pr-c { color: var(--coral); font-weight: 700; font-size: 11px; }
+  .td-pr-t { color: var(--teal); font-weight: 700; font-size: 11px; }
+
+  /* ── USAGE TAGS ── */
+  .tags-wrap { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+  .tag {
+    padding: 4px 12px;
+    border-radius: 14px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .tag-c { background: var(--coral-l); color: var(--coral); border: 1px solid #F5BBAF; }
+  .tag-t { background: var(--teal-l);  color: var(--teal);  border: 1px solid #9FD8CF; }
+
+  /* ── BOX COMPONENTS ── */
+  .box { border-radius: var(--radius); padding: 14px 16px; }
+  .box-gold   { background: var(--gold-l);   border: 1px solid #EFD090; }
+  .box-teal   { background: var(--teal-l);   border: 1px solid #9FD8CF; }
+  .box-slate  { background: var(--slate-l);  border: 1px solid #D8DCE4; }
+  .box-coral  { background: var(--coral-l);  border: 1px solid #F5BBAF; }
+  .box-purple { background: var(--purple-l); border: 1px solid #C9B8EC; }
+  .box-navy   { background: #F0F2F5;         border: 1px solid #C8CDD8; }
+  .box-cyan   { background: var(--cyan-l);   border: 1px solid #7CC9C1; }
+  .box-lbl {
+    font-size: 9px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  .lbl-gold   { color: var(--gold); }
+  .lbl-teal   { color: var(--teal); }
+  .lbl-coral  { color: var(--coral); }
+  .lbl-purple { color: var(--purple); }
+  .lbl-navy   { color: var(--navy); }
+
+  /* ── COUNTER GRID ── */
+  .ctr-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  @media (max-width: 500px) { .ctr-grid { grid-template-columns: repeat(3, 1fr); } }
+  .ctr-item {
+    background: white;
+    border: 1px solid #EFD090;
+    border-radius: 8px;
+    padding: 8px 6px;
+    text-align: center;
+  }
+  .ci-o { font-family: 'Noto Sans KR', sans-serif; font-size: 18px; font-weight: 700; color: var(--gold); }
+  .ci-a { font-size: 12px; color: #9CA3AF; }
+  .ci-f { font-family: 'Noto Sans KR', sans-serif; font-size: 18px; font-weight: 700; color: var(--coral); }
+  .ci-e { font-family: 'Noto Sans KR', sans-serif; font-size: 9.5px; color: var(--muted); margin-top: 3px; }
+
+  /* ── GLANCE TABLE ── */
+  .glance { background: var(--slate-l); border-radius: var(--radius); padding: 14px 16px; }
+
+  /* ── DIVIDER ── */
+  .div { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+  /* ── TIME NOTE BOXES ── */
+  .t-note { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+  @media (max-width: 480px) { .t-note { grid-template-columns: 1fr; } }
+  .t-item {
+    background: var(--slate-l);
+    border-left: 4px solid var(--teal);
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 0;
+  }
+  .t-lbl { font-size: 9px; font-weight: 700; color: var(--teal); text-transform: uppercase; letter-spacing: .5px; }
+  .t-ko  { font-family: 'Noto Sans KR', sans-serif; font-size: 18px; font-weight: 700; margin: 5px 0 3px; }
+  .t-en  { font-size: 10.5px; color: var(--muted); }
+
+  /* ── AGE COMPARE ── */
+  .age-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 480px) { .age-compare { grid-template-columns: 1fr; } }
+  .age-head { padding: 7px 12px; font-size: 11px; font-weight: 700; text-align: center; color: white; border-radius: 6px 6px 0 0; }
+  .age-head-pure { background: var(--teal); }
+  .age-head-sino { background: var(--coral); }
+  .age-col { border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+
+  /* ── SPECIAL AGES ── */
+  .sage-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-top: 14px; }
+  @media (max-width: 500px) { .sage-grid { grid-template-columns: repeat(2,1fr); } }
+  .sage-item {
+    background: var(--gold-l);
+    border: 1px solid #EFD090;
+    border-radius: 10px;
+    padding: 14px 10px;
+    text-align: center;
+  }
+  .sage-num  { font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; }
+  .sage-ko   { font-family: 'Noto Sans KR', sans-serif; font-size: 26px; font-weight: 900; color: var(--gold); margin: 4px 0 3px; }
+  .sage-desc { font-size: 10px; color: var(--muted); }
+  .sage-celebration {
+    margin-top: 8px;
+    font-size: 10.5px;
+    color: var(--navy);
+    line-height: 1.5;
+    background: rgba(255,255,255,.7);
+    border-radius: 6px;
+    padding: 6px 8px;
+  }
+  .sage-celebration .ko-note {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 10px;
+    color: var(--gold);
+    font-weight: 600;
+    display: block;
+    margin-top: 3px;
+  }
+
+  /* ── PHONE BOX ── */
+  .phone-ex {
+    background: var(--purple-l);
+    border: 1px solid #C9B8EC;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+  }
+  .phone-num  { font-family: 'DM Mono', monospace; font-size: 20px; font-weight: 700; color: var(--slate); letter-spacing: 2px; }
+  .phone-read { font-family: 'Noto Sans KR', sans-serif; font-size: 16px; font-weight: 600; color: var(--purple); margin-top: 5px; }
+  .phone-note { font-size: 10.5px; color: var(--muted); margin-top: 4px; }
+
+  /* ── ZERO BOX ── */
+  .zero-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .zero-item { background: white; border: 1px solid #C9B8EC; border-radius: 8px; padding: 12px 14px; }
+  .zero-ko   { font-family: 'Noto Sans KR', sans-serif; font-size: 30px; font-weight: 900; }
+  .zero-when { font-size: 10.5px; color: var(--muted); margin-top: 3px; }
+  .zero-ex   { font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: var(--purple); font-weight: 600; margin-top: 4px; }
+
+  /* ── PRON RULES ── */
+  .pron-r { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; }
+  .pron-t { font-size: 9px; font-weight: 700; color: var(--purple); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 7px; }
+  .pron-f { font-family: 'Noto Sans KR', sans-serif; font-size: 17px; color: var(--slate); font-weight: 700; }
+  .pron-sep { color: #9CA3AF; font-size: 13px; margin: 0 6px; }
+  .pron-fin { color: var(--purple); font-weight: 700; background: var(--purple-l); padding: 1px 7px; border-radius: 4px; font-size: 16px; }
+  .pron-note { font-size: 10.5px; color: var(--muted); margin-top: 5px; }
+
+  /* ── TRICKY BOX ── */
+  .tricky {
+    background: var(--coral-l);
+    border-left: 4px solid var(--coral);
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+  }
+  .tricky-t { font-size: 9px; font-weight: 700; color: var(--coral); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+  .tricky-ko { font-family: 'Noto Sans KR', sans-serif; font-size: 17px; font-weight: 700; }
+  .tricky-note { font-size: 10.5px; color: var(--muted); margin-top: 4px; }
+
+  /* ── ORDINAL CARDS ── */
+  .ord-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+  @media (max-width: 480px) { .ord-grid { grid-template-columns: repeat(2, 1fr); } }
+  .ord-item { background: var(--cyan-l); border: 1px solid #7CC9C1; border-radius: 8px; padding: 10px 12px; text-align: center; }
+  .ord-item.special { background: var(--coral-l); border-color: #F5BBAF; }
+  .ord-n   { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--cyan); }
+  .ord-item.special .ord-n { color: var(--coral); }
+  .ord-ko  { font-family: 'Noto Sans KR', sans-serif; font-size: 20px; font-weight: 700; margin: 4px 0 3px; }
+  .ord-rom { font-size: 10.5px; color: var(--muted); }
+
+  /* ── PRACTICE ── */
+  .prac-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--slate-l);
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin-bottom: 8px;
+  }
+  .pq   { font-family: 'Noto Sans KR', sans-serif; font-size: 18px; font-weight: 700; flex: 0 0 110px; }
+  .pqs  { font-size: 10.5px; color: var(--muted); flex: 1; }
+  .pb   { flex: 1; border-bottom: 2px solid #D1D5DB; height: 16px; min-width: 60px; }
+  .prac-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 560px) { .prac-grid { grid-template-columns: 1fr; } }
+
+  /* ── LINK BOX ── */
+  .link-box {
+    background: var(--navy);
+    border-radius: 10px;
+    padding: 18px 22px;
+    text-align: center;
+    margin-top: 14px;
+  }
+  .link-box a { color: #7ECFC5; font-size: 15px; font-weight: 700; text-decoration: underline; }
+  .link-box p { color: #94A3B8; font-size: 10.5px; margin-top: 5px; }
+
+  /* ── NOTE TAG ── */
+  .nt {
+    display: inline-block;
+    background: var(--slate-l);
+    border-radius: 4px;
+    padding: 3px 9px;
+    font-size: 10px;
+    color: var(--slate);
+    margin: 4px 5px 0 0;
+  }
+
+  /* ── MONTHS TABLE (full-width override) ── */
+  .months-section { margin-top: 24px; }
+
+  /* ── LARGE UNITS ── */
+  .unit-note {
+    font-size: 13px;
+    color: var(--slate);
+    line-height: 2;
+    padding: 12px 16px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+
+  /* ── MINS TABLE HEADER ── */
+  .mins-hdr th { background: var(--coral) !important; color: white !important; }
+
+  /* ── ANIMATION ── */
+  .section.active { animation: fadeIn .25s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 11px;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    background: white;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="site-header">
+  <div>
+    <h1>Korean Number System</h1>
+    <div class="sub">한국어 수 체계 · Korean Numbers Guide</div>
+  </div>
+  <div class="by">by Hanim Lee</div>
+</header>
+
+<!-- ── NAV TABS ── -->
+<nav class="nav-tabs">
+  <button class="nav-tab active" data-tab="sino"    data-color="coral" >① Sino-Korean</button>
+  <button class="nav-tab"        data-tab="native"  data-color="teal"  >② Native Korean</button>
+  <button class="nav-tab"        data-tab="time"    data-color="slate" >③ Time</button>
+  <button class="nav-tab"        data-tab="age"     data-color="gold"  >④ Age</button>
+  <button class="nav-tab"        data-tab="ordinal" data-color="cyan"  >⑤ Ordinal</button>
+  <button class="nav-tab"        data-tab="phone"   data-color="purple">⑥ Phone</button>
+  <button class="nav-tab"        data-tab="pron"    data-color="purple">⑦ Pronunciation</button>
+  <button class="nav-tab"        data-tab="practice"                   >✏ Practice</button>
+</nav>
+
+<main>
+
+<!-- ══════════ ① SINO-KOREAN ══════════ -->
+<section class="section active" id="tab-sino">
+  <div class="sec-header sh-coral">① Sino-Korean Numbers (한자어 숫자)</div>
+
+  <div class="chips-wrap coral-bg">
+    <span class="chip chip-c">일</span><span class="chip chip-c">이</span>
+    <span class="chip chip-c">삼</span><span class="chip chip-c">사</span>
+    <span class="chip chip-c">오</span><span class="chip chip-c">육</span>
+    <span class="chip chip-c">칠</span><span class="chip chip-c">팔</span>
+    <span class="chip chip-c">구</span><span class="chip chip-c">십</span>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <div class="sub-lbl">Basic Numbers 1–10</div>
+      <table class="data-table">
+        <thead><tr><th>#</th><th>Korean</th><th>Romanization</th><th>Pronunciation</th></tr></thead>
+        <tbody>
+          <tr><td class="td-num">1</td><td class="td-ko">일</td><td class="td-rom">il</td><td class="td-pr">[일]</td></tr>
+          <tr><td class="td-num">2</td><td class="td-ko">이</td><td class="td-rom">i</td><td class="td-pr">[이]</td></tr>
+          <tr><td class="td-num">3</td><td class="td-ko">삼</td><td class="td-rom">sam</td><td class="td-pr">[삼]</td></tr>
+          <tr><td class="td-num">4</td><td class="td-ko">사</td><td class="td-rom">sa</td><td class="td-pr">[사]</td></tr>
+          <tr><td class="td-num">5</td><td class="td-ko">오</td><td class="td-rom">o</td><td class="td-pr">[오]</td></tr>
+          <tr><td class="td-num">6</td><td class="td-ko">육</td><td class="td-rom">yuk</td><td class="td-pr">[육]</td></tr>
+          <tr><td class="td-num">7</td><td class="td-ko">칠</td><td class="td-rom">chil</td><td class="td-pr">[칠]</td></tr>
+          <tr><td class="td-num">8</td><td class="td-ko">팔</td><td class="td-rom">pal</td><td class="td-pr">[팔]</td></tr>
+          <tr><td class="td-num">9</td><td class="td-ko">구</td><td class="td-rom">gu</td><td class="td-pr">[구]</td></tr>
+          <tr><td class="td-num">10</td><td class="td-ko">십</td><td class="td-rom">sip</td><td class="td-pr">[십]</td></tr>
+        </tbody>
+      </table>
+      <div class="sub-lbl" style="margin-top:18px;">When to use</div>
+      <div class="tags-wrap">
+        <span class="tag tag-c">💰 Money (원)</span>
+        <span class="tag tag-c">📅 Dates</span>
+        <span class="tag tag-c">📞 Phone</span>
+        <span class="tag tag-c">🏠 Address</span>
+        <span class="tag tag-c">⏱ Min / sec</span>
+        <span class="tag tag-c">➕ Math</span>
+        <span class="tag tag-c">🎂 Age (세)</span>
+      </div>
+    </div>
+    <div>
+      <div class="sub-lbl">Extended Numbers 11–100</div>
+      <table class="data-table">
+        <thead><tr><th>#</th><th>Korean</th><th>Romanization</th><th>Pronunciation</th></tr></thead>
+        <tbody>
+          <tr><td class="td-num">11</td><td class="td-ko">십일</td><td class="td-rom">sip-il</td><td class="td-pr">[시빌]</td></tr>
+          <tr><td class="td-num">12</td><td class="td-ko">십이</td><td class="td-rom">sip-i</td><td class="td-pr">[시비]</td></tr>
+          <tr><td class="td-num">16</td><td class="td-ko">십육</td><td class="td-rom">sip-yuk <span class="td-pr-c">[심뉵]</span></td><td class="td-pr">ㄴ 첨가</td></tr>
+          <tr><td class="td-num">20</td><td class="td-ko">이십</td><td class="td-rom">i-sip</td><td class="td-pr">[이십]</td></tr>
+          <tr><td class="td-num">30</td><td class="td-ko">삼십</td><td class="td-rom">sam-sip</td><td class="td-pr">[삼십]</td></tr>
+          <tr><td class="td-num">40</td><td class="td-ko">사십</td><td class="td-rom">sa-sip</td><td class="td-pr">[사십]</td></tr>
+          <tr><td class="td-num">50</td><td class="td-ko">오십</td><td class="td-rom">o-sip</td><td class="td-pr">[오십]</td></tr>
+          <tr><td class="td-num">60</td><td class="td-ko">육십</td><td class="td-rom">yuk-sip</td><td class="td-pr">[육십]</td></tr>
+          <tr><td class="td-num">66</td><td class="td-ko">육십육</td><td class="td-rom">yuk-sip-yuk <span class="td-pr-c">[육씹뉵]</span></td><td class="td-pr">경음화</td></tr>
+          <tr><td class="td-num">70</td><td class="td-ko">칠십</td><td class="td-rom">chil-sip</td><td class="td-pr">[칠십]</td></tr>
+          <tr><td class="td-num">80</td><td class="td-ko">팔십</td><td class="td-rom">pal-sip</td><td class="td-pr">[팔십]</td></tr>
+          <tr><td class="td-num">90</td><td class="td-ko">구십</td><td class="td-rom">gu-sip</td><td class="td-pr">[구십]</td></tr>
+          <tr><td class="td-num">100</td><td class="td-ko">백</td><td class="td-rom">baek</td><td class="td-pr">[백]</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="div"/>
+  <div class="sub-lbl">Large Units (큰 수)</div>
+  <div class="box box-navy">
+    <div class="box-lbl lbl-navy">⚠ Korean counts in 만(10,000) units — not thousands like English!</div>
+    <table class="data-table">
+      <thead><tr><th>Number</th><th>Korean</th><th>Romanization</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td class="td-num">1,000</td><td class="td-ko">천</td><td class="td-rom">cheon</td><td class="td-pr"></td></tr>
+        <tr><td class="td-num">10,000</td><td class="td-ko">만</td><td class="td-rom">man</td><td class="td-pr">← unique Korean base unit (4자리마다 단위 변화)</td></tr>
+        <tr><td class="td-num">100,000,000</td><td class="td-ko">억</td><td class="td-rom">eok</td><td class="td-pr">next major unit (≠ 영어 billion)</td></tr>
+        <tr><td class="td-num">1,000,000,000,000</td><td class="td-ko">조</td><td class="td-rom">jo</td><td class="td-pr">next unit after 억</td></tr>
+      </tbody>
+    </table>
+    <div class="unit-note">
+      <strong>영어</strong>: thousand → million → billion (3자리마다)<br>
+      <strong>한국어</strong>: 천 → 만 → 억 → 조 (4자리마다) ← 중요!<br>
+      예) 50,000 = <span class="ko" style="font-weight:700;color:var(--coral);">오만</span> &nbsp;·&nbsp;
+      123,000 = <span class="ko" style="font-weight:700;color:var(--coral);">십이만 삼천</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ ② NATIVE KOREAN ══════════ -->
+<section class="section" id="tab-native">
+  <div class="sec-header sh-teal">② Native Korean Numbers (고유어 숫자 · 세는 숫자)</div>
+
+  <div class="chips-wrap teal-bg">
+    <span class="chip chip-t">하나</span><span class="chip chip-t">둘</span>
+    <span class="chip chip-t">셋</span><span class="chip chip-t">넷</span>
+    <span class="chip chip-t">다섯</span><span class="chip chip-t">여섯</span>
+    <span class="chip chip-t">일곱</span><span class="chip chip-t">여덟</span>
+    <span class="chip chip-t">아홉</span><span class="chip chip-t">열</span>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <div class="sub-lbl">Basic Numbers 1–10</div>
+      <table class="data-table">
+        <thead><tr><th>#</th><th>Korean</th><th>Romanization</th><th>Pronunciation</th></tr></thead>
+        <tbody>
+          <tr><td class="td-num">1</td><td class="td-ko">하나</td><td class="td-rom">ha-na</td><td class="td-pr">[하나]</td></tr>
+          <tr><td class="td-num">2</td><td class="td-ko">둘</td><td class="td-rom">dul</td><td class="td-pr">[둘]</td></tr>
+          <tr><td class="td-num">3</td><td class="td-ko">셋</td><td class="td-rom">set</td><td class="td-pr">[셋]</td></tr>
+          <tr><td class="td-num">4</td><td class="td-ko">넷</td><td class="td-rom">net</td><td class="td-pr">[넷]</td></tr>
+          <tr><td class="td-num">5</td><td class="td-ko">다섯</td><td class="td-rom">da-seot</td><td class="td-pr">[다섯]</td></tr>
+          <tr><td class="td-num">6</td><td class="td-ko">여섯</td><td class="td-rom">yeo-seot</td><td class="td-pr">[여섯]</td></tr>
+          <tr><td class="td-num">7</td><td class="td-ko">일곱</td><td class="td-rom">il-gop</td><td class="td-pr">[일곱]</td></tr>
+          <tr><td class="td-num">8</td><td class="td-ko">여덟</td><td class="td-rom">yeo-deol</td><td class="td-pr">[여덜]</td></tr>
+          <tr><td class="td-num">9</td><td class="td-ko">아홉</td><td class="td-rom">a-hop</td><td class="td-pr">[아홉]</td></tr>
+          <tr><td class="td-num">10</td><td class="td-ko">열</td><td class="td-rom">yeol</td><td class="td-pr">[열]</td></tr>
+        </tbody>
+      </table>
+      <div class="sub-lbl" style="margin-top:18px;">When to use</div>
+      <div class="tags-wrap">
+        <span class="tag tag-t">📦 Counting objects (개)</span>
+        <span class="tag tag-t">👤 People (명)</span>
+        <span class="tag tag-t">🎂 Age (살)</span>
+        <span class="tag tag-t">🕐 Hours (시)</span>
+        <span class="tag tag-t">⏳ Duration (시간)</span>
+        <span class="tag tag-t">🔁 Number of times</span>
+      </div>
+    </div>
+    <div>
+      <div class="sub-lbl">Extended Numbers 11–99</div>
+      <table class="data-table">
+        <thead><tr><th>#</th><th>Korean</th><th>Pronunciation</th></tr></thead>
+        <tbody>
+          <tr><td class="td-num">11</td><td class="td-ko">열하나</td><td class="td-pr">[열하나]</td></tr>
+          <tr><td class="td-num">12</td><td class="td-ko">열둘</td><td class="td-pr">[열둘]</td></tr>
+          <tr><td class="td-num">20</td><td class="td-ko">스물</td><td class="td-pr">[스물]</td></tr>
+          <tr><td class="td-num">21</td><td class="td-ko">스물하나</td><td class="td-pr">[스물하나]</td></tr>
+          <tr><td class="td-num">30</td><td class="td-ko">서른</td><td class="td-pr">[서른]</td></tr>
+          <tr><td class="td-num">40</td><td class="td-ko">마흔</td><td class="td-pr">[마흔]</td></tr>
+          <tr><td class="td-num">50</td><td class="td-ko">쉰</td><td class="td-pr">[쉰]</td></tr>
+          <tr><td class="td-num">60</td><td class="td-ko">예순</td><td class="td-pr">[예순]</td></tr>
+          <tr><td class="td-num">70</td><td class="td-ko">일흔</td><td class="td-pr">[일흔]</td></tr>
+          <tr><td class="td-num">80</td><td class="td-ko">여든</td><td class="td-pr">[여든]</td></tr>
+          <tr><td class="td-num">90</td><td class="td-ko">아흔</td><td class="td-pr">[아흔]</td></tr>
+          <tr><td class="td-num">99</td><td class="td-ko">아흔아홉</td><td class="td-pr">[아흔아홉]</td></tr>
+        </tbody>
+      </table>
+      <span class="nt" style="margin-top:8px;display:inline-block;">⚠ 100 이상은 Sino-Korean만 사용</span>
+    </div>
+  </div>
+
+  <hr class="div"/>
+  <div class="sub-lbl">Forms with Counters (명사 앞에서 바뀌는 형태)</div>
+  <div class="box box-gold">
+    <div class="box-lbl lbl-gold">⚠ These 5 numbers change their form when followed by a counter word</div>
+    <div class="ctr-grid">
+      <div class="ctr-item"><div class="ci-o">하나</div><div class="ci-a">↓</div><div class="ci-f">한</div><div class="ci-e">한 개 · 한 명</div></div>
+      <div class="ctr-item"><div class="ci-o">둘</div><div class="ci-a">↓</div><div class="ci-f">두</div><div class="ci-e">두 명 · 두 개</div></div>
+      <div class="ctr-item"><div class="ci-o">셋</div><div class="ci-a">↓</div><div class="ci-f">세</div><div class="ci-e">세 시 · 세 개</div></div>
+      <div class="ctr-item"><div class="ci-o">넷</div><div class="ci-a">↓</div><div class="ci-f">네</div><div class="ci-e">네 시 · 네 마리</div></div>
+      <div class="ctr-item"><div class="ci-o">스물</div><div class="ci-a">↓</div><div class="ci-f">스무</div><div class="ci-e">스무 살 ✔<br><span style="color:var(--coral);font-size:8px;">스물 살 ✗</span></div></div>
+    </div>
+  </div>
+
+  <hr class="div"/>
+  <div class="glance">
+    <div class="sub-lbl" style="margin-bottom:12px;">System at a Glance</div>
+    <table class="data-table" style="font-size:12.5px;">
+      <thead><tr><th>Situation</th><th>System</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td>Money · Dates · Phone · Math</td><td style="color:var(--coral);font-weight:700;">Sino 한자어</td><td class="td-ko-sm">오천 원 · 삼월 오일</td></tr>
+        <tr><td>Minutes / seconds</td><td style="color:var(--coral);font-weight:700;">Sino 한자어</td><td class="td-ko-sm">삼십 분 · 오 초</td></tr>
+        <tr><td>Age (everyday) · People</td><td style="color:var(--teal);font-weight:700;">Native 고유어</td><td class="td-ko-sm">스무 살 · 두 명</td></tr>
+        <tr><td>Age (formal/official)</td><td style="color:var(--coral);font-weight:700;">Sino 한자어</td><td class="td-ko-sm">이십 세</td></tr>
+        <tr><td>Hours (시) · Duration (시간)</td><td style="color:var(--teal);font-weight:700;">Native 고유어</td><td class="td-ko-sm">세 시 · 두 시간</td></tr>
+        <tr><td>Counting objects</td><td style="color:var(--teal);font-weight:700;">Native 고유어</td><td class="td-ko-sm">사과 세 개</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══════════ ③ TIME ══════════ -->
+<section class="section" id="tab-time">
+  <div class="sec-header sh-slate">③ Time Expression (시간 표현)</div>
+  <div class="two-col">
+    <div>
+      <div class="sub-lbl">Hours — Native Korean (시)</div>
+      <table class="data-table">
+        <thead><tr><th>시각</th><th>Korean</th><th>시각</th><th>Korean</th></tr></thead>
+        <tbody>
+          <tr><td class="td-num">1시</td><td class="td-ko">한 시</td><td class="td-num">7시</td><td class="td-ko">일곱 시</td></tr>
+          <tr><td class="td-num">2시</td><td class="td-ko">두 시</td><td class="td-num">8시</td><td class="td-ko">여덟 시</td></tr>
+          <tr><td class="td-num">3시</td><td class="td-ko">세 시</td><td class="td-num">9시</td><td class="td-ko">아홉 시</td></tr>
+          <tr><td class="td-num">4시</td><td class="td-ko">네 시</td><td class="td-num">10시</td><td class="td-ko">열 시</td></tr>
+          <tr><td class="td-num">5시</td><td class="td-ko">다섯 시</td><td class="td-num">11시</td><td class="td-ko">열한 시</td></tr>
+          <tr><td class="td-num">6시</td><td class="td-ko">여섯 시</td><td class="td-num">12시</td><td class="td-ko">열두 시</td></tr>
+        </tbody>
+      </table>
+      <div class="t-note">
+        <div class="t-item"><div class="t-lbl">시 = point in time</div><div class="t-ko">세 시에 만나요</div><div class="t-en">Let's meet at 3 o'clock</div></div>
+        <div class="t-item"><div class="t-lbl">시간 = duration</div><div class="t-ko">세 시간 걸려요</div><div class="t-en">It takes 3 hours</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="sub-lbl">Minutes — Sino-Korean (분)</div>
+      <table class="data-table">
+        <thead class="mins-hdr"><tr><th>분</th><th>Korean</th><th>분</th><th>Korean</th></tr></thead>
+        <tbody>
+          <tr><td class="td-num">5분</td><td class="td-ko">오 분</td><td class="td-num">35분</td><td class="td-ko">삼십오 분</td></tr>
+          <tr><td class="td-num">10분</td><td class="td-ko">십 분</td><td class="td-num">40분</td><td class="td-ko">사십 분</td></tr>
+          <tr><td class="td-num">15분</td><td class="td-ko">십오 분</td><td class="td-num">45분</td><td class="td-ko">사십오 분</td></tr>
+          <tr><td class="td-num">20분</td><td class="td-ko">이십 분</td><td class="td-num">50분</td><td class="td-ko">오십 분</td></tr>
+          <tr><td class="td-num">30분</td><td class="td-ko">삼십 분</td><td class="td-num">반</td><td class="td-ko">반 <span style="font-size:10px;color:var(--teal);">(= 30분)</span></td></tr>
+        </tbody>
+      </table>
+      <div class="sub-lbl" style="margin-top:18px;">Full Time Examples</div>
+      <table class="data-table">
+        <thead><tr><th>Time</th><th>Korean</th></tr></thead>
+        <tbody>
+          <tr><td class="td-num">2:00</td><td class="td-ko">두 시</td></tr>
+          <tr><td class="td-num">3:30</td><td class="td-ko">세 시 삼십 분</td></tr>
+          <tr><td class="td-num">3:30</td><td class="td-ko">세 시 반 <span style="font-size:11px;color:var(--teal);">(more natural!)</span></td></tr>
+          <tr><td class="td-num">7:15</td><td class="td-ko">일곱 시 십오 분</td></tr>
+          <tr><td class="td-num">12:45</td><td class="td-ko">열두 시 사십오 분</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="months-section">
+    <div class="sub-lbl">Months (월) — Sino-Korean</div>
+    <table class="data-table">
+      <thead><tr><th>Month</th><th>Korean</th><th>Pronunciation</th><th>Month</th><th>Korean</th><th>Pronunciation</th></tr></thead>
+      <tbody>
+        <tr><td>January</td><td class="td-ko-sm">1월</td><td class="td-pr">[일월]</td><td>July</td><td class="td-ko-sm">7월</td><td class="td-pr">[칠월]</td></tr>
+        <tr><td>February</td><td class="td-ko-sm">2월</td><td class="td-pr">[이월]</td><td>August</td><td class="td-ko-sm">8월</td><td class="td-pr">[팔월]</td></tr>
+        <tr><td>March</td><td class="td-ko-sm">3월</td><td class="td-pr">[삼월]</td><td>September</td><td class="td-ko-sm">9월</td><td class="td-pr">[구월]</td></tr>
+        <tr><td>April</td><td class="td-ko-sm">4월</td><td class="td-pr">[사월]</td><td>October</td><td class="td-ko-sm">10월</td><td class="td-pr-c">[시월]</td></tr>
+        <tr><td>May</td><td class="td-ko-sm">5월</td><td class="td-pr">[오월]</td><td>November</td><td class="td-ko-sm">11월</td><td class="td-pr">[십일월]</td></tr>
+        <tr><td>June</td><td class="td-ko-sm">6월</td><td class="td-pr-c">[유월]</td><td>December</td><td class="td-ko-sm">12월</td><td class="td-pr">[십이월]</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:8px;">
+      <span class="nt">⚠ 6월 → [육월 ✗] [유월 ✔]</span>
+      <span class="nt">⚠ 10월 → [십월 ✗] [시월 ✔]</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ ④ AGE ══════════ -->
+<section class="section" id="tab-age">
+  <div class="sec-header sh-gold">④ Age (나이)</div>
+
+  <div class="two-col">
+    <div>
+      <div class="sub-lbl">살 (everyday) vs 세 (formal)</div>
+      <div class="age-compare">
+        <div class="age-col">
+          <div class="age-head age-head-pure">살 — everyday speech</div>
+          <table class="data-table"><tbody>
+            <tr><td class="td-num">10</td><td class="td-ko">열 살</td></tr>
+            <tr><td class="td-num">20</td><td class="td-ko">스무 살</td></tr>
+            <tr><td class="td-num">30</td><td class="td-ko">서른 살</td></tr>
+            <tr><td class="td-num">40</td><td class="td-ko">마흔 살</td></tr>
+            <tr><td class="td-num">50</td><td class="td-ko">쉰 살</td></tr>
+            <tr><td class="td-num">60</td><td class="td-ko">예순 살</td></tr>
+            <tr><td class="td-num">70</td><td class="td-ko">일흔 살</td></tr>
+            <tr><td class="td-num">80</td><td class="td-ko">여든 살</td></tr>
+            <tr><td class="td-num">90</td><td class="td-ko">아흔 살</td></tr>
+          </tbody></table>
+        </div>
+        <div class="age-col">
+          <div class="age-head age-head-sino">세 — formal / official</div>
+          <table class="data-table"><tbody>
+            <tr><td class="td-num">10</td><td class="td-ko">십 세</td></tr>
+            <tr><td class="td-num">20</td><td class="td-ko">이십 세</td></tr>
+            <tr><td class="td-num">30</td><td class="td-ko">삼십 세</td></tr>
+            <tr><td class="td-num">40</td><td class="td-ko">사십 세</td></tr>
+            <tr><td class="td-num">50</td><td class="td-ko">오십 세</td></tr>
+            <tr><td class="td-num">60</td><td class="td-ko">육십 세</td></tr>
+            <tr><td class="td-num">70</td><td class="td-ko">칠십 세</td></tr>
+            <tr><td class="td-num">80</td><td class="td-ko">팔십 세</td></tr>
+            <tr><td class="td-num">90</td><td class="td-ko">구십 세</td></tr>
+          </tbody></table>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="sub-lbl">Combined Examples</div>
+      <table class="data-table">
+        <thead><tr><th>Age</th><th>Pure Korean (살)</th><th>Sino-Korean (세)</th></tr></thead>
+        <tbody>
+          <tr><td class="td-num">52</td><td class="td-ko">쉰두 살</td><td class="td-ko">오십이 세</td></tr>
+          <tr><td class="td-num">63</td><td class="td-ko">예순세 살</td><td class="td-ko">육십삼 세</td></tr>
+          <tr><td class="td-num">74</td><td class="td-ko">일흔네 살</td><td class="td-ko">칠십사 세</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="div"/>
+  <div class="sub-lbl">Special Traditional Terms (전통 표현)</div>
+  <div class="sage-grid">
+    <div class="sage-item">
+      <div class="sage-num">60세</div>
+      <div class="sage-ko">환갑</div>
+      <div class="sage-desc">還甲 · hwan-gap</div>
+    </div>
+    <div class="sage-item">
+      <div class="sage-num">70세</div>
+      <div class="sage-ko">칠순</div>
+      <div class="sage-desc">七旬 · chil-sun</div>
+      <div class="sage-desc" style="margin-top:5px;border-top:1px solid #EFD090;padding-top:5px;">
+        <span style="font-family:'Noto Sans KR',sans-serif;font-weight:600;">고희</span> 古稀 · go-hui
+        <span style="display:block;font-size:9px;color:var(--muted);margin-top:1px;">literary / formal term</span>
+      </div>
+    </div>
+    <div class="sage-item">
+      <div class="sage-num">80세</div>
+      <div class="sage-ko">팔순</div>
+      <div class="sage-desc">八旬 · pal-sun</div>
+    </div>
+    <div class="sage-item">
+      <div class="sage-num">90세</div>
+      <div class="sage-ko">구순</div>
+      <div class="sage-desc">九旬 · gu-sun</div>
+    </div>
+  </div>
+  <div class="box box-gold" style="margin-top:12px;">
+    <div class="box-lbl lbl-gold">🎉 전통 축하 방식 · Celebration tradition</div>
+    <div style="font-size:13px;line-height:1.8;color:var(--navy);">
+      These milestone birthdays are celebrated with a family feast and banquet (잔치). Family and relatives gather to share a meal and honor the person reaching this special age.<br>
+      <span style="font-family:'Noto Sans KR',sans-serif;font-size:12.5px;color:var(--gold);display:block;margin-top:6px;">가족과 친지가 모여 식사를 하고 잔치를 열어 특별한 나이를 축하합니다.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ ⑤ ORDINAL ══════════ -->
+<section class="section" id="tab-ordinal">
+  <div class="sec-header sh-cyan">⑤ Ordinal Numbers (순서수)</div>
+  <div class="two-col">
+    <div>
+      <div class="sub-lbl">Pattern: Native Korean number + 번째</div>
+      <div class="ord-grid">
+        <div class="ord-item special">
+          <div class="ord-n">⚠ Irregular</div>
+          <div class="ord-ko">첫 번째</div>
+          <div class="ord-rom">cheot beon-jjae (1st)</div>
+        </div>
+        <div class="ord-item">
+          <div class="ord-n">2nd</div>
+          <div class="ord-ko">두 번째</div>
+          <div class="ord-rom">du beon-jjae</div>
+        </div>
+        <div class="ord-item">
+          <div class="ord-n">3rd</div>
+          <div class="ord-ko">세 번째</div>
+          <div class="ord-rom">se beon-jjae</div>
+        </div>
+        <div class="ord-item">
+          <div class="ord-n">4th</div>
+          <div class="ord-ko">네 번째</div>
+          <div class="ord-rom">ne beon-jjae</div>
+        </div>
+        <div class="ord-item">
+          <div class="ord-n">5th+</div>
+          <div class="ord-ko">다섯 번째</div>
+          <div class="ord-rom">da-seot beon-jjae</div>
+        </div>
+      </div>
+      <div class="box box-cyan">
+        <div class="box-lbl lbl-teal">규칙 Rule</div>
+        <div style="font-size:13px;line-height:2;color:var(--navy);">
+          ① <strong>첫 번째</strong> (1st) is irregular — NOT 한 번째<br>
+          ② 2nd–4th use <strong>shortened forms</strong>: 둘→두, 셋→세, 넷→네<br>
+          ③ 5th and beyond: use <strong>full Native Korean</strong> number + 번째
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="sub-lbl">Examples in Context</div>
+      <table class="data-table">
+        <thead><tr><th>Ordinal</th><th>Korean</th><th>Example sentence</th></tr></thead>
+        <tbody>
+          <tr><td class="td-num">1st</td><td class="td-ko">첫 번째</td><td class="td-pr">첫 번째 문제예요</td></tr>
+          <tr><td class="td-num">2nd</td><td class="td-ko">두 번째</td><td class="td-pr">두 번째 줄에 앉아요</td></tr>
+          <tr><td class="td-num">3rd</td><td class="td-ko">세 번째</td><td class="td-pr">세 번째 문을 열어요</td></tr>
+          <tr><td class="td-num">10th</td><td class="td-ko">열 번째</td><td class="td-pr">열 번째 생일이에요</td></tr>
+          <tr><td class="td-num">last</td><td class="td-ko">마지막</td><td class="td-pr">마지막 기회예요</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ ⑥ PHONE ══════════ -->
+<section class="section" id="tab-phone">
+  <div class="sec-header sh-purple">⑥ Phone Numbers &amp; Reading Digits (전화번호)</div>
+  <div class="two-col">
+    <div>
+      <div class="sub-lbl">읽는 법 — Read each digit individually</div>
+      <div class="phone-ex">
+        <div class="phone-num">010-2345-6789</div>
+        <div class="phone-read">공 일 공 · 이 삼 사 오 · 육 칠 팔 구</div>
+        <div class="phone-note">Each digit said separately, NOT as a full number</div>
+      </div>
+      <div class="phone-ex">
+        <div class="phone-num">02-213-1112</div>
+        <div class="phone-read">공 이 · 이 일 삼 · 일 일 일 이</div>
+        <div class="phone-note">이(2) vs 일(1) — pause between digits!</div>
+      </div>
+      <div class="box box-purple" style="margin-top:12px;">
+        <div class="box-lbl lbl-purple">💡 이 vs 일 Confusion Tip</div>
+        <table class="data-table" style="font-size:12px;"><tbody>
+          <tr><td style="padding:5px 8px;color:var(--muted);">Confusing:</td><td class="td-ko-sm" style="color:var(--coral);">213 → 이일삼?</td></tr>
+          <tr><td style="padding:5px 8px;color:var(--muted);">Clear:</td><td class="td-ko-sm" style="color:var(--teal);">이 · 일 · 삼 (pause!)</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+    <div>
+      <div class="sub-lbl">영 vs 공 for Zero</div>
+      <div class="zero-row">
+        <div class="zero-item">
+          <div class="zero-ko" style="color:var(--teal);">영</div>
+          <div class="zero-when">Math / scores / scientific</div>
+          <div class="zero-ex">영 대 영 (0:0)</div>
+          <div class="zero-ex">영하 오도 (−5°C)</div>
+        </div>
+        <div class="zero-item">
+          <div class="zero-ko" style="color:var(--purple);">공</div>
+          <div class="zero-when">Phone / room / ID numbers</div>
+          <div class="zero-ex">공일공-xxxx</div>
+        </div>
+      </div>
+      <div class="sub-lbl" style="margin-top:18px;">Other Contexts</div>
+      <table class="data-table">
+        <thead><tr><th>Context</th><th>Example</th><th>Reading</th></tr></thead>
+        <tbody>
+          <tr><td>Room number</td><td class="td-ko-sm">305호</td><td class="td-pr">삼공오 호</td></tr>
+          <tr><td>Price</td><td class="td-ko-sm">5,500원</td><td class="td-pr">오천오백 원</td></tr>
+          <tr><td>Year</td><td class="td-ko-sm">2025년</td><td class="td-pr">이천이십오 년</td></tr>
+          <tr><td>Date</td><td class="td-ko-sm">3월 15일</td><td class="td-pr">삼월 십오일</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ ⑦ PRONUNCIATION ══════════ -->
+<section class="section" id="tab-pron">
+  <div class="sec-header sh-purple">⑦ Special Pronunciation Rules (발음 규칙)</div>
+  <div class="two-col">
+    <div>
+      <div class="pron-r">
+        <div class="pron-t">① 십육 (16) — ㄴ 첨가</div>
+        <div class="pron-f">십육 <span class="pron-sep">→</span> 십뉵 <span class="pron-sep">→</span> <span class="pron-fin">[심뉵]</span></div>
+      </div>
+      <div class="pron-r">
+        <div class="pron-t">② 육십육 (66) — 경음화</div>
+        <div class="pron-f">육십육 <span class="pron-sep">→</span> <span class="pron-fin">[육씹뉵]</span></div>
+      </div>
+      <div class="pron-r">
+        <div class="pron-t">③ 6월 · 10월 — 예외 발음</div>
+        <div class="pron-f">
+          <span style="color:var(--coral);">6월</span> <span class="pron-sep">→</span> <span class="pron-fin">[유월]</span>
+          &nbsp;&nbsp;
+          <span style="color:var(--coral);">10월</span> <span class="pron-sep">→</span> <span class="pron-fin">[시월]</span>
+        </div>
+        <div class="pron-note">육월 ✗ · 십월 ✗</div>
+      </div>
+      <div class="pron-r">
+        <div class="pron-t">④ 특수 예외</div>
+        <div class="pron-note">오뉴월 (오 + 유월 → 오뉴월)</div>
+        <div class="pron-note" style="margin-top:4px;">6600 → 육천육백육십 → <span style="color:var(--purple);font-weight:700;">[육천뉵뱅뉵씹]</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="sub-lbl">Common Mistakes by Foreigners</div>
+      <div class="tricky">
+        <div class="tricky-t">❌ 이십 살 (age 20)</div>
+        <div class="tricky-ko"><span style="color:var(--coral);">이십 살 ✗</span> → <span style="color:var(--teal);">스무 살 ✔</span></div>
+        <div class="tricky-note">Age under 100 → always Native Korean (살)</div>
+      </div>
+      <div class="tricky">
+        <div class="tricky-t">❌ 한 시 삼십 분 → shortcut</div>
+        <div class="tricky-ko"><span style="color:var(--teal);">한 시 반 ✔</span></div>
+        <div class="tricky-note">반(半) = 30 minutes — much more natural in speech!</div>
+      </div>
+      <div class="tricky">
+        <div class="tricky-t">❌ Using 개 for people</div>
+        <div class="tricky-ko"><span style="color:var(--coral);">사람 두 개 ✗</span> → <span style="color:var(--teal);">두 명 ✔</span></div>
+        <div class="tricky-note">개 = objects only / 명 = people / 마리 = animals</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ ✏ PRACTICE ══════════ -->
+<section class="section" id="tab-practice">
+  <div class="sec-header sh-slate">✏ Mini Practice</div>
+  <div class="prac-grid">
+    <div>
+      <div class="prac-item"><span class="pq">4시</span><div class="pb"></div></div>
+      <div class="prac-item"><span class="pq">45분</span><div class="pb"></div></div>
+      <div class="prac-item"><span class="pq">사과 3개</span><div class="pb"></div></div>
+      <div class="prac-item"><span class="pq">6월</span><div class="pb"></div></div>
+      <div class="prac-item"><span class="pq">나이 20</span><div class="pb"></div></div>
+    </div>
+    <div>
+      <div class="prac-item"><span class="pq">3:30</span><div class="pb"></div></div>
+      <div class="prac-item"><span class="pq">010-5566</span><div class="pb"></div></div>
+      <div class="prac-item"><span class="pq">쉰두 살</span><div class="pb"></div></div>
+      <div class="prac-item"><span class="pq">첫 번째</span><div class="pb"></div></div>
+      <div class="prac-item"><span class="pq">스물</span><div class="pb"></div></div>
+    </div>
+  </div>
+  <div class="link-box">
+    <p style="color:#94A3B8;font-size:10px;margin-bottom:5px;">MORE PRACTICE</p>
+    <a href="https://hanim-korean.github.io/korean-lessons/numbers/Korean-Numbers-Flashcards2.html" target="_blank" rel="noopener">🃏 Open Interactive Flashcards →</a>
+    <p>40 cards · Sino / Native / Time / Age / Phone / Ordinal · keyboard shortcuts</p>
+  </div>
+</section>
+
+</main>
+
+<footer>Korean Number System · by Hanim Lee · 한국어 수 체계</footer>
+
+<script>
+  const tabs = document.querySelectorAll('.nav-tab');
+  const sections = document.querySelectorAll('.section');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      sections.forEach(s => s.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
