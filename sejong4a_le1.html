@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>한국어 감정</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Helvetica Neue', 'Apple SD Gothic Neo', sans-serif;
+    background: linear-gradient(135deg, #fef3e7 0%, #fce4ec 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 20px;
+  }
+
+  h1 {
+    color: #d4527e;
+    font-size: 28px;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+
+  .subtitle {
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .progress {
+    color: #d4527e;
+    font-weight: 600;
+    margin-bottom: 16px;
+    font-size: 16px;
+  }
+
+  .card-container {
+    perspective: 1000px;
+    width: 100%;
+    max-width: 380px;
+    height: 480px;
+    margin-bottom: 24px;
+  }
+
+  .card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+    cursor: pointer;
+  }
+
+  .card.flipped {
+    transform: rotateY(180deg);
+  }
+
+  .card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: white;
+  }
+
+  .card-front {
+    border: 3px solid #ffb6c1;
+  }
+
+  .card-back {
+    transform: rotateY(180deg);
+    border: 3px solid #b39ddb;
+    background: linear-gradient(135deg, #fff 0%, #f8f0ff 100%);
+  }
+
+  .card-label {
+    font-size: 12px;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+  }
+
+  .word {
+    font-size: 32px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  .context-sentence {
+    font-size: 17px;
+    line-height: 1.7;
+    color: #444;
+    background: #fef9f5;
+    padding: 16px;
+    border-radius: 12px;
+    border-left: 3px solid #ffb6c1;
+    margin-bottom: 16px;
+  }
+
+  .guess-prompt {
+    font-size: 14px;
+    color: #d4527e;
+    text-align: center;
+    margin-top: auto;
+    font-style: italic;
+  }
+
+  .meaning-en {
+    font-size: 18px;
+    color: #6a4c93;
+    font-weight: 600;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+
+  .meaning-detail {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.6;
+    background: #f3edff;
+    padding: 14px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+  }
+
+  .example {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 6px;
+  }
+
+  .example strong {
+    color: #d4527e;
+  }
+
+  .controls {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 380px;
+  }
+
+  button {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .btn-prev, .btn-next {
+    background: white;
+    color: #d4527e;
+    border: 2px solid #ffb6c1;
+  }
+
+  .btn-prev:hover, .btn-next:hover {
+    background: #ffb6c1;
+    color: white;
+    transform: translateY(-2px);
+  }
+
+  .btn-prev:disabled, .btn-next:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .btn-shuffle {
+    background: #b39ddb;
+    color: white;
+  }
+
+  .btn-shuffle:hover {
+    background: #9575cd;
+    transform: translateY(-2px);
+  }
+
+  .hint {
+    text-align: center;
+    color: #999;
+    font-size: 13px;
+    margin-top: 8px;
+  }
+
+  .category-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    align-self: center;
+  }
+
+  .tag-emotion { background: #ffe0e9; color: #d4527e; }
+  .tag-grammar { background: #e1d5f5; color: #6a4c93; }
+  .tag-pronunciation { background: #d5f5e1; color: #2d8659; }
+</style>
+</head>
+<body>
+  <h1>한국어 감정 복습하기</h1>
+  <p class="subtitle">세종학당 4A 1과 & 감정 복습</p>
+  <div class="progress" id="progress">1 / 12</div>
+
+  <div class="card-container">
+    <div class="card" id="card" onclick="flipCard()">
+      <div class="card-face card-front">
+        <span class="category-tag" id="frontTag">감정 어휘</span>
+        <div class="card-label">한국어 / Korean</div>
+        <div class="word" id="wordKo">쓰라리다</div>
+        <div class="context-sentence" id="contextSentence">
+          어제 길에서 넘어져서 무릎이 까졌어요. 너무 <strong>쓰라려요</strong>.
+        </div>
+        <div class="guess-prompt">💭 What feeling do you think this is?<br>(Tap card to flip)</div>
+      </div>
+
+      <div class="card-face card-back">
+        <span class="category-tag" id="backTag">감정 어휘</span>
+        <div class="card-label">의미 / Meaning</div>
+        <div class="meaning-en" id="meaningEn">stinging pain</div>
+        <div class="meaning-detail" id="meaningDetail">
+          The kind of sharp, burning pain you feel from a scrape, paper cut, or salty food on a wound.
+        </div>
+        <div class="example" id="example1"><strong>예) </strong>입안이 헐어서 쓰라려요.</div>
+        <div class="example" id="example2"><strong>예) </strong>손에 알코올이 닿으니까 너무 쓰라려요.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn-prev" id="btnPrev" onclick="prevCard()">← 이전</button>
+    <button class="btn-shuffle" onclick="shuffleCards()">🔀 섞기</button>
+    <button class="btn-next" id="btnNext" onclick="nextCard()">다음 →</button>
+  </div>
+
+  <p class="hint">💡 카드를 누르면 뒤집혀요 · Tap card to flip</p>
+
+<script>
+  const cards = [
+    {
+      tag: '감정 어휘', tagClass: 'tag-emotion',
+      ko: '쓰라리다',
+      context: '어제 길에서 넘어져서 무릎이 까졌어요. 너무 <strong>쓰라려요</strong>.',
+      en: 'stinging pain',
+      detail: 'The kind of sharp, burning pain you feel from a scrape, paper cut, or salty food on a wound.',
+      ex1: '입안이 헐어서 쓰라려요.',
+      ex2: '손에 알코올이 닿으니까 너무 쓰라려요.'
+    },
+    {
+      tag: '감정 어휘', tagClass: 'tag-emotion',
+      ko: '막막하다',
+      context: '시험이 너무 어려워서 <strong>막막했어요</strong>. 어디서부터 시작해야 할지 몰랐어요.',
+      en: 'overwhelmed, at a loss',
+      detail: 'A feeling of "I don\'t know what to do, where to start, or how to move forward." Like staring at a blank wall.',
+      ex1: '직장을 잃어서 앞이 막막해요.',
+      ex2: '한국어 단어가 너무 많아서 막막해요.'
+    },
+    {
+      tag: '감정 어휘', tagClass: 'tag-emotion',
+      ko: '서운하다',
+      context: '친구가 갑자기 약속을 취소해서 정말 <strong>서운했어요</strong>.',
+      en: 'disappointed, hurt feelings',
+      detail: 'Hurt feelings somewhere between sad and let down — usually because someone you care about did/didn\'t do something. Very common in Korean relationships!',
+      ex1: '생일을 잊어버려서 서운했어요.',
+      ex2: '말 안 해줘서 좀 서운해.'
+    },
+    {
+      tag: '감정 어휘', tagClass: 'tag-emotion',
+      ko: '답답하다',
+      context: '한국말로 설명하고 싶은데 단어가 생각 안 나서 <strong>답답해요</strong>.',
+      en: 'frustrated, stuffy',
+      detail: 'A "stuck" feeling — frustration when you can\'t express yourself, or a literal stuffy/stifling feeling. Very useful for language learners!',
+      ex1: '말이 안 통해서 답답해요.',
+      ex2: '방이 좁아서 답답해요.'
+    },
+    {
+      tag: '감정 어휘', tagClass: 'tag-emotion',
+      ko: '신기하다',
+      context: '한국 편의점에 음식이 너무 많아요. 정말 <strong>신기해요</strong>!',
+      en: 'fascinating, amazing',
+      detail: 'When something is novel, surprising, and cool all at once. Use this when something blows your mind a little.',
+      ex1: '한국 지하철이 너무 신기해요.',
+      ex2: '아이돌 무대가 정말 신기했어요.'
+    },
+    {
+      tag: '감정 어휘', tagClass: 'tag-emotion',
+      ko: '걱정되다',
+      context: '내일 시험이 있어서 너무 <strong>걱정돼요</strong>.',
+      en: 'to be worried',
+      detail: 'The state of worrying about something. Different from 걱정하다 (the active "to worry") — 걱정되다 is what you naturally feel.',
+      ex1: '엄마가 아파서 걱정돼요.',
+      ex2: '한국에 처음 가는 거라서 걱정돼요.'
+    },
+    {
+      tag: '문법', tagClass: 'tag-grammar',
+      ko: '-치고 (의미 1)',
+      context: '사비나 씨는 모델<strong>치고</strong> 키가 크지 않은 편이에요.',
+      en: '"For a ___, ..." (exception)',
+      detail: 'Used to say something is unusual or exceptional for its category. Attached to nouns.',
+      ex1: '5월치고 너무 추워요.',
+      ex2: '신입사원치고 일을 잘하네요.'
+    },
+    {
+      tag: '문법', tagClass: 'tag-grammar',
+      ko: '-치고 (의미 2)',
+      context: '동물을 좋아하는 사람<strong>치고</strong> 착하지 않은 사람이 없다.',
+      en: '"There\'s no ___ that doesn\'t..."',
+      detail: 'Used with negative verb to mean "every single one is..." — no exceptions exist.',
+      ex1: '아이치고 사탕을 안 좋아하는 아이가 없어요.',
+      ex2: 'K-pop 팬치고 BTS를 모르는 사람이 없어요.'
+    },
+    {
+      tag: '문법', tagClass: 'tag-grammar',
+      ko: '-는다면서(요)?',
+      context: '미나 씨, 다음 달에 한국에 <strong>간다면서요</strong>?',
+      en: '"I heard you ___, right?"',
+      detail: 'Used to confirm something you heard from someone else. Like "I heard ___, is that true?"',
+      ex1: '새 카페가 맛있다면서요?',
+      ex2: '민호 씨가 선생님이라면서요?'
+    },
+    {
+      tag: '문법 / ㅂ 불규칙', tagClass: 'tag-grammar',
+      ko: '무덥다 → 무더운',
+      context: '여름에는 날씨가 정말 <strong>무더워요</strong>.',
+      en: 'humid + hot (modifier: 무더운)',
+      detail: 'ㅂ irregular: when ㅂ meets a vowel, it becomes 우. So 무덥다 + 은 = 무더운 (humid weather).',
+      ex1: '무더운 여름에는 수박이 최고예요.',
+      ex2: '어제는 정말 무더웠어요.'
+    }
+  ];
+
+  let currentIndex = 0;
+  let isFlipped = false;
+
+  function renderCard() {
+    const card = cards[currentIndex];
+    document.getElementById('wordKo').textContent = card.ko;
+    document.getElementById('contextSentence').innerHTML = card.context;
+    document.getElementById('meaningEn').textContent = card.en;
+    document.getElementById('meaningDetail').textContent = card.detail;
+    document.getElementById('example1').innerHTML = '<strong>예) </strong>' + card.ex1;
+    document.getElementById('example2').innerHTML = '<strong>예) </strong>' + card.ex2;
+
+    const frontTag = document.getElementById('frontTag');
+    const backTag = document.getElementById('backTag');
+    frontTag.textContent = card.tag;
+    backTag.textContent = card.tag;
+    frontTag.className = 'category-tag ' + card.tagClass;
+    backTag.className = 'category-tag ' + card.tagClass;
+
+    document.getElementById('progress').textContent = (currentIndex + 1) + ' / ' + cards.length;
+    document.getElementById('btnPrev').disabled = currentIndex === 0;
+    document.getElementById('btnNext').disabled = currentIndex === cards.length - 1;
+
+    const cardEl = document.getElementById('card');
+    cardEl.classList.remove('flipped');
+    isFlipped = false;
+  }
+
+  function flipCard() {
+    const cardEl = document.getElementById('card');
+    cardEl.classList.toggle('flipped');
+    isFlipped = !isFlipped;
+  }
+
+  function nextCard() {
+    if (currentIndex < cards.length - 1) {
+      currentIndex++;
+      renderCard();
+    }
+  }
+
+  function prevCard() {
+    if (currentIndex > 0) {
+      currentIndex--;
+      renderCard();
+    }
+  }
+
+  function shuffleCards() {
+    for (let i = cards.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [cards[i], cards[j]] = [cards[j], cards[i]];
+    }
+    currentIndex = 0;
+    renderCard();
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') nextCard();
+    else if (e.key === 'ArrowLeft') prevCard();
+    else if (e.key === ' ') { e.preventDefault(); flipCard(); }
+  });
+
+  renderCard();
+</script>
+</body>
+</html>

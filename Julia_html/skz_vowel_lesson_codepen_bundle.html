@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SKZ 기본 모음 미션</title>
+  <style>
+    :root{
+      --bg:#fffafc;
+      --card:#ffffff;
+      --line:#eadff3;
+      --text:#2f2240;
+      --sub:#6d5d82;
+      --purple:#8d73ff;
+      --purple2:#f1edff;
+      --pink:#ff7cab;
+      --pink2:#ffe8f1;
+      --blue:#50a7ff;
+      --blue2:#eaf5ff;
+      --green:#2fb171;
+      --green2:#e8fff4;
+      --yellow:#ffca57;
+      --yellow2:#fff7df;
+      --danger:#e85b6a;
+      --danger2:#ffe9ec;
+      --shadow:0 10px 24px rgba(95,64,145,.08);
+      --radius:20px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Inter, Pretendard, "Noto Sans KR", Arial, sans-serif;
+      background:linear-gradient(180deg,#fff8fb 0%, #f7f4ff 100%);
+      color:var(--text);
+    }
+    .app{max-width:1100px;margin:0 auto;padding:20px 16px 80px}
+    .hero{
+      background:linear-gradient(135deg,#8d73ff 0%, #ff7cab 100%);
+      color:#fff;border-radius:28px;padding:24px;box-shadow:var(--shadow);
+    }
+    .hero h1{margin:0 0 8px;font-size:34px;line-height:1.15}
+    .hero p{margin:0;opacity:.95;line-height:1.6}
+    .hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;align-items:center}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+    .chip{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);padding:7px 12px;border-radius:999px;font-size:13px}
+    .scorebox{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);padding:16px;border-radius:22px;text-align:center}
+    .scorebox .big{font-size:40px;font-weight:800;margin:8px 0}
+    .toolbar{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 6px}
+    button{
+      border:0;border-radius:999px;padding:11px 16px;font-weight:700;cursor:pointer;
+      color:var(--text);background:#fff;box-shadow:var(--shadow)
+    }
+    button.primary{background:var(--purple);color:#fff}
+    button.blue{background:var(--blue);color:#fff}
+    button.green{background:var(--green);color:#fff}
+    button.pink{background:var(--pink);color:#fff}
+    button.ghost{background:#fff;border:1px solid var(--line);box-shadow:none}
+    .layout{display:grid;grid-template-columns:repeat(12,1fr);gap:16px;margin-top:18px}
+    .card{
+      grid-column:span 12;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+      padding:20px;box-shadow:var(--shadow)
+    }
+    .half{grid-column:span 6}
+    .third{grid-column:span 4}
+    .title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+    .title h2{margin:0;font-size:22px}
+    .tag{font-size:12px;font-weight:800;padding:6px 10px;border-radius:999px}
+    .t-purple{background:var(--purple2);color:#6f56ea}
+    .t-blue{background:var(--blue2);color:#1d7fe1}
+    .t-pink{background:var(--pink2);color:#d94f84}
+    .t-green{background:var(--green2);color:#208a59}
+    .sub{color:var(--sub);font-size:14px;line-height:1.6}
+    .vowel-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:12px}
+    .vowel{
+      border:2px solid var(--line);border-radius:18px;padding:14px 8px;text-align:center;background:#fff;
+      transition:.18s transform, .18s border-color, .18s background
+    }
+    .vowel:hover{transform:translateY(-2px);border-color:#cbb6ff;background:#fcfaff}
+    .vowel .char{font-size:34px;font-weight:800;line-height:1.1}
+    .vowel .roman{font-size:12px;color:var(--sub);margin-top:4px}
+    .vowel .hint{font-size:12px;color:#7b67af;margin-top:4px}
+    .shape-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+    .shape{
+      border-radius:18px;padding:14px;background:#fbf9ff;border:1px solid var(--line);line-height:1.6
+    }
+    .shape strong{font-size:18px}
+    .big-demo{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}
+    .demo-btn{min-width:88px}
+    .demo-view{
+      margin-top:14px;padding:22px;border-radius:22px;background:#fcfbff;border:2px dashed #d8cbff;text-align:center
+    }
+    .demo-char{font-size:96px;font-weight:900;line-height:1}
+    .demo-text{margin-top:10px;font-size:20px;font-weight:800}
+    .gesture{font-size:38px;margin-top:10px}
+    .skz-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
+    .member{border:1px solid var(--line);border-radius:18px;padding:14px;background:#fff}
+    .member h3{margin:0 0 6px;font-size:20px}
+    .member p{margin:0;color:var(--sub);line-height:1.55;font-size:14px}
+    .member .hl{color:#7057ec;font-weight:800}
+    .mission-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    .quiz{border:1px solid var(--line);border-radius:18px;padding:16px;background:#fff}
+    .quiz h3{margin:0 0 8px;font-size:18px}
+    .options{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    .opt{padding:10px 14px;border-radius:14px;background:#f8f6fe;border:1px solid var(--line);cursor:pointer;font-weight:800}
+    .opt.correct{background:var(--green2);border-color:#93e0b9;color:#18814f}
+    .opt.wrong{background:var(--danger2);border-color:#ffb0ba;color:#c64555}
+    .opt.lock{pointer-events:none;opacity:.95}
+    .fb{display:none;margin-top:10px;padding:10px 12px;border-radius:14px;font-size:14px;font-weight:700}
+    .fb.show{display:block}
+    .fb.ok{background:var(--green2);color:#197949}
+    .fb.no{background:var(--danger2);color:#c64555}
+    .sound-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+    .sound{padding:14px 18px;border-radius:16px;background:#fff;border:1px solid var(--line);font-size:20px;font-weight:800;cursor:pointer}
+    .sound.active{background:#f2edff;border-color:#b8a6ff}
+    .match-wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .match-col{background:#fcfbff;border:1px solid var(--line);border-radius:18px;padding:14px}
+    .match-col h3{margin:0 0 10px;font-size:16px}
+    .match-btn{display:block;width:100%;margin-bottom:8px;padding:12px;border-radius:14px;background:#fff;border:1px solid var(--line);font-size:18px;font-weight:800;cursor:pointer}
+    .match-btn.selected{background:#f2edff;border-color:#b9a8ff}
+    .match-btn.done{background:var(--green2);border-color:#93e0b9;color:#177a49;cursor:default}
+    .result{margin-top:12px;font-weight:800;color:#6f56ea}
+    .teacher-box{background:#fff8e6;border:1px solid #ffe19b;border-radius:18px;padding:16px;line-height:1.7}
+    .teacher-box h3{margin:0 0 8px}
+    .teacher-box strong{color:#a26a00}
+    .ppt-list{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .slide{border:1px solid var(--line);border-radius:18px;padding:14px;background:#fff}
+    .slide b{display:block;margin-bottom:6px}
+    .footer{margin-top:18px;color:var(--sub);font-size:13px;line-height:1.6}
+    .hidden{display:none}
+    @media (max-width:900px){
+      .hero-grid,.mission-grid,.match-wrap,.shape-list,.skz-grid,.ppt-list{grid-template-columns:1fr}
+      .half,.third{grid-column:span 12}
+      .vowel-grid{grid-template-columns:repeat(3,1fr)}
+      .hero h1{font-size:28px}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <h1>🎤 Stray Kids와 배우는 기본 모음 미션</h1>
+          <p>온라인 수업용 클릭형 한국어 학습 페이지예요. 클릭하면서 배우고, 점수를 모으고, 몸동작으로 기억해요.</p>
+          <div class="chips">
+            <span class="chip">오늘 목표: ㅏ ㅓ ㅗ ㅜ ㅡ ㅣ</span>
+            <span class="chip">온라인 수업 최적화</span>
+            <span class="chip">Only for Julia 줄리아</span>
+          </div>
+        </div>
+        <div class="scorebox">
+          <div>🌟 SCORE</div>
+          <div class="big" id="score">0</div>
+          <div>정답마다 점수가 올라가요!</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="toolbar">
+      <button class="primary" onclick="scrollToId('lesson')">수업 시작</button>
+      <button class="blue" onclick="scrollToId('missions')">퀴즈로 가기</button>
+      <button class="pink" onclick="playRandomCheer()">응원 받기</button>
+      <button class="ghost" onclick="resetAll()">전체 리셋</button>
+    </div>
+
+    <section class="layout" id="lesson">
+      <div class="card half">
+        <div class="title"><h2>1. 기본 모음 보기</h2><span class="tag t-purple">INTRO</span></div>
+        <p class="sub">먼저 6개만 배우면 충분해요. 짧게 보고, 바로 게임으로 넘어가요.</p>
+        <div class="vowel-grid">
+          <div class="vowel"><div class="char">ㅏ</div><div class="roman">a</div><div class="hint">아!</div></div>
+          <div class="vowel"><div class="char">ㅓ</div><div class="roman">eo</div><div class="hint">어!</div></div>
+          <div class="vowel"><div class="char">ㅗ</div><div class="roman">o</div><div class="hint">오!</div></div>
+          <div class="vowel"><div class="char">ㅜ</div><div class="roman">u</div><div class="hint">우!</div></div>
+          <div class="vowel"><div class="char">ㅡ</div><div class="roman">eu</div><div class="hint">으!</div></div>
+          <div class="vowel"><div class="char">ㅣ</div><div class="roman">i</div><div class="hint">이!</div></div>
+        </div>
+      </div>
+
+      <div class="card half">
+        <div class="title"><h2>2. 기억하는 방법</h2><span class="tag t-blue">BODY HINT</span></div>
+        <div class="shape-list">
+          <div class="shape"><strong>ㅏ</strong> → 오른쪽 👉<br>세로선 + 오른쪽 가지</div>
+          <div class="shape"><strong>ㅓ</strong> → 왼쪽 👈<br>세로선 + 왼쪽 가지</div>
+          <div class="shape"><strong>ㅗ</strong> → 위 ☝️<br>가로선 + 위 가지</div>
+          <div class="shape"><strong>ㅜ</strong> → 아래 👇<br>가로선 + 아래 가지</div>
+          <div class="shape"><strong>ㅡ</strong> → 가로 ➖<br>누워 있어요</div>
+          <div class="shape"><strong>ㅣ</strong> → 세로 │<br>서 있어요</div>
+        </div>
+      </div>
+
+      <div class="card half">
+        <div class="title"><h2>3. 클릭 데모</h2><span class="tag t-pink">CLICK & SAY</span></div>
+        <p class="sub">교사가 화면 공유 후 클릭하면 학생이 바로 따라 말할 수 있어요.</p>
+        <div class="big-demo">
+          <button class="demo-btn" onclick="showDemo('ㅏ','아! 오른쪽!','👉')">ㅏ</button>
+          <button class="demo-btn" onclick="showDemo('ㅓ','어! 왼쪽!','👈')">ㅓ</button>
+          <button class="demo-btn" onclick="showDemo('ㅗ','오! 위!','☝️')">ㅗ</button>
+          <button class="demo-btn" onclick="showDemo('ㅜ','우! 아래!','👇')">ㅜ</button>
+          <button class="demo-btn" onclick="showDemo('ㅡ','으! 가로!','➖')">ㅡ</button>
+          <button class="demo-btn" onclick="showDemo('ㅣ','이! 세로!','│')">ㅣ</button>
+        </div>
+        <div class="demo-view" id="demoView">
+          <div class="demo-char">ㅏ</div>
+          <div class="demo-text">아! 오른쪽!</div>
+          <div class="gesture">👉</div>
+        </div>
+      </div>
+
+      <div class="card half">
+        <div class="title"><h2>4. Stray Kids 이름에서 찾기</h2><span class="tag t-green">SKZ</span></div>
+        <div class="skz-grid">
+          <div class="member"><h3>방찬</h3><p><span class="hl">찬 → ㅏ</span><br>오른쪽 가지!</p></div>
+          <div class="member"><h3>리노</h3><p><span class="hl">노 → ㅗ</span><br>위로 올라가요!</p></div>
+          <div class="member"><h3>현진</h3><p><span class="hl">현 → ㅕ</span><br>왼쪽 가지가 두 개예요.</p></div>
+          <div class="member"><h3>창빈</h3><p><span class="hl">창 → ㅏ, 빈 → ㅣ</span><br>두 모음을 함께 찾아요.</p></div>
+          <div class="member"><h3>필릭스</h3><p><span class="hl">필 → ㅣ</span><br>세로선 모음!</p></div>
+          <div class="member"><h3>승민</h3><p><span class="hl">승 → ㅡ</span><br>가로선만 있어요.</p></div>
+          <div class="member"><h3>한</h3><p><span class="hl">한 → ㅏ</span><br>짧고 쉬운 예시!</p></div>
+          <div class="member"><h3>아이엔</h3><p><span class="hl">아 → ㅏ / 이 → ㅣ</span><br>두 모음 바로 찾기!</p></div>
+        </div>
+      </div>
+
+      <div class="card third">
+        <div class="title"><h2>5. 소리 버튼</h2><span class="tag t-blue">SOUND</span></div>
+        <p class="sub">TTS 없이도 teacher call-and-response 용으로 써요.</p>
+        <div class="sound-row">
+          <button class="sound" onclick="speakKor('아')">아</button>
+          <button class="sound" onclick="speakKor('어')">어</button>
+          <button class="sound" onclick="speakKor('오')">오</button>
+          <button class="sound" onclick="speakKor('우')">우</button>
+          <button class="sound" onclick="speakKor('으')">으</button>
+          <button class="sound" onclick="speakKor('이')">이</button>
+        </div>
+      </div>
+
+      <div class="card third">
+        <div class="title"><h2>6. 빠른 읽기</h2><span class="tag t-purple">READ</span></div>
+        <p class="sub">학생과 같이 리듬 있게 읽어요.</p>
+        <div class="sound-row">
+          <button class="sound" onclick="speakKor('우유')">우유</button>
+          <button class="sound" onclick="speakKor('아이')">아이</button>
+          <button class="sound" onclick="speakKor('오이')">오이</button>
+          <button class="sound" onclick="speakKor('여우')">여우</button>
+          <button class="sound" onclick="speakKor('이')">이</button>
+          <button class="sound" onclick="speakKor('오')">오</button>
+        </div>
+      </div>
+
+      <div class="card third">
+        <div class="title"><h2>7. 움직임 미션</h2><span class="tag t-pink">MOVE</span></div>
+        <p class="sub">교사가 읽으면 학생이 손동작을 해요.</p>
+        <div class="teacher-box">
+          <strong>예시</strong><br>
+          ㅏ → 오른쪽 손<br>
+          ㅓ → 왼쪽 손<br>
+          ㅗ → 손 위로<br>
+          ㅜ → 손 아래로<br>
+          ㅡ → 팔 가로<br>
+          ㅣ → 몸 세로
+        </div>
+      </div>
+
+      <div class="card" id="missions">
+        <div class="title"><h2>8. 퀴즈 미션</h2><span class="tag t-green">GAME</span></div>
+        <div class="mission-grid">
+          <div class="quiz" id="q1">
+            <h3>Q1. “찬”의 모음은?</h3>
+            <div class="options">
+              <div class="opt" onclick="answer('q1', this, false)">ㅓ</div>
+              <div class="opt" onclick="answer('q1', this, true)">ㅏ</div>
+              <div class="opt" onclick="answer('q1', this, false)">ㅜ</div>
+              <div class="opt" onclick="answer('q1', this, false)">ㅡ</div>
+            </div>
+            <div class="fb" id="q1fb"></div>
+          </div>
+          <div class="quiz" id="q2">
+            <h3>Q2. 아래로 내려가는 모음은?</h3>
+            <div class="options">
+              <div class="opt" onclick="answer('q2', this, false)">ㅗ</div>
+              <div class="opt" onclick="answer('q2', this, true)">ㅜ</div>
+              <div class="opt" onclick="answer('q2', this, false)">ㅏ</div>
+              <div class="opt" onclick="answer('q2', this, false)">ㅣ</div>
+            </div>
+            <div class="fb" id="q2fb"></div>
+          </div>
+          <div class="quiz" id="q3">
+            <h3>Q3. “노”의 모음은?</h3>
+            <div class="options">
+              <div class="opt" onclick="answer('q3', this, false)">ㅜ</div>
+              <div class="opt" onclick="answer('q3', this, true)">ㅗ</div>
+              <div class="opt" onclick="answer('q3', this, false)">ㅡ</div>
+              <div class="opt" onclick="answer('q3', this, false)">ㅓ</div>
+            </div>
+            <div class="fb" id="q3fb"></div>
+          </div>
+          <div class="quiz" id="q4">
+            <h3>Q4. “승”의 모음은?</h3>
+            <div class="options">
+              <div class="opt" onclick="answer('q4', this, false)">ㅣ</div>
+              <div class="opt" onclick="answer('q4', this, true)">ㅡ</div>
+              <div class="opt" onclick="answer('q4', this, false)">ㅗ</div>
+              <div class="opt" onclick="answer('q4', this, false)">ㅏ</div>
+            </div>
+            <div class="fb" id="q4fb"></div>
+          </div>
+          <div class="quiz" id="q5">
+            <h3>Q5. 세로선만 있는 모음은?</h3>
+            <div class="options">
+              <div class="opt" onclick="answer('q5', this, true)">ㅣ</div>
+              <div class="opt" onclick="answer('q5', this, false)">ㅡ</div>
+              <div class="opt" onclick="answer('q5', this, false)">ㅗ</div>
+              <div class="opt" onclick="answer('q5', this, false)">ㅏ</div>
+            </div>
+            <div class="fb" id="q5fb"></div>
+          </div>
+          <div class="quiz" id="q6">
+            <h3>Q6. “아이”에 있는 모음은?</h3>
+            <div class="options">
+              <div class="opt" onclick="answer('q6', this, false)">ㅓ + ㅜ</div>
+              <div class="opt" onclick="answer('q6', this, true)">ㅏ + ㅣ</div>
+              <div class="opt" onclick="answer('q6', this, false)">ㅗ + ㅡ</div>
+              <div class="opt" onclick="answer('q6', this, false)">ㅣ + ㅜ</div>
+            </div>
+            <div class="fb" id="q6fb"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card half">
+        <div class="title"><h2>9. 매칭 게임</h2><span class="tag t-purple">MATCH</span></div>
+        <p class="sub">왼쪽을 하나, 오른쪽을 하나 눌러서 연결해요.</p>
+        <div class="match-wrap">
+          <div class="match-col">
+            <h3>모음</h3>
+            <button class="match-btn" data-side="left" data-id="a" onclick="pickMatch(this)">ㅏ</button>
+            <button class="match-btn" data-side="left" data-id="eo" onclick="pickMatch(this)">ㅓ</button>
+            <button class="match-btn" data-side="left" data-id="o" onclick="pickMatch(this)">ㅗ</button>
+            <button class="match-btn" data-side="left" data-id="u" onclick="pickMatch(this)">ㅜ</button>
+            <button class="match-btn" data-side="left" data-id="eu" onclick="pickMatch(this)">ㅡ</button>
+            <button class="match-btn" data-side="left" data-id="i" onclick="pickMatch(this)">ㅣ</button>
+          </div>
+          <div class="match-col">
+            <h3>소리</h3>
+            <button class="match-btn" data-side="right" data-id="u" onclick="pickMatch(this)">우</button>
+            <button class="match-btn" data-side="right" data-id="i" onclick="pickMatch(this)">이</button>
+            <button class="match-btn" data-side="right" data-id="a" onclick="pickMatch(this)">아</button>
+            <button class="match-btn" data-side="right" data-id="eu" onclick="pickMatch(this)">으</button>
+            <button class="match-btn" data-side="right" data-id="o" onclick="pickMatch(this)">오</button>
+            <button class="match-btn" data-side="right" data-id="eo" onclick="pickMatch(this)">어</button>
+          </div>
+        </div>
+        <div class="result" id="matchResult">아직 시작 전!</div>
+      </div>
+
+      <div class="card half">
+        <div class="title"><h2>10. 랜덤 챌린지</h2><span class="tag t-blue">RANDOM</span></div>
+        <p class="sub">버튼을 누르면 랜덤 모음이 나와요. 학생이 바로 말하거나 손동작을 해요.</p>
+        <button class="primary" onclick="randomChallenge()">랜덤 모음 뽑기</button>
+        <div class="demo-view" id="randomBox" style="margin-top:14px">
+          <div class="demo-char">?</div>
+          <div class="demo-text">눌러 보세요!</div>
+          <div class="gesture">🎲</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="title"><h2>11. 가족 이름과 호칭 연결하기</h2><span class="tag t-blue">FAMILY MATCH</span></div>
+        <p class="sub">이름과 가족 호칭을 연결해요. 왼쪽을 하나, 오른쪽을 하나 눌러 보세요.</p>
+        <div class="match-wrap">
+          <div class="match-col">
+            <h3>이름</h3>
+            <button class="match-btn" data-side="left" data-id="julia" onclick="pickFamily(this)">줄리아</button>
+            <button class="match-btn" data-side="left" data-id="ella" onclick="pickFamily(this)">엘라</button>
+            <button class="match-btn" data-side="left" data-id="sandra" onclick="pickFamily(this)">산드라</button>
+            <button class="match-btn" data-side="left" data-id="sebastian" onclick="pickFamily(this)">세바스티안</button>
+            <button class="match-btn" data-side="left" data-id="grandma" onclick="pickFamily(this)">할머니</button>
+            <button class="match-btn" data-side="left" data-id="mom" onclick="pickFamily(this)">엄마</button>
+            <button class="match-btn" data-side="left" data-id="dad" onclick="pickFamily(this)">아빠</button>
+            <button class="match-btn" data-side="left" data-id="youngerSister" onclick="pickFamily(this)">여동생</button>
+            <button class="match-btn" data-side="left" data-id="youngerBrother" onclick="pickFamily(this)">남동생</button>
+          </div>
+          <div class="match-col">
+            <h3>뜻 / 연결</h3>
+            <button class="match-btn" data-side="right" data-id="youngerBrother" onclick="pickFamily(this)">younger brother</button>
+            <button class="match-btn" data-side="right" data-id="mom" onclick="pickFamily(this)">mother / mom</button>
+            <button class="match-btn" data-side="right" data-id="sebastian" onclick="pickFamily(this)">Sebastian</button>
+            <button class="match-btn" data-side="right" data-id="julia" onclick="pickFamily(this)">Julia</button>
+            <button class="match-btn" data-side="right" data-id="grandma" onclick="pickFamily(this)">grandmother</button>
+            <button class="match-btn" data-side="right" data-id="ella" onclick="pickFamily(this)">Ella</button>
+            <button class="match-btn" data-side="right" data-id="dad" onclick="pickFamily(this)">father / dad</button>
+            <button class="match-btn" data-side="right" data-id="sandra" onclick="pickFamily(this)">Sandra</button>
+            <button class="match-btn" data-side="right" data-id="youngerSister" onclick="pickFamily(this)">younger sister</button>
+          </div>
+        </div>
+        <div class="result" id="familyResult">가족 매칭 시작 전!</div>
+      </div>
+
+    </section>
+  </div>
+
+  <script>
+    let score = 0;
+    const answered = {};
+    let selectedMatch = null;
+    let matchCount = 0;
+    let selectedFamily = null;
+    let familyCount = 0;
+    const cheers = [
+      '🎉 대단해요!',
+      '🌟 잘했어요!',
+      '💜 SKZ would be proud!',
+      '🔥 Excellent!',
+      '👏 Great job!'
+    ];
+
+    function setScore(v){
+      score = v;
+      document.getElementById('score').textContent = score;
+    }
+
+    function addScore(v){
+      setScore(score + v);
+    }
+
+    function scrollToId(id){
+      document.getElementById(id).scrollIntoView({behavior:'smooth', block:'start'});
+    }
+
+    function showDemo(ch, text, emoji){
+      const box = document.getElementById('demoView');
+      box.innerHTML = `<div class="demo-char">${ch}</div><div class="demo-text">${text}</div><div class="gesture">${emoji}</div>`;
+    }
+
+    function answer(qid, el, ok){
+      if(answered[qid]) return;
+      answered[qid] = true;
+      const wrap = document.getElementById(qid);
+      const opts = wrap.querySelectorAll('.opt');
+      opts.forEach(o => o.classList.add('lock'));
+      const fb = document.getElementById(qid + 'fb');
+      if(ok){
+        el.classList.add('correct');
+        fb.className = 'fb show ok';
+        fb.textContent = '정답! +10점';
+        addScore(10);
+      }else{
+        el.classList.add('wrong');
+        fb.className = 'fb show no';
+        fb.textContent = '아쉬워요! 다시 기억해 봐요.';
+        opts.forEach(o => {
+          const click = o.getAttribute('onclick') || '';
+          if(click.includes('true')) o.classList.add('correct');
+        });
+      }
+    }
+
+    function speakKor(text){
+      try{
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'ko-KR';
+        u.rate = 0.85;
+        speechSynthesis.cancel();
+        speechSynthesis.speak(u);
+      }catch(e){
+        alert(text);
+      }
+    }
+
+    function playRandomCheer(){
+      const msg = cheers[Math.floor(Math.random()*cheers.length)];
+      alert(msg);
+    }
+
+    function randomChallenge(){
+      const pool = [
+        ['ㅏ','아! 오른쪽!','👉'],
+        ['ㅓ','어! 왼쪽!','👈'],
+        ['ㅗ','오! 위!','☝️'],
+        ['ㅜ','우! 아래!','👇'],
+        ['ㅡ','으! 가로!','➖'],
+        ['ㅣ','이! 세로!','│']
+      ];
+      const pick = pool[Math.floor(Math.random()*pool.length)];
+      document.getElementById('randomBox').innerHTML = `<div class="demo-char">${pick[0]}</div><div class="demo-text">${pick[1]}</div><div class="gesture">${pick[2]}</div>`;
+    }
+
+    function pickMatch(el){
+      if(el.classList.contains('done')) return;
+      if(!selectedMatch){
+        selectedMatch = el;
+        el.classList.add('selected');
+        return;
+      }
+      if(el === selectedMatch){
+        el.classList.remove('selected');
+        selectedMatch = null;
+        return;
+      }
+      if(el.dataset.side === selectedMatch.dataset.side){
+        selectedMatch.classList.remove('selected');
+        selectedMatch = el;
+        el.classList.add('selected');
+        return;
+      }
+      if(el.dataset.id === selectedMatch.dataset.id){
+        el.classList.add('done');
+        selectedMatch.classList.add('done');
+        el.classList.remove('selected');
+        selectedMatch.classList.remove('selected');
+        selectedMatch = null;
+        matchCount += 1;
+        document.getElementById('matchResult').textContent = `맞은 개수: ${matchCount} / 6`;
+        if(matchCount === 6){
+          addScore(20);
+          document.getElementById('matchResult').textContent = '완벽해요! 매칭 성공! +20점';
+        }
+      }else{
+        const a = selectedMatch;
+        const b = el;
+        a.classList.remove('selected');
+        b.classList.add('selected');
+        setTimeout(() => b.classList.remove('selected'), 250);
+        selectedMatch = null;
+      }
+    }
+
+    function resetAll(){
+      setScore(0);
+      Object.keys(answered).forEach(k => delete answered[k]);
+      document.querySelectorAll('.opt').forEach(o => o.className = 'opt');
+      document.querySelectorAll('.fb').forEach(f => { f.className = 'fb'; f.textContent = ''; });
+      document.querySelectorAll('.match-btn').forEach(btn => btn.classList.remove('selected','done'));
+      selectedMatch = null;
+      matchCount = 0;
+      selectedFamily = null;
+      familyCount = 0;
+      document.getElementById('matchResult').textContent = '아직 시작 전!';
+      const familyResult = document.getElementById('familyResult');
+      if (familyResult) familyResult.textContent = '가족 매칭 시작 전!';
+      showDemo('ㅏ','아! 오른쪽!','👉');
+      document.getElementById('randomBox').innerHTML = '<div class="demo-char">?</div><div class="demo-text">눌러 보세요!</div><div class="gesture">🎲</div>';
+    }
+
+    function pickFamily(el){
+      if(el.classList.contains('done')) return;
+      if(!selectedFamily){
+        selectedFamily = el;
+        el.classList.add('selected');
+        return;
+      }
+      if(el === selectedFamily){
+        el.classList.remove('selected');
+        selectedFamily = null;
+        return;
+      }
+      if(el.dataset.side === selectedFamily.dataset.side){
+        selectedFamily.classList.remove('selected');
+        selectedFamily = el;
+        el.classList.add('selected');
+        return;
+      }
+      if(el.dataset.id === selectedFamily.dataset.id){
+        el.classList.add('done');
+        selectedFamily.classList.add('done');
+        el.classList.remove('selected');
+        selectedFamily.classList.remove('selected');
+        selectedFamily = null;
+        familyCount += 1;
+        document.getElementById('familyResult').textContent = `맞은 개수: ${familyCount} / 9`;
+        if(familyCount === 9){
+          addScore(20);
+          document.getElementById('familyResult').textContent = '가족 매칭 완성! +20점';
+        }
+      }else{
+        const a = selectedFamily;
+        const b = el;
+        a.classList.remove('selected');
+        b.classList.add('selected');
+        setTimeout(() => b.classList.remove('selected'), 250);
+        selectedFamily = null;
+      }
+    }
+  </script>
+</body>
+</html>

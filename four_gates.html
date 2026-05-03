@@ -1,0 +1,159 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.wrap { padding: 1.5rem 0; font-family: var(--font-sans); }
+.intro { font-size: 14px; color: var(--color-text-secondary); line-height: 1.7; margin-bottom: 1.5rem; }
+.intro strong { color: var(--color-text-primary); font-weight: 500; }
+.gates-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem; }
+@media (max-width: 480px) { .gates-grid { grid-template-columns: 1fr; } }
+.gate-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; position: relative; overflow: hidden; }
+.gate-dir { font-size: 11px; font-weight: 500; letter-spacing: 0.05em; margin-bottom: 6px; }
+.gate-name-kr { font-size: 20px; font-weight: 500; color: var(--color-text-primary); }
+.gate-name-nick { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 2px; }
+.gate-name-en { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 10px; }
+.gate-meaning { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 6px 10px; font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; margin-bottom: 8px; }
+.gate-meaning span { color: var(--color-text-primary); font-weight: 500; }
+.gate-note { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
+.gate-badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 20px; margin-top: 6px; }
+
+.east .gate-dir { color: #185FA5; }
+.east { border-top: 2px solid #185FA5; }
+.east .gate-badge { background: #E6F1FB; color: #185FA5; }
+
+.south .gate-dir { color: #993C1D; }
+.south { border-top: 2px solid #D85A30; }
+.south .gate-badge { background: #FAECE7; color: #993C1D; }
+
+.west .gate-dir { color: #3B6D11; }
+.west { border-top: 2px solid #639922; }
+.west .gate-badge { background: #EAF3DE; color: #3B6D11; }
+
+.north .gate-dir { color: #533AB7; }
+.north { border-top: 2px solid #7F77DD; }
+.north .gate-badge { background: #EEEDFE; color: #534AB7; }
+
+.divider { border: none; border-top: 0.5px solid var(--color-border-tertiary); margin: 1.5rem 0; }
+.section-label { font-size: 12px; color: var(--color-text-secondary); font-weight: 500; letter-spacing: 0.03em; margin-bottom: 10px; }
+.tag { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; margin-bottom: 8px; }
+.tag-vocab { background: var(--color-background-info); color: var(--color-text-info); }
+.tag-talk { background: var(--color-background-success); color: var(--color-text-success); }
+.vocab-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.vocab-table td { padding: 7px 6px; border-bottom: 0.5px solid var(--color-border-tertiary); color: var(--color-text-primary); vertical-align: top; line-height: 1.5; }
+.vocab-table td:first-child { font-weight: 500; width: 90px; white-space: nowrap; }
+.vocab-table td:nth-child(2) { color: var(--color-text-secondary); width: 130px; }
+.vocab-table td:last-child { color: var(--color-text-secondary); }
+.q-box { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 14px; margin-bottom: 8px; }
+.q-text { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+.q-hint { font-size: 12px; color: var(--color-text-secondary); }
+.tip-box { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-left: 3px solid #378ADD; border-radius: var(--border-radius-md); padding: 10px 14px; font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; }
+.tip-box strong { color: var(--color-text-primary); font-weight: 500; }
+</style>
+
+<div class="wrap">
+
+  <p class="intro">
+    <strong>사대문(四大門)</strong>은 조선시대 한양(지금의 서울)을 둘러싼 성벽에 있던 <strong>4개의 큰 문</strong>이에요.<br>
+    동·서·남·북 방향에 하나씩 있어요.<br><br>
+    The <strong>Four Great Gates (사대문)</strong> were the four main gates of the walled city of Hanyang — the old name for Seoul — built during the Joseon Dynasty.
+  </p>
+
+  <div class="gates-grid">
+
+    <div class="gate-card east">
+      <p class="gate-dir">동쪽 EAST</p>
+      <p class="gate-name-kr">흥인지문</p>
+      <p class="gate-name-nick">동대문 (Dongdaemun)</p>
+      <p class="gate-name-en">Gate of Rising Benevolence</p>
+      <div class="gate-meaning">
+        흥 = rise / 인 = <span>benevolence (인자함)</span> / 지 = of / 문 = gate
+      </div>
+      <p class="gate-note">현재도 남아 있어요. 지금은 동대문 쇼핑 지구로 유명해요.<br>Still standing today — now famous for the Dongdaemun shopping district.</p>
+      <span class="gate-badge">현존 / Still exists</span>
+    </div>
+
+    <div class="gate-card south">
+      <p class="gate-dir">남쪽 SOUTH</p>
+      <p class="gate-name-kr">숭례문</p>
+      <p class="gate-name-nick">남대문 (Namdaemun)</p>
+      <p class="gate-name-en">Gate of崇 Revered Propriety</p>
+      <div class="gate-meaning">
+        숭 = <span>revere (높이다)</span> / 례 = propriety / 문 = gate
+      </div>
+      <p class="gate-note">대한민국 국보 1호예요. 2008년 화재로 소실, 2013년 복원.<br>National Treasure No. 1. Damaged by arson in 2008, restored in 2013.</p>
+      <span class="gate-badge">국보 1호 / National Treasure #1</span>
+    </div>
+
+    <div class="gate-card west">
+      <p class="gate-dir">서쪽 WEST</p>
+      <p class="gate-name-kr">돈의문</p>
+      <p class="gate-name-nick">서대문 (Seodaemun)</p>
+      <p class="gate-name-en">Gate of Gross Benevolence</p>
+      <div class="gate-meaning">
+        돈 = <span>strengthen (두텁게 하다)</span> / 의 = righteousness / 문 = gate
+      </div>
+      <p class="gate-note">1915년 일제강점기에 철거돼서 지금은 없어요. 터만 남아 있어요.<br>Demolished during Japanese colonial rule in 1915. Only the site remains.</p>
+      <span class="gate-badge" style="background:#f1efe8;color:#5f5e5a;">철거됨 / Demolished</span>
+    </div>
+
+    <div class="gate-card north">
+      <p class="gate-dir">북쪽 NORTH</p>
+      <p class="gate-name-kr">숙정문</p>
+      <p class="gate-name-nick">북대문 (Bukdaemun)</p>
+      <p class="gate-name-en">Gate of Solemn Governance</p>
+      <div class="gate-meaning">
+        숙 = <span>solemn (엄숙하다)</span> / 정 = governance / 문 = gate
+      </div>
+      <p class="gate-note">산 위에 있어 실제로는 거의 쓰이지 않았어요. 지금도 북악산에 남아 있어요.<br>Built on a mountain, rarely used. Still stands on Bugaksan today.</p>
+      <span class="gate-badge">현존 / Still exists</span>
+    </div>
+
+  </div>
+
+  <hr class="divider">
+
+  <div style="margin-bottom: 1.5rem;">
+    <span class="tag tag-vocab">단어 / Vocabulary</span>
+    <p class="section-label">방향 + 문 단어</p>
+    <table class="vocab-table">
+      <tr><td>동(東)</td><td>east</td><td>동쪽, 동대문</td></tr>
+      <tr><td>서(西)</td><td>west</td><td>서쪽, 서대문</td></tr>
+      <tr><td>남(南)</td><td>south</td><td>남쪽, 남대문</td></tr>
+      <tr><td>북(北)</td><td>north</td><td>북쪽, 북대문</td></tr>
+      <tr><td>문(門)</td><td>gate / door</td><td>대문 = big gate, 입구 = entrance</td></tr>
+      <tr><td>사대문</td><td>four great gates</td><td>사(四) = 4, 대(大) = big/great</td></tr>
+      <tr><td>국보</td><td>national treasure</td><td>국 = nation, 보 = treasure</td></tr>
+      <tr><td>복원</td><td>restoration</td><td>복원하다 = to restore</td></tr>
+    </table>
+  </div>
+
+  <hr class="divider">
+
+  <div style="margin-bottom: 1.5rem;">
+    <div class="tip-box">
+      <strong>왜 서대문(돈의문)만 없나요?</strong><br>
+      일제강점기(1910–1945)에 일본이 도로를 넓히면서 철거했어요. 지금도 복원을 논의 중이에요.<br><br>
+      <strong>Why is Seodaemun (Donuimun) the only one missing?</strong><br>
+      Japan demolished it during the colonial period to widen the road. There are ongoing discussions about restoring it.
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div>
+    <span class="tag tag-talk">대화 연습 / Let's talk!</span>
+    <p class="section-label">학생과 이야기해 보세요</p>
+    <div class="q-box">
+      <p class="q-text">Q1. 사대문 중에서 어느 문이 가장 유명하다고 생각해요?</p>
+      <p class="q-hint">Which of the four gates do you think is most famous?</p>
+    </div>
+    <div class="q-box">
+      <p class="q-text">Q2. 숭례문이 불에 탔을 때 한국 사람들은 어떤 기분이었을까요?</p>
+      <p class="q-hint">How do you think Koreans felt when Sungnyemun burned down in 2008?</p>
+    </div>
+    <div class="q-box">
+      <p class="q-text">Q3. 여러분 나라에도 이런 역사적인 문이나 성벽이 있어요?</p>
+      <p class="q-hint">Does your country have historic gates or city walls like these?</p>
+    </div>
+  </div>
+
+</div>

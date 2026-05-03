@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SKZ & Family Vowel Game</title>
+  <style>
+    :root{
+      --card:#ffffff; --line:#eadff3; --text:#2f2240; --sub:#6d5d82;
+      --purple:#8d73ff; --purple2:#f1edff; --pink:#ff7cab; --pink2:#ffe8f1;
+      --blue:#50a7ff; --blue2:#eaf5ff; --green:#2fb171; --green2:#e8fff4;
+      --danger:#e85b6a; --danger2:#ffe9ec; --shadow:0 10px 24px rgba(95,64,145,.08);
+      --radius:20px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,Pretendard,"Noto Sans KR",Arial,sans-serif;background:linear-gradient(180deg,#fff8fb 0%, #f7f4ff 100%);color:var(--text)}
+    .app{max-width:1120px;margin:0 auto;padding:20px 16px 80px}
+    .hero{background:linear-gradient(135deg,#8d73ff 0%, #ff7cab 100%);color:#fff;border-radius:28px;padding:24px;box-shadow:var(--shadow)}
+    .hero h1{margin:0 0 8px;font-size:34px;line-height:1.15}
+    .hero p{margin:0;opacity:.95;line-height:1.6}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+    .chip{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);padding:7px 12px;border-radius:999px;font-size:13px}
+    .toolbar{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 6px}
+    button{border:0;border-radius:999px;padding:11px 16px;font-weight:700;cursor:pointer;color:var(--text);background:#fff;box-shadow:var(--shadow)}
+    button.primary{background:var(--purple);color:#fff} button.blue{background:var(--blue);color:#fff} button.green{background:var(--green);color:#fff} button.pink{background:var(--pink);color:#fff} button.ghost{background:#fff;border:1px solid var(--line);box-shadow:none}
+    .layout{display:grid;grid-template-columns:repeat(12,1fr);gap:16px;margin-top:18px}
+    .card{grid-column:span 12;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+    .half{grid-column:span 6}.third{grid-column:span 4}
+    .title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.title h2{margin:0;font-size:22px}
+    .tag{font-size:12px;font-weight:800;padding:6px 10px;border-radius:999px}.t-purple{background:var(--purple2);color:#6f56ea}.t-blue{background:var(--blue2);color:#1d7fe1}.t-pink{background:var(--pink2);color:#d94f84}.t-green{background:var(--green2);color:#208a59}
+    .sub{color:var(--sub);font-size:14px;line-height:1.6}
+    .vowel-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:12px}
+    .vowel{border:2px solid var(--line);border-radius:18px;padding:14px 8px;text-align:center;background:#fff;transition:.18s transform,.18s border-color,.18s background}.vowel:hover{transform:translateY(-2px);border-color:#cbb6ff;background:#fcfaff}
+    .vowel .char{font-size:34px;font-weight:800;line-height:1.1}.vowel .roman{font-size:12px;color:var(--sub);margin-top:4px}.vowel .hint{font-size:12px;color:#7b67af;margin-top:4px}
+    .shape-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}.shape{border-radius:18px;padding:14px;background:#fbf9ff;border:1px solid var(--line);line-height:1.6}.shape strong{font-size:18px}
+    .big-demo{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}.demo-btn{min-width:88px}.demo-view{margin-top:14px;padding:22px;border-radius:22px;background:#fcfbff;border:2px dashed #d8cbff;text-align:center}.demo-char{font-size:96px;font-weight:900;line-height:1}.demo-text{margin-top:10px;font-size:20px;font-weight:800}.gesture{font-size:38px;margin-top:10px}
+    .member-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px}
+    .name-card{border:1px solid var(--line);border-radius:18px;padding:14px;background:#fff;text-align:center;cursor:pointer;transition:.18s transform,.18s border-color}
+    .name-card:hover{transform:translateY(-2px);border-color:#cbb6ff}
+    .portrait{width:88px;height:88px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:42px;background:linear-gradient(180deg,#f3efff,#ffeef4);border:2px solid #e5dbff;overflow:hidden}
+    .portrait img{width:100%;height:100%;object-fit:cover;display:block}
+    .name-card .label{font-size:18px;font-weight:800}.name-card .subtext{font-size:13px;color:var(--sub);margin-top:6px}
+    .sound-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}.sound{padding:14px 18px;border-radius:16px;background:#fff;border:1px solid var(--line);font-size:18px;font-weight:800;cursor:pointer}
+    .mission-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.quiz{border:1px solid var(--line);border-radius:18px;padding:16px;background:#fff}.quiz h3{margin:0 0 8px;font-size:18px}.options{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.opt{padding:10px 14px;border-radius:14px;background:#f8f6fe;border:1px solid var(--line);cursor:pointer;font-weight:800}.opt.correct{background:var(--green2);border-color:#93e0b9;color:#18814f}.opt.wrong{background:var(--danger2);border-color:#ffb0ba;color:#c64555}.opt.lock{pointer-events:none;opacity:.95}.fb{display:none;margin-top:10px;padding:10px 12px;border-radius:14px;font-size:14px;font-weight:700}.fb.show{display:block}.fb.ok{background:var(--green2);color:#197949}.fb.no{background:var(--danger2);color:#c64555}
+    .score-card{display:flex;justify-content:space-between;align-items:center;gap:16px;background:linear-gradient(135deg,#f2edff,#fff0f6)}
+    .score-number{font-size:48px;font-weight:900;color:#6f56ea}
+    .teacher-box{background:#fff8e6;border:1px solid #ffe19b;border-radius:18px;padding:16px;line-height:1.7}.footer{margin-top:18px;color:var(--sub);font-size:13px;line-height:1.6}
+    @media (max-width:900px){.mission-grid,.shape-list,.member-grid{grid-template-columns:1fr}.half,.third{grid-column:span 12}.vowel-grid{grid-template-columns:repeat(3,1fr)}.hero h1{font-size:28px}.score-card{display:block;text-align:center}.score-number{margin-top:8px}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <section class="hero">
+    <h1>🎤 Stray Kids와 가족 이름으로 배우는 한국어</h1>
+    <p>온라인 수업용 클릭형 한국어 학습 페이지예요. 이름을 누르고, 모음을 말하고, 발음을 들어요.</p>
+    <div class="chips">
+      <span class="chip">모음: ㅏ ㅓ ㅗ ㅜ ㅡ ㅣ</span>
+      <span class="chip">보너스: ㅑ ㅕ ㅛ ㅠ</span>
+      <span class="chip">Stray Kids 이름</span>
+      <span class="chip">가족 이름</span>
+    </div>
+  </section>
+
+  <div class="toolbar">
+    <button class="primary" onclick="scrollToId('skzCards')">SKZ 카드</button>
+    <button class="blue" onclick="scrollToId('familyCards')">가족 카드</button>
+    <button class="green" onclick="scrollToId('quizScore')">퀴즈</button>
+    <button class="pink" onclick="playRandomCheer()">응원 받기</button>
+    <button class="ghost" onclick="resetAll()">전체 리셋</button>
+  </div>
+
+  <section class="layout">
+    <div class="card half" id="vowels">
+      <div class="title"><h2>1. 기본 모음 보기</h2><span class="tag t-purple">INTRO</span></div>
+      <p class="sub">먼저 6개만 배우고 바로 이름 속 모음을 찾아요.</p>
+      <div class="vowel-grid">
+        <div class="vowel"><div class="char">ㅏ</div><div class="roman">a</div><div class="hint">아!</div></div>
+        <div class="vowel"><div class="char">ㅓ</div><div class="roman">eo</div><div class="hint">어!</div></div>
+        <div class="vowel"><div class="char">ㅗ</div><div class="roman">o</div><div class="hint">오!</div></div>
+        <div class="vowel"><div class="char">ㅜ</div><div class="roman">u</div><div class="hint">우!</div></div>
+        <div class="vowel"><div class="char">ㅡ</div><div class="roman">eu</div><div class="hint">으!</div></div>
+        <div class="vowel"><div class="char">ㅣ</div><div class="roman">i</div><div class="hint">이!</div></div>
+      </div>
+    </div>
+
+    <div class="card half">
+      <div class="title"><h2>2. 기억하는 방법</h2><span class="tag t-blue">BODY HINT</span></div>
+      <div class="shape-list">
+        <div class="shape"><strong>ㅏ</strong> → 오른쪽 👉</div>
+        <div class="shape"><strong>ㅓ</strong> → 왼쪽 👈</div>
+        <div class="shape"><strong>ㅗ</strong> → 위 ☝️</div>
+        <div class="shape"><strong>ㅜ</strong> → 아래 👇</div>
+        <div class="shape"><strong>ㅡ</strong> → 가로 ➖</div>
+        <div class="shape"><strong>ㅣ</strong> → 세로 │</div>
+      </div>
+    </div>
+
+    <div class="card half">
+      <div class="title"><h2>3. 클릭 데모</h2><span class="tag t-pink">CLICK & SAY</span></div>
+      <div class="big-demo">
+        <button class="demo-btn" onclick="showDemo('ㅏ','아! 오른쪽!','👉')">ㅏ</button>
+        <button class="demo-btn" onclick="showDemo('ㅓ','어! 왼쪽!','👈')">ㅓ</button>
+        <button class="demo-btn" onclick="showDemo('ㅗ','오! 위!','☝️')">ㅗ</button>
+        <button class="demo-btn" onclick="showDemo('ㅜ','우! 아래!','👇')">ㅜ</button>
+        <button class="demo-btn" onclick="showDemo('ㅡ','으! 가로!','➖')">ㅡ</button>
+        <button class="demo-btn" onclick="showDemo('ㅣ','이! 세로!','│')">ㅣ</button>
+      </div>
+      <div class="demo-view" id="demoView"><div class="demo-char">ㅏ</div><div class="demo-text">아! 오른쪽!</div><div class="gesture">👉</div></div>
+    </div>
+
+    <div class="card half">
+      <div class="title"><h2>4. 빠른 읽기</h2><span class="tag t-green">READ</span></div>
+      <p class="sub">그림처럼 보고 리듬 있게 읽어요.</p>
+      <div class="sound-row">
+        <button class="sound" onclick="speakKor('우유')">🥛 우유</button>
+        <button class="sound" onclick="speakKor('아이')">🧒 아이</button>
+        <button class="sound" onclick="speakKor('오이')">🥒 오이</button>
+        <button class="sound" onclick="speakKor('여우')">🦊 여우</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="title"><h2>5. 이중 모음 보기</h2><span class="tag t-blue">DOUBLE VOWELS</span></div>
+      <p class="sub">너무 빠르지 않게, 읽기만 해도 충분해요. <b>ㅣ + ㅏ → ㅑ, ㅣ + ㅓ → ㅕ, ㅣ + ㅗ → ㅛ, ㅣ + ㅜ → ㅠ</b> 가 돼요.</p>
+      <div class="vowel-grid" style="grid-template-columns:repeat(4,1fr)">
+        <div class="vowel"><div class="char">ㅑ</div><div class="roman">ya</div><div class="hint">야!</div></div>
+        <div class="vowel"><div class="char">ㅕ</div><div class="roman">yeo</div><div class="hint">여!</div></div>
+        <div class="vowel"><div class="char">ㅛ</div><div class="roman">yo</div><div class="hint">요!</div></div>
+        <div class="vowel"><div class="char">ㅠ</div><div class="roman">yu</div><div class="hint">유!</div></div>
+      </div>
+    </div>
+
+    <div class="card" id="skzCards">
+      <div class="title"><h2>6. Stray Kids 카드</h2><span class="tag t-purple">SKZ</span></div>
+      <p class="sub">동물 이모티콘 대신 사람 얼굴 카드로 바꿨어요. 카드를 누르면 이름이 크게 나오고 발음도 들려요.</p>
+      <div class="member-grid">
+        <div class="name-card" onclick="showBigName('🧑','방찬','Bang Chan','images/bangchan.png')"><div class="portrait"><img src="images/bangchan.png"></div><div class="label">방찬</div><div class="subtext">click!</div></div>
+        <div class="name-card" onclick="showBigName('🧑','리노','Lee Know','images/leeknow.png')"><div class="portrait"><img src="images/leeknow.png"></div><div class="label">리노</div><div class="subtext">click!</div></div>
+        <div class="name-card" onclick="showBigName('🧑','창빈','Changbin','images/changbin.png')"><div class="portrait"><img src="images/changbin.png"></div><div class="label">창빈</div><div class="subtext">click!</div></div>
+        <div class="name-card" onclick="showBigName('🧑','현진','Hyunjin','images/hyunjin.png')"><div class="portrait"><img src="images/hyunjin.png"></div><div class="label">현진</div><div class="subtext">click!</div></div>
+        <div class="name-card" onclick="showBigName('🧑','한','Han','images/han.png')"><div class="portrait"><img src="images/han.png"></div><div class="label">한</div><div class="subtext">click!</div></div>
+        <div class="name-card" onclick="showBigName('🧑','필릭스','Felix','images/felix.png')"><div class="portrait"><img src="images/felix.png"></div><div class="label">필릭스</div><div class="subtext">click!</div></div>
+        <div class="name-card" onclick="showBigName('🧑','승민','Seungmin','images/seungmin.png')"><div class="portrait"><img src="images/seungmin.png"></div><div class="label">승민</div><div class="subtext">click!</div></div>
+        <div class="name-card" onclick="showBigName('🧑','아이엔','I.N','images/in.png')"><div class="portrait"><img src="images/in.png"></div><div class="label">아이엔</div><div class="subtext">click!</div></div>
+      </div>
+      <div class="demo-view" id="bigNameBox"><div class="demo-char">🧑</div><div class="demo-text">방찬</div><div class="gesture">Bang Chan</div></div>
+    </div>
+
+    <div class="card half">
+      <div class="title"><h2>7. SKZ 이름 속 모음</h2><span class="tag t-blue">VOWELS</span></div>
+      <p class="sub">이름 다음에 한 박자 쉬고 모음만 자연스럽게 들리게 바꿨어요.</p>
+      <div class="sound-row">
+        <button class="sound" onclick="speakSequence(['방찬','ㅏ'])">방찬 → ㅏ</button>
+        <button class="sound" onclick="speakSequence(['리노','ㅗ'])">리노 → ㅗ</button>
+        <button class="sound" onclick="speakSequence(['창빈','ㅏ','ㅣ'])">창빈 → ㅏ, ㅣ</button>
+        <button class="sound" onclick="speakSequence(['현진','ㅕ','ㅣ'])">현진 → ㅕ, ㅣ</button>
+        <button class="sound" onclick="speakSequence(['한','ㅏ'])">한 → ㅏ</button>
+        <button class="sound" onclick="speakSequence(['필릭스','ㅣ'])">필릭스 → ㅣ</button>
+        <button class="sound" onclick="speakSequence(['승민','ㅡ','ㅣ'])">승민 → ㅡ, ㅣ</button>
+        <button class="sound" onclick="speakSequence(['아이엔','ㅏ','ㅣ'])">아이엔 → ㅏ, ㅣ</button>
+      </div>
+    </div>
+
+    <div class="card half" id="familyCards">
+      <div class="title"><h2>8. 가족 카드</h2><span class="tag t-pink">FAMILY</span></div>
+      <p class="sub">가족 이름 카드도 누르면 크게 보여 주고 발음해요.</p>
+      <div class="member-grid">
+        <div class="name-card" onclick="showFamilyName('👴','그제고르즈','할아버지')"><div class="portrait">👴</div><div class="label">그제고르즈</div><div class="subtext">할아버지</div></div>
+        <div class="name-card" onclick="showFamilyName('👵','엘라','할머니')"><div class="portrait">👵</div><div class="label">엘라</div><div class="subtext">할머니</div></div>
+        <div class="name-card" onclick="showFamilyName('👨','세바스티안','아빠')"><div class="portrait">👨</div><div class="label">세바스티안</div><div class="subtext">아빠</div></div>
+        <div class="name-card" onclick="showFamilyName('👩','산드라','엄마')"><div class="portrait">👩</div><div class="label">산드라</div><div class="subtext">엄마</div></div>
+        <div class="name-card" onclick="showFamilyName('🧒','줄리아','나')"><div class="portrait">🧒</div><div class="label">줄리아</div><div class="subtext">나</div></div>
+        <div class="name-card" onclick="showFamilyName('👦','티멕','남동생')"><div class="portrait">👦</div><div class="label">티멕</div><div class="subtext">남동생</div></div>
+        <div class="name-card" onclick="showFamilyName('👶','에밀카','여동생(아기)')"><div class="portrait">👶</div><div class="label">에밀카</div><div class="subtext">여동생(아기)</div></div>
+        <div class="name-card" onclick="showFamilyName('🐶','벨라','강아지')"><div class="portrait">🐶</div><div class="label">벨라</div><div class="subtext">강아지</div></div>
+      </div>
+      <div class="demo-view" id="bigFamilyBox"><div class="demo-char">👵</div><div class="demo-text">엘라</div><div class="gesture">할머니</div></div>
+    </div>
+
+    <div class="card half">
+      <div class="title"><h2>9. 가족 이름 속 모음</h2><span class="tag t-green">FAMILY VOWELS</span></div>
+      <p class="sub">가족 이름도 이름 다음에 한 박자 쉬고 모음만 들려요.</p>
+      <div class="sound-row">
+        <button class="sound" onclick="speakSequence(['그제고르즈','ㅡ','ㅔ','ㅗ'])">그제고르즈 → ㅡ, ㅔ, ㅗ</button>
+        <button class="sound" onclick="speakSequence(['엘라','ㅔ','ㅏ'])">엘라 → ㅔ, ㅏ</button>
+        <button class="sound" onclick="speakSequence(['세바스티안','ㅔ','ㅏ','ㅡ','ㅣ'])">세바스티안 → ㅔ, ㅏ, ㅡ, ㅣ</button>
+        <button class="sound" onclick="speakSequence(['산드라','ㅏ'])">산드라 → ㅏ</button>
+        <button class="sound" onclick="speakSequence(['줄리아','ㅜ','ㅣ','ㅏ'])">줄리아 → ㅜ, ㅣ, ㅏ</button>
+        <button class="sound" onclick="speakSequence(['티멕','ㅣ','ㅔ'])">티멕 → ㅣ, ㅔ</button>
+        <button class="sound" onclick="speakSequence(['에밀카','ㅔ','ㅣ','ㅏ'])">에밀카 → ㅔ, ㅣ, ㅏ</button>
+        <button class="sound" onclick="speakSequence(['벨라','ㅔ','ㅏ'])">벨라 → ㅔ, ㅏ</button>
+      </div>
+    </div>
+
+    <div class="card score-card" id="quizScore">
+      <div>
+        <div class="title" style="margin:0"><h2>10. 퀴즈 점수</h2><span class="tag t-pink">SCORE</span></div>
+        <div class="sub">위에서는 연습하고, 여기부터는 게임처럼 점수를 모아요.</div>
+      </div>
+      <div class="score-number" id="score">0</div>
+    </div>
+
+    <div class="card">
+      <div class="title"><h2>11. 모음 퀴즈</h2><span class="tag t-purple">QUIZ</span></div>
+      <div class="mission-grid">
+        <div class="quiz" id="q1"><h3>Q1. “찬”의 모음은?</h3><div class="options"><div class="opt" onclick="answer('q1', this, false)">ㅓ</div><div class="opt" onclick="answer('q1', this, true)">ㅏ</div><div class="opt" onclick="answer('q1', this, false)">ㅜ</div><div class="opt" onclick="answer('q1', this, false)">ㅡ</div></div><div class="fb" id="q1fb"></div></div>
+        <div class="quiz" id="q2"><h3>Q2. “노”의 모음은?</h3><div class="options"><div class="opt" onclick="answer('q2', this, false)">ㅜ</div><div class="opt" onclick="answer('q2', this, true)">ㅗ</div><div class="opt" onclick="answer('q2', this, false)">ㅏ</div><div class="opt" onclick="answer('q2', this, false)">ㅣ</div></div><div class="fb" id="q2fb"></div></div>
+        <div class="quiz" id="q3"><h3>Q3. “줄리아”에 있는 모음은?</h3><div class="options"><div class="opt" onclick="answer('q3', this, true)">ㅜ, ㅣ, ㅏ</div><div class="opt" onclick="answer('q3', this, false)">ㅓ, ㅗ</div><div class="opt" onclick="answer('q3', this, false)">ㅡ, ㅣ</div><div class="opt" onclick="answer('q3', this, false)">ㅏ만</div></div><div class="fb" id="q3fb"></div></div>
+        <div class="quiz" id="q4"><h3>Q4. 세로선만 있는 모음은?</h3><div class="options"><div class="opt" onclick="answer('q4', this, true)">ㅣ</div><div class="opt" onclick="answer('q4', this, false)">ㅡ</div><div class="opt" onclick="answer('q4', this, false)">ㅗ</div><div class="opt" onclick="answer('q4', this, false)">ㅏ</div></div><div class="fb" id="q4fb"></div></div>
+        <div class="quiz" id="q5"><h3>Q5. “현진”에서 먼저 들리는 모음은?</h3><div class="options"><div class="opt" onclick="answer('q5', this, true)">ㅕ</div><div class="opt" onclick="answer('q5', this, false)">ㅓ</div><div class="opt" onclick="answer('q5', this, false)">ㅜ</div><div class="opt" onclick="answer('q5', this, false)">ㅠ</div></div><div class="fb" id="q5fb"></div></div>
+        <div class="quiz" id="q6"><h3>Q6. “우유”에 들어 있는 모음은?</h3><div class="options"><div class="opt" onclick="answer('q6', this, true)">ㅜ, ㅠ</div><div class="opt" onclick="answer('q6', this, false)">ㅗ, ㅜ</div><div class="opt" onclick="answer('q6', this, false)">ㅏ, ㅣ</div><div class="opt" onclick="answer('q6', this, false)">ㅕ, ㅣ</div></div><div class="fb" id="q6fb"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="title"><h2>12. 듣고 클릭하기</h2><span class="tag t-blue">LISTEN & CLICK</span></div>
+      <p class="sub">이름을 클릭하면 이름 소리가 나고, 아래에 사진이 퀴즐렛처럼 크게 보여요. Netlify에서는 <b>images/</b> 폴더에 사진을 넣으면 돼요.</p>
+      <div class="member-grid">
+        <div class="name-card" onclick="showQuizletCard('방찬','Bang Chan','images/bangchan.png')"><div class="label">방찬</div><div class="subtext">click to hear + see</div></div>
+        <div class="name-card" onclick="showQuizletCard('리노','Lee Know','images/leeknow.png')"><div class="label">리노</div><div class="subtext">click to hear + see</div></div>
+        <div class="name-card" onclick="showQuizletCard('창빈','Changbin','images/changbin.png')"><div class="label">창빈</div><div class="subtext">click to hear + see</div></div>
+        <div class="name-card" onclick="showQuizletCard('현진','Hyunjin','images/hyunjin.png')"><div class="label">현진</div><div class="subtext">click to hear + see</div></div>
+        <div class="name-card" onclick="showQuizletCard('한','Han','images/han.png')"><div class="label">한</div><div class="subtext">click to hear + see</div></div>
+        <div class="name-card" onclick="showQuizletCard('필릭스','Felix','images/felix.png')"><div class="label">필릭스</div><div class="subtext">click to hear + see</div></div>
+        <div class="name-card" onclick="showQuizletCard('승민','Seungmin','images/seungmin.png')"><div class="label">승민</div><div class="subtext">click to hear + see</div></div>
+        <div class="name-card" onclick="showQuizletCard('아이엔','I.N','images/in.png')"><div class="label">아이엔</div><div class="subtext">click to hear + see</div></div>
+      </div>
+      <div class="demo-view" id="quizletCardBox">
+        <div style="max-width:280px;margin:0 auto 14px;border-radius:18px;overflow:hidden;border:2px solid #e5dbff;background:#fff">
+          <img id="quizletCardImg" src="images/bangchan.png" alt="Bang Chan" style="width:100%;height:260px;object-fit:cover;display:block">
+        </div>
+        <div class="demo-text" id="quizletCardName">방찬</div>
+        <div class="gesture" id="quizletCardEn">Bang Chan</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="title"><h2>13. Notion / Netlify 사용법</h2><span class="tag t-green">EMBED</span></div>
+      <div class="teacher-box">1. 새 폴더를 만들어요. 예: <strong>my-lesson</strong><br>2. 그 안에 현재 HTML 파일을 <strong>index.html</strong> 로 저장해요.<br>3. 같은 폴더 안에 <strong>images</strong> 폴더를 만들어요.<br>4. 그 안에 사진 8장을 이렇게 넣어요:<br><strong>bangchan.jpg, leeknow.jpg, changbin.jpg, hyunjin.jpg, han.jpg, felix.jpg, seungmin.jpg, in.jpg</strong><br>5. 폴더 구조는 이렇게예요:<br><strong>my-lesson / index.html / images / bangchan.jpg ...</strong><br>6. Netlify에서 이 폴더 전체를 업로드해요.<br>7. 배포된 URL을 Notion에서 <strong>/embed</strong>로 넣어요.</div>
+      <div class="footer">사진 파일은 HTML과 같은 프로젝트 안에 넣어야 Netlify에서 잘 보여요. ㅑ, ㅕ, ㅛ, ㅠ는 읽기와 인지 중심으로 넣었기 때문에 아직 빠르지 않아요.</div>
+    </div>
+  </section>
+</div>
+
+<script>
+let score = 0;
+let answered = {};
+const cheers = ['🎉 대단해요!','🌟 잘했어요!','💜 SKZ would be proud!','🔥 Excellent!','👏 Great job!'];
+const synth = window.speechSynthesis;
+let koVoice = null;
+
+function setVoice(){
+  const voices = synth.getVoices();
+  koVoice = voices.find(v => /ko-KR/i.test(v.lang) && /Google|Microsoft|Siri|Apple/i.test(v.name)) ||
+            voices.find(v => /ko-KR/i.test(v.lang)) || null;
+}
+setVoice();
+if (typeof speechSynthesis !== 'undefined') speechSynthesis.onvoiceschanged = setVoice;
+
+function speakKor(text){
+  try{
+    synth.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'ko-KR';
+    u.rate = 0.9;
+    u.pitch = 1.0;
+    if (koVoice) u.voice = koVoice;
+    synth.speak(u);
+  }catch(e){ alert(text); }
+}
+
+function speakSequence(parts){
+  try{
+    synth.cancel();
+    let delay = 0;
+    parts.forEach((part, i) => {
+      const u = new SpeechSynthesisUtterance(part);
+      u.lang = 'ko-KR';
+      u.rate = i === 0 ? 0.88 : 0.8;
+      u.pitch = 1.0;
+      if (koVoice) u.voice = koVoice;
+      setTimeout(() => synth.speak(u), delay);
+      delay += i === 0 ? 900 : 700;
+    });
+  }catch(e){ alert(parts.join(' / ')); }
+}
+
+function setScore(v){score=v;document.querySelectorAll('#score').forEach(el => el.textContent = score);}
+function addScore(v){setScore(score+v);} 
+function scrollToId(id){document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});} 
+function showDemo(ch,text,emoji){document.getElementById('demoView').innerHTML=`<div class="demo-char">${ch}</div><div class="demo-text">${text}</div><div class="gesture">${emoji}</div>`;}
+function playRandomCheer(){alert(cheers[Math.floor(Math.random()*cheers.length)]);}
+function showBigName(face,name,en,imgSrc){document.getElementById('bigNameBox').innerHTML=`<div style="max-width:180px;margin:0 auto 10px;border-radius:18px;overflow:hidden;border:2px solid #e5dbff"><img src="${imgSrc}" style="width:100%;height:180px;object-fit:cover"></div><div class="demo-text">${name}</div><div class="gesture">${en}</div>`; speakKor(name);}
+function showFamilyName(face,name,role){document.getElementById('bigFamilyBox').innerHTML=`<div class="demo-char">${face}</div><div class="demo-text">${name}</div><div class="gesture">${role}</div>`; speakKor(name);}
+function showQuizletCard(name,en,imgSrc){document.getElementById('quizletCardName').textContent=name;document.getElementById('quizletCardEn').textContent=en;const img=document.getElementById('quizletCardImg');img.src=imgSrc;img.alt=en;speakKor(name);}
+function answer(qid,el,ok){if(answered[qid]) return; answered[qid]=true; const wrap=document.getElementById(qid), opts=wrap.querySelectorAll('.opt'), fb=document.getElementById(qid+'fb'); opts.forEach(o=>o.classList.add('lock')); if(ok){el.classList.add('correct'); fb.className='fb show ok'; fb.textContent='정답! +10점'; addScore(10);} else {el.classList.add('wrong'); fb.className='fb show no'; fb.textContent='아쉬워요! 다시 기억해 봐요.'; opts.forEach(o=>{if((o.getAttribute('onclick')||'').includes('true')) o.classList.add('correct');});}}
+function resetAll(){setScore(0); answered={}; synth.cancel(); document.querySelectorAll('.opt').forEach(o=>o.className='opt'); document.querySelectorAll('.fb').forEach(f=>{f.className='fb';f.textContent='';}); document.getElementById('bigNameBox').innerHTML='<div class="demo-char">🧑</div><div class="demo-text">방찬</div><div class="gesture">Bang Chan</div>'; document.getElementById('bigFamilyBox').innerHTML='<div class="demo-char">👵</div><div class="demo-text">엘라</div><div class="gesture">할머니</div>'; showDemo('ㅏ','아! 오른쪽!','👉');}
+setScore(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Korean Colors Flashcards & Quiz</title>
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --line:#e5e7eb;
+      --shadow:0 10px 30px rgba(0,0,0,.06);
+      --radius:24px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;background:var(--bg);color:var(--text)}
+    .wrap{max-width:1200px;margin:0 auto;padding:24px}
+    .hero,.section{background:#fff;border-radius:28px;box-shadow:var(--shadow)}
+    .hero{padding:28px;background:linear-gradient(135deg,#eef7ff,#f4fdf7)}
+    .section{padding:24px;margin-top:20px}
+    h1{margin:0 0 8px;font-size:40px}
+    h2{margin:0 0 10px;font-size:28px}
+    .subtitle{color:#4b5563;line-height:1.7}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+    .color-card{border-radius:22px;overflow:hidden;min-height:300px;display:flex;flex-direction:column;justify-content:space-between;position:relative;border:2px solid rgba(0,0,0,.08);cursor:pointer;transition:.2s transform,.2s box-shadow}
+    .color-card:hover{transform:translateY(-3px);box-shadow:0 12px 24px rgba(0,0,0,.15)}
+    .listen{position:absolute;top:12px;right:12px;border:0;border-radius:999px;padding:8px 12px;background:rgba(255,255,255,.25);backdrop-filter:blur(6px);font-weight:800;cursor:pointer}
+    .top{padding:20px 18px 10px;text-align:center}
+    .eng{font-size:22px;font-weight:800;margin-bottom:18px;text-transform:lowercase}
+    .formal{font-size:42px;font-weight:900;line-height:1.1;margin-bottom:8px}
+    .common{font-size:22px;font-weight:800}
+    .examples{padding:0 18px 18px;text-align:center;font-size:16px;font-weight:700;line-height:1.6}
+    .note-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+    .note{background:#eef7ff;border-radius:18px;padding:16px;line-height:1.7}
+    .flip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px}
+    .flip{perspective:1000px;height:190px;cursor:pointer}
+    .flip-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s}
+    .flip.flipped .flip-inner{transform:rotateY(180deg)}
+    .flip-face{position:absolute;inset:0;border-radius:20px;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px solid rgba(0,0,0,.08);padding:16px;text-align:center;font-weight:800}
+    .flip-back{transform:rotateY(180deg);background:#fff;color:#111}
+    .mcq-card{border:2px solid var(--line);border-radius:18px;padding:20px;margin-bottom:16px}
+    .swatch{height:100px;border-radius:16px;border:2px solid rgba(0,0,0,.12);margin:14px 0}
+    .options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .opt{padding:12px 14px;border-radius:14px;border:2px solid #d1d5db;background:#fff;cursor:pointer;font-weight:700}
+    .opt.correct{background:#dcfce7;border-color:#22c55e}
+    .opt.wrong{background:#fee2e2;border-color:#ef4444}
+    .scorebox{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:10px 0 20px}
+    .pill{background:#111827;color:#fff;padding:10px 16px;border-radius:999px;font-weight:800}
+    .btn{padding:10px 16px;border-radius:999px;border:0;background:#2563eb;color:#fff;font-weight:800;cursor:pointer}
+    .legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+    .legend div{background:#f3f4f6;padding:12px 14px;border-radius:12px;font-size:14px}
+    .small{color:#6b7280}
+    @media (max-width:680px){
+      .note-grid{grid-template-columns:1fr}
+      .formal{font-size:34px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <h1>색깔 공부하기 <span style="font-size:22px;color:#6b7280;">Korean Colors</span></h1>
+      <div class="subtitle">카드형 플래시카드 + 클릭하면 말하기 + 뒤집기 퀴즈 + 사지선다 퀴즈가 한 번에 들어 있어요. 카드나 🔊 버튼을 누르면 한국어로 읽어 줘요.</div>
+    </div>
+
+    <div class="section">
+      <h2>1. 색깔 카드</h2>
+      <div class="grid" id="cards"></div>
+      <div class="note-grid">
+        <div class="note"><b>형태</b><br>정식 표현: 빨간색, 파란색, 노란색<br>자주 말하는 표현: 빨강, 파랑, 노랑</div>
+        <div class="note"><b>연습 문장</b><br>바나나는 노란색이에요.<br>하늘은 파란색이에요.<br>포도는 보라색이에요.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>2. 뒤집기 퀴즈</h2>
+      <p class="small">앞면은 색만 보여요. 카드를 누르면 정답이 보여요.</p>
+      <div class="flip-grid" id="flipGrid"></div>
+    </div>
+
+    <div class="section">
+      <h2>3. 사지선다 퀴즈</h2>
+      <div class="scorebox">
+        <div class="pill">점수: <span id="score">0</span> / 10</div>
+        <button class="btn" onclick="resetQuiz()">다시하기</button>
+      </div>
+      <div id="quizArea"></div>
+    </div>
+
+    <div class="section">
+      <h2>4. 자주 쓰는 말</h2>
+      <div class="legend">
+        <div>이건 무슨 색이에요?</div>
+        <div>빨간색이에요.</div>
+        <div>저는 파란색 좋아해요.</div>
+        <div>바나나는 노란색이에요.</div>
+        <div>검은색 셔츠예요.</div>
+        <div>분홍색 꽃이에요.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const colorsData = [
+      {id:'white',eng:'white',formal:'흰색',common:'하양',bg:'#F5F5F5',text:'#111111',examples:['눈','우유','토끼']},
+      {id:'black',eng:'black',formal:'검은색',common:'검정 / 까망',bg:'#111111',text:'#FFFFFF',examples:['밤','고양이','까마귀']},
+      {id:'gray',eng:'grey',formal:'회색',common:'회색',bg:'#8E8E8E',text:'#FFFFFF',examples:['구름','돌','코끼리']},
+      {id:'red',eng:'red',formal:'빨간색',common:'빨강',bg:'#FF2A2A',text:'#FFFFFF',examples:['토마토','사과','딸기']},
+      {id:'pink',eng:'pink',formal:'분홍색',common:'분홍',bg:'#F6B7C8',text:'#111111',examples:['꽃','돼지','솜사탕']},
+      {id:'orange',eng:'orange',formal:'주황색',common:'주황',bg:'#FFA500',text:'#111111',examples:['귤','당근','오렌지']},
+      {id:'yellow',eng:'yellow',formal:'노란색',common:'노랑',bg:'#F6F700',text:'#111111',examples:['바나나','병아리','해']},
+      {id:'green',eng:'green',formal:'초록색',common:'초록',bg:'#1E7A46',text:'#FFFFFF',examples:['잎','개구리','오이']},
+      {id:'lightgreen',eng:'light green',formal:'연두색',common:'연두',bg:'#B6E35A',text:'#111111',examples:['새싹','라임','멜론']},
+      {id:'blue',eng:'blue',formal:'파란색',common:'파랑',bg:'#1743FF',text:'#FFFFFF',examples:['하늘','바다','지구']},
+      {id:'skyblue',eng:'sky blue',formal:'하늘색',common:'하늘색',bg:'#7FD6FF',text:'#111111',examples:['맑은 하늘','풍선','수영장']},
+      {id:'navy',eng:'navy',formal:'남색',common:'남색',bg:'#0E1D8F',text:'#FFFFFF',examples:['교복','밤바다','재킷']},
+      {id:'purple',eng:'purple',formal:'보라색',common:'보라',bg:'#8A11B0',text:'#FFFFFF',examples:['포도','라벤더','자두']},
+      {id:'brown',eng:'brown',formal:'갈색',common:'갈색',bg:'#A52A2A',text:'#FFFFFF',examples:['초콜릿','나무','곰']},
+      {id:'gold',eng:'gold',formal:'금색',common:'금색',bg:'#D4AF37',text:'#111111',examples:['메달','왕관','별']},
+      {id:'silver',eng:'silver',formal:'은색',common:'은색',bg:'#C9CDD1',text:'#111111',examples:['숟가락','동전','로봇']},
+    ];
+
+    const questions = [
+      ['🍅 토마토는 무슨 색이에요?','red',['빨간색','파란색','초록색','노란색']],
+      ['🍌 바나나는 무슨 색이에요?','yellow',['보라색','노란색','주황색','갈색']],
+      ['🍇 포도는 무슨 색이에요?','purple',['보라색','빨간색','하늘색','은색']],
+      ['🍃 잎은 무슨 색이에요?','green',['남색','초록색','분홍색','갈색']],
+      ['☁️ 눈은 무슨 색이에요?','white',['회색','흰색','검은색','금색']],
+      ['🌊 바다는 무슨 색이에요?','blue',['파란색','노란색','갈색','분홍색']],
+      ['🥄 숟가락은 무슨 색으로 자주 보여요?','silver',['은색','주황색','보라색','연두색']],
+      ['🏅 메달은 무슨 색이에요?','gold',['회색','금색','남색','분홍색']],
+      ['🌸 꽃은 무슨 색이에요?','pink',['분홍색','갈색','검은색','초록색']],
+      ['🥕 당근은 무슨 색이에요?','orange',['하늘색','주황색','보라색','흰색']],
+    ];
+
+    const lookup = Object.fromEntries(colorsData.map(c => [c.id, c]));
+
+    const synth = window.speechSynthesis;
+    let voices = [];
+
+    function loadVoices(){
+      voices = synth.getVoices();
+    }
+
+    loadVoices();
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+      speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+    function getPreferredKoreanVoice(){
+      const koreanVoices = voices.filter(v =>
+        v.lang && v.lang.toLowerCase().startsWith('ko')
+      );
+
+      return (
+        koreanVoices.find(v => /female|woman|yuna|sunhi|sora|nari|google 한국의|heami|sera/i.test(v.name)) ||
+        koreanVoices.find(v => v.lang.toLowerCase() === 'ko-kr') ||
+        koreanVoices[0] ||
+        null
+      );
+    }
+
+    function speakText(text){
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = 'ko-KR';
+      utter.rate = 0.95;
+      utter.pitch = 1.15;
+      utter.volume = 1;
+
+      const selectedVoice = getPreferredKoreanVoice();
+      if (selectedVoice) {
+        utter.voice = selectedVoice;
+      }
+
+      synth.cancel();
+      synth.speak(utter);
+    }
+
+    function buildCards(){
+      const cards = document.getElementById('cards');
+      colorsData.forEach(c => {
+        const speak = `${c.formal}. ${c.common}.`;
+        const el = document.createElement('div');
+        el.className = 'color-card';
+        el.style.background = c.bg;
+        el.style.color = c.text;
+        el.innerHTML = `
+          <button class="listen">🔊</button>
+          <div class="top">
+            <div class="eng">${c.eng}</div>
+            <div class="formal">${c.formal}</div>
+            <div class="common">→ ${c.common}</div>
+          </div>
+          <div class="examples">예: ${c.examples.join(' · ')}</div>
+        `;
+        el.onclick = () => speakText(speak);
+        el.querySelector('.listen').onclick = (e) => { e.stopPropagation(); speakText(speak); };
+        cards.appendChild(el);
+      });
+    }
+
+    function buildFlipCards(){
+      const box = document.getElementById('flipGrid');
+      colorsData.slice(0, 12).forEach(c => {
+        const el = document.createElement('div');
+        el.className = 'flip';
+        el.innerHTML = `
+          <div class="flip-inner">
+            <div class="flip-face" style="background:${c.bg};color:${c.text}">
+              <div style="font-size:42px">🎨</div>
+              <div style="font-size:18px;margin-top:8px">이건 무슨 색일까요?</div>
+            </div>
+            <div class="flip-face flip-back">
+              <div style="font-size:28px">${c.formal}</div>
+              <div style="font-size:18px;color:#4b5563;margin-top:6px">→ ${c.common}</div>
+              <div style="font-size:15px;margin-top:12px">예: ${c.examples.join(' · ')}</div>
+            </div>
+          </div>
+        `;
+        el.onclick = () => {
+          el.classList.toggle('flipped');
+          speakText(`${c.formal}.`);
+        };
+        box.appendChild(el);
+      });
+    }
+
+    let score = 0;
+    function buildQuiz(){
+      const area = document.getElementById('quizArea');
+      questions.forEach((q, i) => {
+        const [question, qid, options] = q;
+        const sw = lookup[qid];
+        const el = document.createElement('div');
+        el.className = 'mcq-card';
+        el.dataset.answer = sw.formal;
+        el.innerHTML = `
+          <div style="font-weight:800;font-size:20px">Q${i+1}. ${question}</div>
+          <div class="swatch" style="background:${sw.bg};"></div>
+          <div class="options">
+            ${options.map(opt => `<button class="opt">${opt}</button>`).join('')}
+          </div>
+        `;
+        el.querySelectorAll('.opt').forEach(btn => {
+          btn.onclick = () => checkAnswer(btn, sw.formal);
+        });
+        area.appendChild(el);
+      });
+    }
+
+    function checkAnswer(btn, answer){
+      const card = btn.closest('.mcq-card');
+      if(card.dataset.done === '1') return;
+      card.dataset.done = '1';
+      const buttons = card.querySelectorAll('.opt');
+      buttons.forEach(b => {
+        if(b.textContent === answer) b.classList.add('correct');
+        if(b === btn && b.textContent !== answer) b.classList.add('wrong');
+        b.disabled = true;
+      });
+      if(btn.textContent === answer){
+        score += 1;
+        document.getElementById('score').textContent = score;
+        speakText(answer + '이에요.');
+      }
+    }
+
+    function resetQuiz(){
+      score = 0;
+      document.getElementById('score').textContent = '0';
+      document.querySelectorAll('.mcq-card').forEach(card => {
+        card.dataset.done = '0';
+        card.querySelectorAll('.opt').forEach(b => {
+          b.disabled = false;
+          b.classList.remove('correct', 'wrong');
+        });
+      });
+    }
+
+    buildCards();
+    buildFlipCards();
+    buildQuiz();
+  </script>
+</body>
+</html>

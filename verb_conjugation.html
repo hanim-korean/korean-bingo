@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>한국어 동사 활용 — -아요/-어요/-해요</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans KR',sans-serif;background:#f8f8f6;padding:24px 20px;color:#1a1a1a}
+.wrap{max-width:780px;margin:0 auto}
+h1{font-size:20px;font-weight:700;margin-bottom:6px;color:#111}
+.subtitle{font-size:13px;color:#6b7280;margin-bottom:24px}
+.tabs{display:flex;gap:6px;margin-bottom:1.5rem;flex-wrap:wrap}
+.tab{font-size:13px;padding:6px 14px;border-radius:8px;border:1px solid #d1d5db;background:#f3f4f6;color:#6b7280;cursor:pointer}
+.tab.active{background:#dbeafe;color:#1d4ed8;border-color:#93c5fd}
+.section{display:none}
+.section.active{display:block}
+.sec-label{font-size:11px;color:#6b7280;font-weight:600;letter-spacing:.04em;margin-bottom:12px}
+.card-area{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:1.5rem}
+.fc{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:14px 10px;text-align:center;cursor:pointer;min-height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;transition:border-color .15s}
+.fc:hover{border-color:#93c5fd}
+.fc.flipped{background:#dbeafe}
+.fc-kr{font-size:19px;font-weight:600;color:#111}
+.fc.flipped .fc-kr{color:#1d4ed8;font-size:21px}
+.fc-en{font-size:11px;color:#6b7280}
+.fc.flipped .fc-en{display:none}
+.score-row{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.score-lbl{font-size:13px;color:#6b7280}
+.score-num{font-size:18px;font-weight:700;color:#111}
+.reset-btn{font-size:12px;padding:4px 12px;border-radius:20px;border:1px solid #e5e7eb;background:#f3f4f6;color:#6b7280;cursor:pointer}
+.reset-btn:hover{background:#fee2e2;color:#b91c1c}
+.qcard{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:1rem 1.25rem;margin-bottom:10px}
+.qnum{font-size:11px;font-weight:600;color:#b91c1c;margin-bottom:6px}
+.qq{font-size:14px;font-weight:600;color:#111;line-height:1.6;margin-bottom:10px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{font-size:14px;font-weight:600;color:#374151;background:#f3f4f6;border-radius:8px;padding:7px 14px;cursor:pointer;border:1px solid #e5e7eb;transition:background .15s}
+.opt:hover{background:#dbeafe;color:#1d4ed8}
+.opt.correct{background:#dcfce7;color:#15803d;border-color:#86efac}
+.opt.wrong{background:#fee2e2;color:#b91c1c;border-color:#fca5a5}
+.opt.disabled{pointer-events:none}
+.fb{font-size:13px;margin-top:8px;padding:6px 10px;border-radius:8px;display:none;line-height:1.5}
+.fb.show{display:block}
+.fb.ok{background:#dcfce7;color:#15803d}
+.fb.no{background:#fee2e2;color:#b91c1c}
+.irr-rule{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:1rem 1.25rem;margin-bottom:12px}
+.irr-title{font-size:15px;font-weight:700;color:#111;margin-bottom:4px}
+.irr-sub{font-size:12px;color:#6b7280;margin-bottom:10px;line-height:1.5}
+.irr-table{width:100%;border-collapse:collapse;font-size:13px}
+.irr-table th{text-align:left;color:#6b7280;font-weight:600;padding:4px 8px 6px;border-bottom:1px solid #e5e7eb}
+.irr-table td{padding:5px 8px;border-bottom:1px solid #f3f4f6;color:#111}
+.irr-table td:last-child{color:#1d4ed8;font-weight:600}
+.irr-table tr:last-child td{border-bottom:none}
+.rule-badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;background:#fef3c7;color:#92400e;margin-left:6px;vertical-align:middle}
+.note-box{background:#f9fafb;border-radius:6px;padding:8px 12px;font-size:12px;color:#6b7280;margin-top:8px;line-height:1.6;border-left:3px solid #3b82f6}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>한국어 동사 활용 — -아요 / -어요 / -해요</h1>
+<p class="subtitle">플래시카드를 클릭하면 활용형이 나와요. 퀴즈는 다시 하기를 누르면 문제가 섞여요!</p>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('fc1')">플래시카드 1 (-아요)</div>
+  <div class="tab" onclick="switchTab('fc2')">플래시카드 2 (-어요)</div>
+  <div class="tab" onclick="switchTab('fc3')">플래시카드 3 (-해요)</div>
+  <div class="tab" onclick="switchTab('q1')">퀴즈 1</div>
+  <div class="tab" onclick="switchTab('q2')">퀴즈 2</div>
+  <div class="tab" onclick="switchTab('q3')">퀴즈 3</div>
+  <div class="tab" onclick="switchTab('irr')">불규칙</div>
+</div>
+
+<div id="fc1" class="section active"><p class="sec-label">Case 1 — -아요</p><div class="card-area" id="fc1-cards"></div></div>
+<div id="fc2" class="section"><p class="sec-label">Case 2 — -어요</p><div class="card-area" id="fc2-cards"></div></div>
+<div id="fc3" class="section"><p class="sec-label">Case 3 — -해요</p><div class="card-area" id="fc3-cards"></div></div>
+
+<div id="q1" class="section"><p class="sec-label">Case 1 퀴즈 — 10문제</p><div class="score-row"><span class="score-lbl">점수</span><span class="score-num" id="s1">0</span><span class="score-lbl">/ 100</span><button class="reset-btn" onclick="resetQ(1)">다시 하기</button></div><div id="q1-wrap"></div></div>
+<div id="q2" class="section"><p class="sec-label">Case 2 퀴즈 — 10문제</p><div class="score-row"><span class="score-lbl">점수</span><span class="score-num" id="s2">0</span><span class="score-lbl">/ 100</span><button class="reset-btn" onclick="resetQ(2)">다시 하기</button></div><div id="q2-wrap"></div></div>
+<div id="q3" class="section"><p class="sec-label">Case 3 퀴즈 — 10문제</p><div class="score-row"><span class="score-lbl">점수</span><span class="score-num" id="s3">0</span><span class="score-lbl">/ 100</span><button class="reset-btn" onclick="resetQ(3)">다시 하기</button></div><div id="q3-wrap"></div></div>
+
+<div id="irr" class="section">
+  <p class="sec-label">불규칙 활용 — 규칙형을 완전히 익힌 후에 봐요!</p>
+  <div class="irr-rule">
+    <div class="irr-title">ㅡ 탈락 <span class="rule-badge">ㅡ 불규칙</span></div>
+    <div class="irr-sub">어근이 ㅡ로 끝날 때 → ㅡ가 사라지고 앞 모음에 따라 -아요/-어요 결정</div>
+    <table class="irr-table"><tr><th>기본형</th><th>뜻</th><th>→ 활용형</th></tr>
+    <tr><td>쓰다</td><td>to write / to use</td><td>써요</td></tr>
+    <tr><td>끄다</td><td>to turn off</td><td>꺼요</td></tr>
+    <tr><td>크다</td><td>to be big</td><td>커요</td></tr>
+    <tr><td>바쁘다</td><td>to be busy</td><td>바빠요</td></tr>
+    <tr><td>아프다</td><td>to be sick/hurt</td><td>아파요</td></tr></table>
+    <div class="note-box">쓰다 → 쓰- → ㅡ 탈락 → 앞 모음 없으면 -어요 → 써요</div>
+  </div>
+  <div class="irr-rule">
+    <div class="irr-title">ㄷ 불규칙 <span class="rule-badge">ㄷ 불규칙</span></div>
+    <div class="irr-sub">받침이 ㄷ인 일부 동사 → 모음 앞에서 ㄷ이 ㄹ로 바뀜</div>
+    <table class="irr-table"><tr><th>기본형</th><th>뜻</th><th>→ 활용형</th></tr>
+    <tr><td>걷다</td><td>to walk</td><td>걸어요</td></tr>
+    <tr><td>듣다</td><td>to listen/hear</td><td>들어요</td></tr>
+    <tr><td>묻다</td><td>to ask</td><td>물어요</td></tr></table>
+    <div class="note-box">규칙형과 구분! 받다→받아요, 닫다→닫아요 는 ㄷ 규칙이에요.</div>
+  </div>
+  <div class="irr-rule">
+    <div class="irr-title">ㅂ 불규칙 <span class="rule-badge">ㅂ 불규칙</span></div>
+    <div class="irr-sub">받침이 ㅂ인 일부 형용사/동사 → 모음 앞에서 ㅂ이 우/오로 바뀜</div>
+    <table class="irr-table"><tr><th>기본형</th><th>뜻</th><th>→ 활용형</th></tr>
+    <tr><td>덥다</td><td>to be hot</td><td>더워요</td></tr>
+    <tr><td>춥다</td><td>to be cold</td><td>추워요</td></tr>
+    <tr><td>맵다</td><td>to be spicy</td><td>매워요</td></tr>
+    <tr><td>어렵다</td><td>to be difficult</td><td>어려워요</td></tr>
+    <tr><td>쉽다</td><td>to be easy</td><td>쉬워요</td></tr></table>
+    <div class="note-box">날씨 어휘랑 함께 배우면 자연스러워요 — 오늘 너무 더워요!</div>
+  </div>
+  <div class="irr-rule">
+    <div class="irr-title">르 불규칙 <span class="rule-badge">르 불규칙</span></div>
+    <div class="irr-sub">어근이 르로 끝날 때 → ㄹ이 앞 음절 받침으로 이동하고 -라요/-러요</div>
+    <table class="irr-table"><tr><th>기본형</th><th>뜻</th><th>→ 활용형</th></tr>
+    <tr><td>모르다</td><td>to not know</td><td>몰라요</td></tr>
+    <tr><td>부르다</td><td>to call / to sing</td><td>불러요</td></tr>
+    <tr><td>다르다</td><td>to be different</td><td>달라요</td></tr>
+    <tr><td>빠르다</td><td>to be fast</td><td>빨라요</td></tr></table>
+    <div class="note-box">모르다 → 모르- → ㄹ이 앞으로 → 몰+라요 → 몰라요</div>
+  </div>
+</div>
+</div>
+
+<script>
+var data={
+  1:[
+    {kr:'앉다',en:'to sit',conj:'앉아요'},{kr:'오다',en:'to come',conj:'와요'},
+    {kr:'자다',en:'to sleep',conj:'자요'},{kr:'가다',en:'to go',conj:'가요'},
+    {kr:'만나다',en:'to meet',conj:'만나요'},{kr:'보다',en:'to see/look',conj:'봐요'},
+    {kr:'받다',en:'to get/receive',conj:'받아요'},{kr:'사다',en:'to buy',conj:'사요'},
+    {kr:'닫다',en:'to close',conj:'닫아요'},{kr:'놀다',en:'to play',conj:'놀아요'},
+    {kr:'막다',en:'to stop/block',conj:'막아요'},{kr:'잡다',en:'to hold',conj:'잡아요'},
+    {kr:'알다',en:'to know',conj:'알아요'},{kr:'나오다',en:'to come out',conj:'나와요'},
+    {kr:'살다',en:'to live',conj:'살아요'},{kr:'나가다',en:'to go out',conj:'나가요'},
+    {kr:'찾다',en:'to find',conj:'찾아요'},{kr:'싸다',en:'to be cheap',conj:'싸요'}
+  ],
+  2:[
+    {kr:'열다',en:'to open',conj:'열어요'},{kr:'읽다',en:'to read',conj:'읽어요'},
+    {kr:'먹다',en:'to eat',conj:'먹어요'},{kr:'만들다',en:'to make',conj:'만들어요'},
+    {kr:'배우다',en:'to learn',conj:'배워요'},{kr:'서다',en:'to stand',conj:'서요'},
+    {kr:'멈추다',en:'to stop',conj:'멈춰요'},{kr:'바꾸다',en:'to change',conj:'바꿔요'},
+    {kr:'지다',en:'to lose',conj:'져요'},{kr:'보내다',en:'to send',conj:'보내요'},
+    {kr:'움직이다',en:'to move',conj:'움직여요'},{kr:'기다리다',en:'to wait',conj:'기다려요'},
+    {kr:'마시다',en:'to drink',conj:'마셔요'},{kr:'있다',en:'to exist/have',conj:'있어요'},
+    {kr:'없다',en:'to not exist',conj:'없어요'},{kr:'다니다',en:'to attend/commute',conj:'다녀요'},
+    {kr:'켜다',en:'to turn on',conj:'켜요'}
+  ],
+  3:[
+    {kr:'공부하다',en:'to study',conj:'공부해요'},{kr:'말하다',en:'to talk/speak',conj:'말해요'},
+    {kr:'청소하다',en:'to clean',conj:'청소해요'},{kr:'노래하다',en:'to sing',conj:'노래해요'},
+    {kr:'설명하다',en:'to explain',conj:'설명해요'},{kr:'운동하다',en:'to exercise',conj:'운동해요'},
+    {kr:'일하다',en:'to work',conj:'일해요'},{kr:'요리하다',en:'to cook',conj:'요리해요'},
+    {kr:'운전하다',en:'to drive',conj:'운전해요'},{kr:'생각하다',en:'to think',conj:'생각해요'},
+    {kr:'전화하다',en:'to call',conj:'전화해요'},{kr:'기록하다',en:'to record',conj:'기록해요'},
+    {kr:'참여하다',en:'to participate',conj:'참여해요'},{kr:'좋아하다',en:'to like',conj:'좋아해요'},
+    {kr:'싫어하다',en:'to dislike',conj:'싫어해요'},{kr:'시작하다',en:'to start',conj:'시작해요'},
+    {kr:'준비하다',en:'to prepare',conj:'준비해요'},{kr:'약속하다',en:'to promise',conj:'약속해요'},
+    {kr:'이야기하다',en:'to talk/chat',conj:'이야기해요'},{kr:'사랑하다',en:'to love',conj:'사랑해요'},
+    {kr:'걱정하다',en:'to worry',conj:'걱정해요'},{kr:'쇼핑하다',en:'to go shopping',conj:'쇼핑해요'}
+  ]
+};
+function buildCards(n){var el=document.getElementById('fc'+n+'-cards');el.innerHTML='';data[n].forEach(function(v){var d=document.createElement('div');d.className='fc';d.innerHTML='<div class="fc-kr">'+v.kr+'</div><div class="fc-en">'+v.en+'</div>';d.onclick=function(){if(d.classList.contains('flipped')){d.classList.remove('flipped');d.innerHTML='<div class="fc-kr">'+v.kr+'</div><div class="fc-en">'+v.en+'</div>';}else{d.classList.add('flipped');d.innerHTML='<div class="fc-kr">'+v.conj+'</div>';}};el.appendChild(d);});}
+var scores={1:0,2:0,3:0};var answered={1:{},2:{},3:{}};
+function shuffle(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;}return b;}
+function buildQuiz(n){var wrap=document.getElementById('q'+n+'-wrap');wrap.innerHTML='';var pool=data[n];var picked=shuffle(pool).slice(0,10);picked.forEach(function(v,i){var qid='c'+n+'q'+i;var wrongs=shuffle(pool.filter(function(x){return x.kr!==v.kr;})).slice(0,3).map(function(x){return x.conj;});var opts=shuffle([v.conj].concat(wrongs));var div=document.createElement('div');div.className='qcard';div.id=qid;var optHtml=opts.map(function(o){var isC=(o===v.conj);return '<div class="opt" data-correct="'+isC+'" onclick="ans('+n+',\''+qid+'\',this,'+isC+')">'+o+'</div>';}).join('');div.innerHTML='<p class="qnum">문제 '+(i+1)+'/10</p><p class="qq">'+v.kr+' <span style="font-size:12px;font-weight:400;color:#6b7280">('+v.en+')</span> 의 -요 형태는?</p><div class="opts">'+optHtml+'</div><div class="fb" id="'+qid+'-fb"></div>';wrap.appendChild(div);});}
+function ans(n,qid,el,isCorrect){if(answered[n][qid])return;answered[n][qid]=true;var opts=document.querySelectorAll('#'+qid+' .opt');opts.forEach(function(o){o.classList.add('disabled');});var fb=document.getElementById(qid+'-fb');if(isCorrect){el.classList.add('correct');scores[n]+=10;document.getElementById('s'+n).textContent=scores[n];fb.textContent='정답! +10점';fb.className='fb show ok';}else{el.classList.add('wrong');opts.forEach(function(o){if(o.getAttribute('data-correct')==='true')o.classList.add('correct');});fb.textContent='아쉬워요! 다시 기억해봐요.';fb.className='fb show no';}}
+function resetQ(n){scores[n]=0;answered[n]={};document.getElementById('s'+n).textContent='0';buildQuiz(n);}
+var tabMap={'fc1':0,'fc2':1,'fc3':2,'q1':3,'q2':4,'q3':5,'irr':6};
+function switchTab(id){document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active');});document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});document.getElementById(id).classList.add('active');document.querySelectorAll('.tab')[tabMap[id]].classList.add('active');}
+buildCards(1);buildCards(2);buildCards(3);buildQuiz(1);buildQuiz(2);buildQuiz(3);
+</script>
+</body>
+</html>
