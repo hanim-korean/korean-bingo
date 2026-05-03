@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>정규 수업 3 · 제6과 불고기를 좋아해요</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;700&display=swap');
+
+  :root {
+    --bg: #F7F6F3;
+    --card: #FFFFFF;
+    --border: #E8E5DF;
+    --text-main: #37352F;
+    --text-muted: #9B9A97;
+    --text-light: #B5B3AE;
+    --accent-yellow: #FDECC8;
+    --accent-yellow-dark: #F5C842;
+    --accent-blue: #D3E5EF;
+    --accent-blue-dark: #4A90C4;
+    --accent-green: #DBEDDB;
+    --accent-green-dark: #3DAA5C;
+    --accent-red: #FFE2DD;
+    --accent-red-dark: #E03E3E;
+    --accent-purple: #E8DEEE;
+    --accent-purple-dark: #9065B0;
+    --tag-bg: #F1EFEA;
+    --divider: #E9E5DF;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--text-main);
+    font-size: 15px;
+    line-height: 1.7;
+    padding: 0 0 80px;
+  }
+
+  /* ── TOP HEADER ── */
+  .page-header {
+    padding: 60px 60px 36px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .breadcrumb {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .breadcrumb span { color: var(--text-light); }
+
+  .page-emoji { font-size: 52px; margin-bottom: 12px; display: block; }
+
+  .page-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1.25;
+    margin-bottom: 8px;
+  }
+
+  .page-subtitle {
+    font-size: 16px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+  }
+
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-muted);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 12px;
+  }
+
+  .meta-item .label { font-weight: 500; color: var(--text-main); }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+  .tag-yellow { background: var(--accent-yellow); color: #805900; }
+  .tag-blue   { background: var(--accent-blue);   color: #2A6B99; }
+  .tag-green  { background: var(--accent-green);  color: #266B3C; }
+
+  /* ── MAIN LAYOUT ── */
+  .content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 60px;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--divider);
+    margin: 32px 0;
+  }
+
+  /* ── SECTION HEADERS ── */
+  .section-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 20px;
+    margin-top: 36px;
+  }
+  .section-heading .icon { font-size: 22px; }
+  .section-heading.first { margin-top: 0; }
+
+  .sub-heading {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
+    margin-top: 24px;
+  }
+
+  /* ── CALLOUT BOX ── */
+  .callout {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .callout-yellow { background: var(--accent-yellow); }
+  .callout-blue   { background: var(--accent-blue);   }
+  .callout-green  { background: var(--accent-green);  }
+  .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .callout-body { flex: 1; }
+  .callout-body strong { font-weight: 600; }
+
+  /* ── FLASHCARD SECTION ── */
+  .flashcard-intro {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+
+  .flashcard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .flashcard {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    min-height: 130px;
+    cursor: pointer;
+    perspective: 800px;
+    position: relative;
+  }
+
+  .flashcard-inner {
+    width: 100%;
+    height: 100%;
+    min-height: 130px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 10px;
+  }
+
+  .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+
+  .fc-front, .fc-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 18px 16px;
+    border-radius: 10px;
+  }
+
+  .fc-front {
+    background: var(--card);
+    border-radius: 10px;
+  }
+
+  .fc-back {
+    background: #2E2E2E;
+    color: white;
+    transform: rotateY(180deg);
+    border-radius: 10px;
+  }
+
+  .fc-korean {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 4px;
+  }
+
+  .fc-romanize {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  .fc-hint {
+    font-size: 11px;
+    color: var(--text-light);
+    margin-top: 6px;
+  }
+
+  .fc-answer {
+    font-size: 15px;
+    font-weight: 500;
+    color: #f0f0f0;
+    margin-bottom: 4px;
+  }
+
+  .fc-example {
+    font-size: 12px;
+    color: #aaa;
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  .fc-flip-hint {
+    position: absolute;
+    bottom: 8px;
+    right: 10px;
+    font-size: 10px;
+    color: var(--text-light);
+  }
+
+  /* ── GRAMMAR TABLE ── */
+  .grammar-box {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  .grammar-box-header {
+    padding: 12px 18px;
+    background: #2E2E2E;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .grammar-pattern {
+    font-size: 20px;
+    font-weight: 700;
+    font-family: 'Noto Serif KR', serif;
+    padding: 16px 18px 12px;
+    color: var(--text-main);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .grammar-pattern em {
+    color: var(--accent-yellow-dark);
+    font-style: normal;
+  }
+
+  .grammar-examples {
+    padding: 12px 18px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .example-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 10px 14px;
+    align-items: start;
+  }
+
+  .ex-q {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-main);
+  }
+
+  .ex-q small { font-size: 11px; color: var(--text-muted); display: block; }
+
+  .ex-a {
+    font-size: 14px;
+    color: #2A6B99;
+    font-weight: 500;
+  }
+
+  .ex-a small { font-size: 11px; color: var(--text-muted); display: block; }
+
+  /* ── VOCAB TABLE ── */
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .vocab-card {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 14px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .vocab-card.food { border-left: 3px solid var(--accent-yellow-dark); }
+  .vocab-card.verb { border-left: 3px solid var(--accent-blue-dark); }
+
+  .vocab-ko {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-main);
+  }
+
+  .vocab-en {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .vocab-type {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-light);
+    margin-top: 2px;
+  }
+
+  /* ── DIALOGUE BOX ── */
+  .dialogue-box {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+
+  .dialogue-line {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .dialogue-line:last-child { margin-bottom: 0; }
+
+  .speaker-bubble {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+  .speaker-a { background: var(--accent-yellow); color: #805900; }
+  .speaker-b { background: var(--accent-blue); color: #2A6B99; }
+
+  .dialogue-text { font-size: 14px; line-height: 1.6; }
+  .dialogue-text strong { font-weight: 600; }
+  .dialogue-text .en { font-size: 12px; color: var(--text-muted); display: block; font-style: italic; }
+  .dialogue-text .highlight { color: var(--accent-yellow-dark); font-weight: 700; }
+
+  /* ── ACTIVITY BOX ── */
+  .activity-box {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 12px;
+  }
+
+  .activity-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .activity-content {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text-main);
+  }
+
+  /* ── HOMEWORK BOX ── */
+  .homework-box {
+    background: var(--accent-yellow);
+    border: 1.5px solid var(--accent-yellow-dark);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-top: 8px;
+  }
+  .homework-box .hw-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #805900;
+  }
+  .hw-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .hw-list li {
+    font-size: 13px;
+    color: #5C3D00;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .hw-list li::before {
+    content: '☐';
+    font-size: 14px;
+    color: #9B6D00;
+    flex-shrink: 0;
+  }
+
+  /* ── COMPARE BOX ── */
+  .compare-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .compare-card {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+
+  .compare-card.lesson5 { border-top: 3px solid var(--accent-green-dark); }
+  .compare-card.lesson6 { border-top: 3px solid var(--accent-yellow-dark); }
+
+  .compare-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .compare-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--divider);
+    font-size: 14px;
+  }
+
+  .compare-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .compare-item .ko { font-weight: 600; }
+  .compare-item .arrow { color: var(--text-light); font-size: 11px; }
+  .compare-item .en { color: var(--text-muted); font-size: 12px; }
+
+  /* ── PROGRESS BAR ── */
+  .progress-section {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+  }
+  .progress-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .progress-bar-wrap {
+    background: var(--bg);
+    border-radius: 20px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 20px;
+    background: linear-gradient(90deg, var(--accent-green-dark), var(--accent-yellow-dark));
+    transition: width 1s ease;
+  }
+
+  /* ── FOOTER NOTE ── */
+  .footer-note {
+    font-size: 12px;
+    color: var(--text-light);
+    text-align: center;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--divider);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 680px) {
+    .page-header, .content { padding-left: 24px; padding-right: 24px; }
+    .page-title { font-size: 26px; }
+    .compare-row, .example-row { grid-template-columns: 1fr; }
+    .flashcard-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+   <div class="content">
+
+  <!-- PROGRESS -->
+  <div class="progress-section">
+    <div class="progress-label">
+      <span>교재 전체 진도</span>
+      <span style="font-weight:600; color: var(--text-main);">6 / 16 과</span>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" style="width: 37.5%"></div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ══════════════ SECTION 1: REVIEW ══════════════ -->
+  <h2 class="section-heading first">
+    <span class="icon">🔄</span> 복습 (Review) — 제5과 우유가 좋아요
+  </h2>
+
+  <div class="callout callout-blue">
+    <span class="callout-icon">💡</span>
+    <div class="callout-body">
+      카드를 클릭하면 뒤집혀요! 먼저 이모티콘을 보고 한국어로 말해보세요.
+      <br><small style="color:#5a7a8a;">Click each card to reveal the answer.</small>
+    </div>
+  </div>
+
+  <p class="flashcard-intro">📦 5과 단어 플래시카드 — Lesson 5 Vocabulary</p>
+
+  <div class="flashcard-grid">
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean">🍦</div>
+          <div class="fc-hint">dessert</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">아이스크림</div>
+          <div class="fc-romanize">a-i-seu-keu-rim</div>
+          <div class="fc-example">아이스크림이 좋아요.<br><em style="font-size:11px;">I like ice cream.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean">🍬</div>
+          <div class="fc-hint">sweet</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">사탕</div>
+          <div class="fc-romanize">sa-tang</div>
+          <div class="fc-example">사탕이 좋아요.<br><em style="font-size:11px;">I like candy.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean">🍪</div>
+          <div class="fc-hint">snack</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">과자</div>
+          <div class="fc-romanize">gwa-ja</div>
+          <div class="fc-example">과자가 좋아요.<br><em style="font-size:11px;">I like cookies.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean">🥟</div>
+          <div class="fc-hint"> Korean food</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">만두</div>
+          <div class="fc-romanize">man-du</div>
+          <div class="fc-example">만두가 좋아요.<br><em style="font-size:11px;">I like dumplings.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean">🍕</div>
+          <div class="fc-hint">italian food</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">피자</div>
+          <div class="fc-romanize">pi-ja</div>
+          <div class="fc-example">피자를 좋아해요.<br><em style="font-size:11px;">I like pizza.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean">🍝</div>
+          <div class="fc-hint">noodle</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">스파게티</div>
+          <div class="fc-romanize">seu-pa-ge-ti</div>
+          <div class="fc-example">스파게티가 좋아요.<br><em style="font-size:11px;">I like spaghetti.</em></div>
+        </div>
+      </div>
+    </div>
+</div>
+
+  <p class="flashcard-intro" style="margin-top:20px;">📝 5과 문법 플래시카드 — Lesson 5 Grammar</p>
+
+  <div class="flashcard-grid">
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean" style="font-size:17px;">~이/가 좋아요</div>
+          <div class="fc-romanize">~i/ga jo-a-yo</div>
+          <div class="fc-hint">Subject marker + like</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">I like ~ / ~ is good</div>
+          <div class="fc-example">피자<strong style="color:#FFD700;">가</strong> 좋아요.<br>우유<strong style="color:#FFD700;">가</strong> 좋아요.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean" style="font-size:15px;">뭐가 좋아요?</div>
+          <div class="fc-romanize">mwo-ga jo-a-yo?</div>
+          <div class="fc-hint">Asking preference</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">What do you like?</div>
+          <div class="fc-example">뭐가 좋아요?<br>→ 사탕이 좋아요.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean" style="font-size:15px;">네 / 아니요</div>
+          <div class="fc-romanize">ne / a-ni-yo</div>
+          <div class="fc-hint">Yes / No</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">Yes / No</div>
+          <div class="fc-example">아이스크림이 좋아요?<br>→ 네, 좋아요. / 아니요.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="divider">
+
+  <!-- ══════════════ SECTION 2: 5과 vs 6과 비교 ══════════════ -->
+  <h2 class="section-heading">
+    <span class="icon">🔍</span> 5과 ↔ 6과 비교 — Key Difference
+  </h2>
+
+  <div class="callout callout-yellow">
+    <span class="callout-icon">⭐</span>
+    <div class="callout-body">
+      오늘의 핵심 포인트! 5과에서는 <strong>~이/가 좋아요</strong>를 배웠어요.<br>
+      6과에서는 목적어 표지 <strong>~을/를</strong>이 붙는 <strong>좋아해요 / 싫어해요</strong>를 배워요.<br>
+      <small style="color:#805900;">Today's key: we add an object marker ~을/를 and the verb changes!</small>
+    </div>
+  </div>
+
+  <div class="compare-row">
+    <div class="compare-card lesson5">
+      <div class="compare-label">✅ 5과 — 이미 배운 것</div>
+      <div class="compare-item"><span class="ko">~이/가 좋아요</span></div>
+      <div class="compare-item"><span class="ko">아이스크림이 좋아요</span> <span class="arrow">→</span> <span class="en">I like ice cream</span></div>
+      <div class="compare-item"><span class="ko">피자가 좋아요</span> <span class="arrow">→</span> <span class="en">I like pizza</span></div>
+      <div class="compare-item"><span class="ko">뭐가 좋아요?</span> <span class="arrow">→</span> <span class="en">What do you like?</span></div>
+    </div>
+    <div class="compare-card lesson6">
+      <div class="compare-label">🆕 6과 — 오늘 배울 것</div>
+      <div class="compare-item"><span class="ko">~을/를 좋아해요 / 싫어해요</span></div>
+      <div class="compare-item"><span class="ko">불고기를 좋아해요</span> <span class="arrow">→</span> <span class="en">I like bulgogi</span></div>
+      <div class="compare-item"><span class="ko">라면을 싫어해요</span> <span class="arrow">→</span> <span class="en">I dislike ramyun</span></div>
+      <div class="compare-item"><span class="ko">뭘 좋아해요?</span> <span class="arrow">→</span> <span class="en">What do you like?</span></div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ══════════════ SECTION 3: TODAY'S VOCAB ══════════════ -->
+  <h2 class="section-heading">
+    <span class="icon">🍖</span> 오늘의 단어 — New Vocabulary (p.41)
+  </h2>
+
+  <div class="sub-heading">🥘 음식 (Food)</div>
+  <div class="vocab-grid">
+    <div class="vocab-card food">
+      <div class="vocab-ko">불고기</div>
+      <div class="vocab-en">bulgogi (Korean BBQ beef)</div>
+      <div class="vocab-type">🥩 food</div>
+    </div>
+    <div class="vocab-card food">
+      <div class="vocab-ko">잡채</div>
+      <div class="vocab-en">japchae (glass noodles)</div>
+      <div class="vocab-type">🍜 food</div>
+    </div>
+    <div class="vocab-card food">
+      <div class="vocab-ko">라면</div>
+      <div class="vocab-en">ramyun (instant noodles)</div>
+      <div class="vocab-type">🍜 food</div>
+    </div>
+    <div class="vocab-card food">
+      <div class="vocab-ko">김치</div>
+      <div class="vocab-en">kimchi (fermented cabbage)</div>
+      <div class="vocab-type">🌶️ food</div>
+    </div>
+  </div>
+
+  <div class="sub-heading">🗣️ 동사/표현 (Verbs &amp; Expressions)</div>
+  <div class="vocab-grid">
+    <div class="vocab-card verb">
+      <div class="vocab-ko">좋아해요</div>
+      <div class="vocab-en">like (to like)</div>
+      <div class="vocab-type">💛 verb</div>
+    </div>
+    <div class="vocab-card verb">
+      <div class="vocab-ko">싫어해요</div>
+      <div class="vocab-en">dislike (to dislike)</div>
+      <div class="vocab-type">💙 verb</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ══════════════ SECTION 4: GRAMMAR ══════════════ -->
+  <h2 class="section-heading">
+    <span class="icon">📐</span> 문법 — Grammar (p.41)
+  </h2>
+
+  <!-- Pattern 1 -->
+  <div class="grammar-box">
+    <div class="grammar-box-header">📌 패턴 1 · Pattern 1</div>
+    <div class="grammar-pattern">
+      뭘 좋아해요? → <em>___을/를</em> 좋아해요.
+    </div>
+    <div class="grammar-examples">
+      <div class="example-row">
+        <div class="ex-q">뭘 좋아해요?<small>What do you like?</small></div>
+        <div class="ex-a">불고기<strong>를</strong> 좋아해요.<small>I like bulgogi.</small></div>
+      </div>
+      <div class="example-row">
+        <div class="ex-q">뭘 좋아해요?<small>What do you like?</small></div>
+        <div class="ex-a">김치<strong>를</strong> 좋아해요.<small>I like kimchi.</small></div>
+      </div>
+      <div class="example-row">
+        <div class="ex-q">뭘 좋아해요?<small>What do you like?</small></div>
+        <div class="ex-a">잡채<strong>를</strong> 좋아해요.<small>I like japchae.</small></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pattern 2 -->
+  <div class="grammar-box">
+    <div class="grammar-box-header">📌 패턴 2 · Pattern 2</div>
+    <div class="grammar-pattern">
+      뭘 싫어해요? → <em>___을/를</em> 싫어해요.
+    </div>
+    <div class="grammar-examples">
+      <div class="example-row">
+        <div class="ex-q">뭘 싫어해요?<small>What do you dislike?</small></div>
+        <div class="ex-a">라면<strong>을</strong> 싫어해요.<small>I dislike ramyun.</small></div>
+      </div>
+      <div class="example-row">
+        <div class="ex-q">뭘 싫어해요?<small>What do you dislike?</small></div>
+        <div class="ex-a">김치<strong>를</strong> 싫어해요.<small>I dislike kimchi.</small></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Object marker rule -->
+  <div class="callout callout-green">
+    <span class="callout-icon">📏</span>
+    <div class="callout-body">
+      <strong>을 vs 를 규칙 — When to use 을 or 를?</strong><br>
+      앞 글자에 받침(final consonant)이 있으면 → <strong>을</strong> (예: 라면<strong>을</strong>, 김치<strong>를</strong>)<br>
+      앞 글자에 받침이 없으면 → <strong>를</strong> (예: 불고기<strong>를</strong>, 피자<strong>를</strong>)<br>
+      <small style="color:#266B3C;">Tip: 받침 있음 → 을 / 받침 없음 → 를</small>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ══════════════ SECTION 5: MAIN TEXT ══════════════ -->
+  <h2 class="section-heading">
+    <span class="icon">💬</span> 본문 대화 — Main Dialogue (p.40)
+  </h2>
+
+  <div class="dialogue-box">
+    <div class="dialogue-line">
+      <div class="speaker-bubble speaker-a">A</div>
+      <div class="dialogue-text">
+        뭘 <span class="highlight">좋아해요</span>?
+        <span class="en">What do you like?</span>
+      </div>
+    </div>
+    <div class="dialogue-line">
+      <div class="speaker-bubble speaker-b">B</div>
+      <div class="dialogue-text">
+        불고기<span class="highlight">를</span> 좋아해요.
+        <span class="en">I like bulgogi.</span>
+      </div>
+    </div>
+    <div class="dialogue-line">
+      <div class="speaker-bubble speaker-a">A</div>
+      <div class="dialogue-text">
+        뭘 <span class="highlight">싫어해요</span>?
+        <span class="en">What do you dislike?</span>
+      </div>
+    </div>
+    <div class="dialogue-line">
+      <div class="speaker-bubble speaker-b">B</div>
+      <div class="dialogue-text">
+        라면<span class="highlight">을</span> 싫어해요.
+        <span class="en">I dislike ramyun.</span>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ══════════════ SECTION 6: ACTIVITIES ══════════════ -->
+  <h2 class="section-heading">
+    <span class="icon">🎯</span> 수업 활동 — Class Activities
+  </h2>
+
+  <div class="activity-box">
+    <div class="activity-title">👂 들어 봐요 · Let's Listen! (p.42)</div>
+    <div class="activity-content">
+      사람과 좋아하는 음식을 연결하세요. Match each person to their favorite food.<br>
+      <small style="color: var(--text-muted);">(1) 린다 (2) 슬기 (3) 준영 → 음식 그림 연결</small>
+    </div>
+  </div>
+
+  <div class="activity-box">
+    <div class="activity-title">🗣️ 이야기해요 · Let's Talk! (p.43)</div>
+    <div class="activity-content">
+      친구는 뭘 좋아해요? 이야기해 보세요.<br>
+      <em style="color: var(--text-muted);">What does your friend like? Share with your friend!</em><br><br>
+      <strong>예시 (Example):</strong><br>
+      저는 주스를 좋아해요. → 슬기는 주스를 좋아해요. 저는 우유를 좋아해요.
+    </div>
+  </div>
+
+  <div class="activity-box">
+    <div class="activity-title">✏️ 써 봐요 · Let's Write! (p.44)</div>
+    <div class="activity-content">
+      뭘 좋아해요? 뭘 싫어해요? 써 보세요.<br>
+      <em style="color: var(--text-muted);">What do you like? What do you dislike? Please write.</em><br><br>
+      빈칸 채우기: <strong>인형을 좋아해요 / 피자를 좋아해요 / 빵을 싫어해요</strong>
+    </div>
+  </div>
+
+  <div class="activity-box">
+    <div class="activity-title">🌏 문화 배우기 · Korean Culture (p.45)</div>
+    <div class="activity-content">
+      <strong>불고기와 김치 — Bulgogi &amp; Kimchi</strong><br>
+      불고기는 한국의 대표 음식이에요. 소고기나 돼지고기로 만들어요.<br>
+      김치는 배추, 고춧가루, 마늘로 만들어요. 한국 사람들은 김치를 정말 좋아해요!<br>
+      <small style="color: var(--text-muted);">Bulgogi is one of Korea's most beloved dishes. Kimchi is made from fermented cabbage with chili powder and garlic.</small>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ══════════════ SECTION 7: FLASHCARDS for today ══════════════ -->
+  <h2 class="section-heading">
+    <span class="icon">🃏</span> 오늘 배운 단어 플래시카드
+  </h2>
+
+  <div class="flashcard-grid">
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean">불고기</div>
+          <div class="fc-romanize">bul-go-gi</div>
+          <div class="fc-hint">🥩 Korean BBQ</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">Bulgogi</div>
+          <div class="fc-example">불고기<strong style="color:#FFD700;">를</strong> 좋아해요.<br><em style="font-size:11px;">(받침 없음 → 를)</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean">잡채</div>
+          <div class="fc-romanize">jap-chae</div>
+          <div class="fc-hint">🍜 glass noodles</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">Japchae</div>
+          <div class="fc-example">잡채<strong style="color:#FFD700;">를</strong> 좋아해요.<br><em style="font-size:11px;">(받침 없음 → 를)</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean">라면</div>
+          <div class="fc-romanize">ra-myeon</div>
+          <div class="fc-hint">🍜 instant noodles</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">Ramyun</div>
+          <div class="fc-example">라면<strong style="color:#FFD700;">을</strong> 싫어해요.<br><em style="font-size:11px;">(받침 있음 ㄴ → 을)</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean">김치</div>
+          <div class="fc-romanize">gim-chi</div>
+          <div class="fc-hint">🌶️ fermented veggie</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">Kimchi</div>
+          <div class="fc-example">김치<strong style="color:#FFD700;">를</strong> 좋아해요.<br><em style="font-size:11px;">(받침 없음 → 를)</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean">좋아해요</div>
+          <div class="fc-romanize">jo-a-hae-yo</div>
+          <div class="fc-hint">💛 positive feeling</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">I like / (someone) likes</div>
+          <div class="fc-example">불고기를 <strong style="color:#FFD700;">좋아해요</strong>.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean">싫어해요</div>
+          <div class="fc-romanize">si-reo-hae-yo</div>
+          <div class="fc-hint">💙 negative feeling</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">I dislike / (someone) dislikes</div>
+          <div class="fc-example">라면을 <strong style="color:#FFD700;">싫어해요</strong>.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="divider">
+
+  <!-- HOMEWORK -->
+  <h2 class="section-heading">
+    <span class="icon">📋</span> 숙제 (Homework)
+  </h2>
+
+  <div class="homework-box">
+    <div class="hw-title">📝 다음 수업 전까지 — Before next class</div>
+    <ul class="hw-list">
+      <li>오늘 배운 단어 외우기 — Memorize today's new vocabulary (p.41)</li>
+      <li>교재 p.40–45 복습하기 — Review textbook pages 40–45</li>
+      <li>써 봐요 완성하기 — Complete the writing activity (p.44)</li>
+      <li>자기가 좋아하는 음식 / 싫어하는 음식 한국어로 말할 수 있도록 연습하기</li>
+    </ul>
+  </div>
+
+  <div class="callout callout-yellow" style="margin-top: 20px;">
+    <span class="callout-icon">💡</span>
+    <div class="callout-body">
+      <strong>가장 중요한 건? 복습!</strong> 수업 끝나고 딱 10분만 복습해요.<br>
+      <small style="color:#805900;">The most important thing? Review! Just 10 minutes after class goes a long way.</small>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    맞춤 한국어 2 · 정규 수업 3 · 제6과 불고기를 좋아해요 · p.40–45
+  </div>
+
+</div>
+
+</body>
+</html>

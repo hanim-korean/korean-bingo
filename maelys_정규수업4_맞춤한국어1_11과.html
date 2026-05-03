@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>정규 수업 4 · 제11과 안녕하세요?</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;700&display=swap');
+
+  :root {
+    --bg: #F7F6F3;
+    --card: #FFFFFF;
+    --border: #E8E5DF;
+    --text-main: #37352F;
+    --text-muted: #9B9A97;
+    --text-light: #B5B3AE;
+    --accent-pink: #FFE4E8;
+    --accent-pink-dark: #D94F6B;
+    --accent-yellow: #FDECC8;
+    --accent-yellow-dark: #F5C842;
+    --accent-blue: #D3E5EF;
+    --accent-blue-dark: #4A90C4;
+    --accent-green: #DBEDDB;
+    --accent-green-dark: #3DAA5C;
+    --accent-teal: #D0EFEA;
+    --accent-teal-dark: #2A8C7A;
+    --divider: #E9E5DF;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--text-main);
+    font-size: 15px;
+    line-height: 1.7;
+    padding: 0 0 80px;
+  }
+
+  .page-header {
+    padding: 60px 60px 36px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .breadcrumb {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .breadcrumb span { color: var(--text-light); }
+
+  .page-emoji { font-size: 52px; margin-bottom: 12px; display: block; }
+
+  .page-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1.25;
+    margin-bottom: 8px;
+  }
+
+  .page-subtitle {
+    font-size: 16px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+  }
+
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-muted);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 12px;
+  }
+  .meta-item .label { font-weight: 500; color: var(--text-main); }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+  .tag-pink   { background: var(--accent-pink);   color: #8B0E2A; }
+  .tag-yellow { background: var(--accent-yellow); color: #805900; }
+  .tag-teal   { background: var(--accent-teal);   color: #1A5C4E; }
+  .tag-blue   { background: var(--accent-blue);   color: #2A6B99; }
+
+  .content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 60px;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--divider);
+    margin: 32px 0;
+  }
+
+  .section-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 20px;
+    margin-top: 36px;
+  }
+  .section-heading.first { margin-top: 0; }
+  .section-heading .icon { font-size: 22px; }
+
+  .sub-heading {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
+    margin-top: 24px;
+  }
+
+  .callout {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .callout-yellow { background: var(--accent-yellow); }
+  .callout-blue   { background: var(--accent-blue);   }
+  .callout-green  { background: var(--accent-green);  }
+  .callout-pink   { background: var(--accent-pink);   }
+  .callout-teal   { background: var(--accent-teal);   }
+  .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .callout-body { flex: 1; }
+  .callout-body strong { font-weight: 600; }
+
+  /* ── FLASHCARDS ── */
+  .flashcard-intro {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+
+  .flashcard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .flashcard {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    min-height: 130px;
+    cursor: pointer;
+    perspective: 800px;
+    position: relative;
+  }
+
+  .flashcard-inner {
+    width: 100%;
+    height: 100%;
+    min-height: 130px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 10px;
+  }
+
+  .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+
+  .fc-front, .fc-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 18px 14px;
+    border-radius: 10px;
+  }
+
+  .fc-front { background: var(--card); }
+  .fc-back {
+    background: #2E2E2E;
+    color: white;
+    transform: rotateY(180deg);
+  }
+
+  .fc-korean {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 4px;
+  }
+  .fc-romanize { font-size: 11px; color: var(--text-muted); font-style: italic; }
+  .fc-hint { font-size: 11px; color: var(--text-light); margin-top: 6px; }
+  .fc-answer { font-size: 15px; font-weight: 500; color: #f0f0f0; margin-bottom: 4px; }
+  .fc-example { font-size: 12px; color: #aaa; font-style: italic; line-height: 1.5; }
+  .fc-flip-hint { position: absolute; bottom: 8px; right: 10px; font-size: 10px; color: var(--text-light); }
+
+  /* ── READING PRACTICE ── */
+  .reading-box {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  .reading-header {
+    background: #2E2E2E;
+    color: white;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .reading-levels {
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .level-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .level-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .lv1 { background: var(--accent-green); color: #266B3C; }
+  .lv2 { background: var(--accent-yellow); color: #805900; }
+  .lv3 { background: var(--accent-pink); color: #8B0E2A; }
+
+  .level-words {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .word-chip {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 16px;
+    font-weight: 700;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    color: var(--text-main);
+  }
+
+  /* ── GRAMMAR BOX ── */
+  .grammar-box {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  .grammar-header {
+    padding: 10px 18px;
+    background: var(--accent-teal-dark);
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .grammar-pattern {
+    font-size: 20px;
+    font-weight: 700;
+    font-family: 'Noto Serif KR', serif;
+    padding: 16px 18px 12px;
+    color: var(--text-main);
+    border-bottom: 1px solid var(--border);
+  }
+  .grammar-pattern em { color: var(--accent-teal-dark); font-style: normal; }
+
+  .grammar-examples {
+    padding: 12px 18px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .example-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 10px 14px;
+  }
+
+  .ex-q { font-size: 14px; font-weight: 500; }
+  .ex-q small { font-size: 11px; color: var(--text-muted); display: block; }
+  .ex-a { font-size: 14px; color: var(--accent-teal-dark); font-weight: 500; }
+  .ex-a small { font-size: 11px; color: var(--text-muted); display: block; }
+
+  /* ── VOCAB GRID ── */
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .vocab-card {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 14px 12px;
+  }
+  .vocab-card.greeting { border-left: 3px solid var(--accent-teal-dark); }
+  .vocab-card.pronoun  { border-left: 3px solid var(--accent-blue-dark); }
+
+  .vocab-ko {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-main);
+  }
+  .vocab-en { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .vocab-note { font-size: 10px; color: var(--text-light); margin-top: 3px; }
+
+  /* ── DIALOGUE ── */
+  .dialogue-box {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+
+  .dialogue-line {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .dialogue-line:last-child { margin-bottom: 0; }
+
+  .speaker-bubble {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+  .sp-teacher { background: var(--accent-teal);  color: #1A5C4E; }
+  .sp-student { background: var(--accent-pink);  color: #8B0E2A; }
+  .sp-friend  { background: var(--accent-yellow); color: #805900; }
+
+  .dialogue-text { font-size: 14px; line-height: 1.6; }
+  .dialogue-text .highlight { color: var(--accent-teal-dark); font-weight: 700; }
+  .dialogue-text .en { font-size: 12px; color: var(--text-muted); display: block; font-style: italic; }
+
+  /* ── GOODBYE TABLE ── */
+  .goodbye-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .goodbye-card {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .goodbye-card.staying { border-top: 3px solid var(--accent-teal-dark); }
+  .goodbye-card.leaving { border-top: 3px solid var(--accent-pink-dark); }
+
+  .goodbye-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .goodbye-phrase {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 4px;
+  }
+
+  .goodbye-usage {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* ── ACTIVITY BOX ── */
+  .activity-box {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 12px;
+  }
+
+  .activity-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .activity-content {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text-main);
+  }
+
+  /* ── PROGRESS ── */
+  .progress-section {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+  }
+  .progress-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .progress-bar-wrap { background: var(--bg); border-radius: 20px; height: 8px; overflow: hidden; }
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 20px;
+    background: linear-gradient(90deg, var(--accent-teal-dark), var(--accent-pink-dark));
+  }
+
+  /* ── HOMEWORK ── */
+  .homework-box {
+    background: var(--accent-yellow);
+    border: 1.5px solid var(--accent-yellow-dark);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-top: 8px;
+  }
+  .hw-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #805900;
+  }
+  .hw-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .hw-list li { font-size: 13px; color: #5C3D00; display: flex; align-items: center; gap: 8px; }
+  .hw-list li::before { content: '☐'; font-size: 14px; color: #9B6D00; flex-shrink: 0; }
+
+  .footer-note {
+    font-size: 12px;
+    color: var(--text-light);
+    text-align: center;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--divider);
+  }
+
+  @media (max-width: 680px) {
+    .page-header, .content { padding-left: 24px; padding-right: 24px; }
+    .page-title { font-size: 26px; }
+    .goodbye-grid, .example-row { grid-template-columns: 1fr; }
+    .flashcard-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="breadcrumb">
+    맞춤 한국어 1 <span>›</span> 정규 수업 4
+  </div>
+  <span class="page-emoji">🇰🇷</span>
+  <h1 class="page-title">정규 수업 4</h1>
+  <p class="page-subtitle">제11과 · 안녕하세요? — Hello. How are you?</p>
+
+  <div class="meta-row">
+    <div class="meta-item">📅 <span class="label">날짜</span> 2026년 4월 22일</div>
+    <div class="meta-item">📖 <span class="label">교재</span> 맞춤 한국어 01</div>
+    <div class="meta-item">📄 <span class="label">진도</span> p.70–75</div>
+  </div>
+  <div class="meta-row" style="margin-top:8px;">
+    <span class="tag tag-pink">🔄 복습 포함</span>
+    <span class="tag tag-teal">👋 인사 표현</span>
+    <span class="tag tag-blue">📝 이름이 뭐예요?</span>
+    <span class="tag tag-yellow">🌏 문화: 인사</span>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- PROGRESS -->
+  <div class="progress-section">
+    <div class="progress-label">
+      <span>교재 전체 진도</span>
+      <span style="font-weight:600; color: var(--text-main);">11 / 16 과</span>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" style="width: 68.75%"></div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ══ SECTION 1: REVIEW ══ -->
+  <h2 class="section-heading first">
+    <span class="icon">🔄</span> 복습 (Review) — 지난 수업 (p.56–68)
+  </h2>
+
+  <div class="callout callout-blue">
+    <span class="callout-icon">💡</span>
+    <div class="callout-body">
+      카드를 클릭하면 뒤집혀요! 먼저 한국어를 보고 영어로 말해보세요.<br>
+      <small style="color:#2A6B99;">Click to flip — say the answer before you look!</small>
+    </div>
+  </div>
+
+  <!-- Reading practice review -->
+  <p class="flashcard-intro">📖 지난 시간 읽기 연습 (받침 읽기 — Final Consonants)</p>
+
+  <div class="reading-box">
+    <div class="reading-header">📚 받침(받침) 읽기 연습 — Reading Practice (p.56–68)</div>
+    <div class="reading-levels">
+      <div class="level-row">
+        <div class="level-badge lv1">1단계</div>
+        <div class="level-words">
+          <span class="word-chip">입</span>
+          <span class="word-chip">앞</span>
+          <span class="word-chip">옆</span>
+          <span class="word-chip">톱</span>
+          <span class="word-chip">숲</span>
+          <span class="word-chip">법</span>
+          <span class="word-chip">잎</span>
+          <span class="word-chip">약</span>
+          <span class="word-chip">밭</span>
+          <span class="word-chip">곽</span>
+          <span class="word-chip">볶</span>
+          <span class="word-chip">넣</span>
+          <span class="word-chip">깎</span>
+          <span class="word-chip">떡</span>
+        </div>
+      </div>
+      <div class="level-row">
+        <div class="level-badge lv2">2단계</div>
+        <div class="level-words">
+          <span class="word-chip">답답</span>
+          <span class="word-chip">싫다</span>
+          <span class="word-chip">깊다</span>
+          <span class="word-chip">쉽다</span>
+          <span class="word-chip">덮밥</span>
+          <span class="word-chip">엮다</span>
+          <span class="word-chip">식탁</span>
+          <span class="word-chip">창밖</span>
+          <span class="word-chip">북녘</span>
+          <span class="word-chip">섞다</span>
+        </div>
+      </div>
+      <div class="level-row">
+        <div class="level-badge lv3">3단계</div>
+        <div class="level-words">
+          <span class="word-chip">늪지대</span>
+          <span class="word-chip">구급차</span>
+          <span class="word-chip">앞치마</span>
+          <span class="word-chip">새벽녘</span>
+          <span class="word-chip">연필깎이</span>
+          <span class="word-chip">볶습니다</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Family vocab flashcards review -->
+  <p class="flashcard-intro" style="margin-top:20px;">👨‍👩‍👧 가족 단어 복습 플래시카드</p>
+
+  <div class="flashcard-grid">
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean">시어머니</div>
+          <div class="fc-romanize">si-eo-meo-ni</div>
+          <div class="fc-hint">👩 W → H 쪽</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">Mother-in-law</div>
+          <div class="fc-example">(husband's mother)<br>시- prefix = husband's side</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean">시아버지</div>
+          <div class="fc-romanize">si-a-beo-ji</div>
+          <div class="fc-hint">👨 W → H 쪽</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">Father-in-law</div>
+          <div class="fc-example">(husband's father)<br>시집간다 = (wife) gets married</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean">장모님</div>
+          <div class="fc-romanize">jang-mo-nim</div>
+          <div class="fc-hint">👩 H → W 쪽</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">Mother-in-law</div>
+          <div class="fc-example">(wife's mother)<br>장가간다 = (husband) gets married</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean">장인어른</div>
+          <div class="fc-romanize">jang-in-eo-reun</div>
+          <div class="fc-hint">👨 H → W 쪽</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">Father-in-law</div>
+          <div class="fc-example">(wife's father)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean">며느리</div>
+          <div class="fc-romanize">myeo-neu-ri</div>
+          <div class="fc-hint">👧 시집살이</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">Daughter-in-law</div>
+          <div class="fc-example">시집살이 = life living with husband's family</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean">사위</div>
+          <div class="fc-romanize">sa-wi</div>
+          <div class="fc-hint">👦 son-in-law</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">Son-in-law</div>
+          <div class="fc-example">딸의 남편</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean" style="font-size:16px;">언니 / 오빠</div>
+          <div class="fc-romanize">eon-ni / o-ppa</div>
+          <div class="fc-hint">👧 여자 기준</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">Older sister / Older brother</div>
+          <div class="fc-example">said by a female speaker<br>언니 = older sister<br>오빠 = older brother</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean" style="font-size:16px;">누나 / 형</div>
+          <div class="fc-romanize">nu-na / hyeong</div>
+          <div class="fc-hint">👦 남자 기준</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">Older sister / Older brother</div>
+          <div class="fc-example">said by a male speaker<br>누나 = older sister<br>형 = older brother</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Pron tip review -->
+  <p class="flashcard-intro" style="margin-top:20px;">🔤 발음 복습 — Pronunciation Review (쌍자음)</p>
+
+  <div class="flashcard-grid">
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean" style="font-size:28px;">ㄲ</div>
+          <div class="fc-romanize">쌍기역</div>
+          <div class="fc-hint">vs ㄱ / ㅋ</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">Tense "k" sound</div>
+          <div class="fc-example">끄~~아 → 끄아 → 끄아 → 까<br>더 강하고 짧게!</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean" style="font-size:28px;">ㄸ</div>
+          <div class="fc-romanize">쌍디귿</div>
+          <div class="fc-hint">vs ㄷ / ㅌ</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">Tense "t" sound</div>
+          <div class="fc-example">뜨~~아 → 뜨아 → 뜨아 → 따<br>더 강하고 짧게!</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean" style="font-size:28px;">ㅆ</div>
+          <div class="fc-romanize">쌍시옷</div>
+          <div class="fc-hint">vs ㅅ / ㅈ</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">Tense "ss" sound</div>
+          <div class="fc-example">쓰~~아 → 쓰아 → 쓰아 → 싸<br>더 강하고 짧게!</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="divider">
+
+  <!-- ══ SECTION 2: TODAY VOCAB ══ -->
+  <h2 class="section-heading">
+    <span class="icon">👋</span> 오늘의 단어 — New Vocabulary (p.71)
+  </h2>
+
+  <div class="sub-heading">🗣️ 인사 표현 (Greetings)</div>
+  <div class="vocab-grid">
+    <div class="vocab-card greeting">
+      <div class="vocab-ko">안녕하세요?</div>
+      <div class="vocab-en">Hello. / How are you?</div>
+      <div class="vocab-note">formal — to elders/teachers</div>
+    </div>
+    <div class="vocab-card greeting">
+      <div class="vocab-ko">안녕?</div>
+      <div class="vocab-en">Hi? / Hey!</div>
+      <div class="vocab-note">informal — between friends</div>
+    </div>
+    <div class="vocab-card greeting">
+      <div class="vocab-ko">안녕히 계세요.</div>
+      <div class="vocab-en">Goodbye (to those staying)</div>
+      <div class="vocab-note">said by the person leaving</div>
+    </div>
+    <div class="vocab-card greeting">
+      <div class="vocab-ko">안녕히 가세요.</div>
+      <div class="vocab-en">Goodbye (to those leaving)</div>
+      <div class="vocab-note">said by the person staying</div>
+    </div>
+  </div>
+
+  <div class="sub-heading">📛 이름 표현 (Name expressions)</div>
+  <div class="vocab-grid">
+    <div class="vocab-card pronoun">
+      <div class="vocab-ko">저는</div>
+      <div class="vocab-en">I am... / My name is...</div>
+      <div class="vocab-note">formal "I"</div>
+    </div>
+    <div class="vocab-card pronoun">
+      <div class="vocab-ko">이름</div>
+      <div class="vocab-en">name</div>
+      <div class="vocab-note">이름이 뭐예요?</div>
+    </div>
+    <div class="vocab-card pronoun">
+      <div class="vocab-ko">~예요 / ~이에요</div>
+      <div class="vocab-en">am / is / are (name ending)</div>
+      <div class="vocab-note">vowel → 예요 / consonant → 이에요</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ══ SECTION 3: GRAMMAR ══ -->
+  <h2 class="section-heading">
+    <span class="icon">📐</span> 문법 — Grammar (p.71)
+  </h2>
+
+  <div class="grammar-box">
+    <div class="grammar-header">📌 이름 묻고 답하기 — Asking and saying your name</div>
+    <div class="grammar-pattern">
+      이름이 <em>뭐예요?</em> → 저는 ___<em>예요/이에요.</em>
+    </div>
+    <div class="grammar-examples">
+      <div class="example-row">
+        <div class="ex-q">이름이 뭐예요?<small>What is your name?</small></div>
+        <div class="ex-a">저는 사라<strong>예요</strong>.<small>My name is Sarah. (vowel ending)</small></div>
+      </div>
+      <div class="example-row">
+        <div class="ex-q">이름이 뭐예요?<small>What is your name?</small></div>
+        <div class="ex-a">저는 스티븐<strong>이에요</strong>.<small>My name is Steven. (consonant ending)</small></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-teal">
+    <span class="callout-icon">📏</span>
+    <div class="callout-body">
+      <strong>예요 vs 이에요 규칙</strong><br>
+      이름 마지막 글자에 받침이 <strong>없으면</strong> → <strong>예요</strong> (예: 사라<strong>예요</strong>, 미라<strong>예요</strong>)<br>
+      이름 마지막 글자에 받침이 <strong>있으면</strong> → <strong>이에요</strong> (예: 스티븐<strong>이에요</strong>, 민수<strong>이에요</strong>)<br>
+      <small style="color:#1A5C4E;">받침 없음 → 예요 / 받침 있음 → 이에요</small>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ══ SECTION 4: GOODBYE ══ -->
+  <h2 class="section-heading">
+    <span class="icon">🚪</span> 작별 인사 — Goodbye Expressions
+  </h2>
+
+  <div class="callout callout-pink">
+    <span class="callout-icon">⭐</span>
+    <div class="callout-body">
+      <strong>한국어 작별 인사는 두 가지예요! — Korean has TWO goodbye phrases!</strong><br>
+      누가 남느냐, 누가 떠나느냐에 따라 달라요.<br>
+      <small style="color:#8B0E2A;">Which one you say depends on whether you're staying or leaving.</small>
+    </div>
+  </div>
+
+  <div class="goodbye-grid">
+    <div class="goodbye-card staying">
+      <div class="goodbye-label">🏠 남아 있는 사람이 → The person STAYING says:</div>
+      <div class="goodbye-phrase">안녕히 가세요.</div>
+      <div class="goodbye-usage">Go in peace. / Take care (on your way).<br>상대방이 떠날 때 내가 말해요.</div>
+    </div>
+    <div class="goodbye-card leaving">
+      <div class="goodbye-label">🚶 떠나는 사람이 → The person LEAVING says:</div>
+      <div class="goodbye-phrase">안녕히 계세요.</div>
+      <div class="goodbye-usage">Stay well. / Take care.<br>내가 떠날 때 남아 있는 상대방에게 말해요.</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ══ SECTION 5: DIALOGUE ══ -->
+  <h2 class="section-heading">
+    <span class="icon">💬</span> 본문 대화 — Main Dialogue (p.70)
+  </h2>
+
+  <div class="dialogue-box">
+    <div class="dialogue-line">
+      <div class="speaker-bubble sp-teacher">선생님</div>
+      <div class="dialogue-text">
+        <span class="highlight">안녕하세요?</span>
+        <span class="en">Hello. How are you?</span>
+      </div>
+    </div>
+    <div class="dialogue-line">
+      <div class="speaker-bubble sp-student">학생</div>
+      <div class="dialogue-text">
+        <span class="highlight">안녕하세요?</span>
+        <span class="en">Hello. How are you?</span>
+      </div>
+    </div>
+    <div class="dialogue-line">
+      <div class="speaker-bubble sp-teacher">선생님</div>
+      <div class="dialogue-text">
+        이름이 <span class="highlight">뭐예요</span>?
+        <span class="en">What is your name?</span>
+      </div>
+    </div>
+    <div class="dialogue-line">
+      <div class="speaker-bubble sp-student">학생</div>
+      <div class="dialogue-text">
+        저는 이슬기<span class="highlight">예요</span>.
+        <span class="en">My name is Isulgi.</span>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ══ SECTION 6: ACTIVITIES ══ -->
+  <h2 class="section-heading">
+    <span class="icon">🎯</span> 수업 활동 — Class Activities
+  </h2>
+
+  <div class="activity-box">
+    <div class="activity-title">👂 들어 봐요 · Let's Listen! (p.72)</div>
+    <div class="activity-content">
+      (1) 누가 이야기해요? ○표 하세요. Who is speaking? Mark the correct answer.<br>
+      → 이슬기 / 강미라 / 린다<br><br>
+      (2) 누구하고 이야기해요? 연결해 보세요. Who is the person speaking with? Match them.<br>
+      → 선생님 ↔ 슬기/사라 | 민수 ↔ 준영/스티븐
+    </div>
+  </div>
+
+  <div class="activity-box">
+    <div class="activity-title">✏️ 써 봐요 · Let's Write! (p.73)</div>
+    <div class="activity-content">
+      (1) 안녕하세요? — 빈칸 채우기<br>
+      (2) 안녕히 가세요. → 안녕히 계세요.<br>
+      (3) 이름이 뭐예요? → 저는 <strong>미라예요</strong>. (미라)<br>
+      (4) 이름이 뭐예요? → 저는 <strong>스티븐이에요</strong>. (스티븐)
+    </div>
+  </div>
+
+  <div class="activity-box">
+    <div class="activity-title">🗣️ 이야기해요 · Let's Talk! (p.74)</div>
+    <div class="activity-content">
+      이야기해 보세요. Practice with your teacher!<br><br>
+      <strong>예시:</strong><br>
+      안녕하세요? → 안녕하세요?<br>
+      이름이 뭐예요? → 저는 ___예요/이에요.
+    </div>
+  </div>
+
+  <div class="activity-box">
+    <div class="activity-title">🌏 문화 배우기 · Korean Culture (p.75) — 인사 (Greeting Others)</div>
+    <div class="activity-content">
+      한국에서는 고개를 숙여서 인사해요. In Korea, people bow their heads to greet others.<br>
+      프랑스, 이탈리아, 스페인에서는 볼에 키스해요. In France, Italy, Spain — a kiss on both cheeks!<br>
+      요즘은 악수가 가장 일반적인 인사예요. Today, a handshake is the most widespread greeting worldwide.
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ══ SECTION 7: TODAY FLASHCARDS ══ -->
+  <h2 class="section-heading">
+    <span class="icon">🃏</span> 오늘 배운 표현 플래시카드
+  </h2>
+
+  <div class="flashcard-grid">
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean">안녕하세요?</div>
+          <div class="fc-romanize">an-nyeong-ha-se-yo</div>
+          <div class="fc-hint">👩‍🏫 formal greeting</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">Hello / How are you?</div>
+          <div class="fc-example">선생님께 / 어른께<br>formal, to elders</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean">안녕?</div>
+          <div class="fc-romanize">an-nyeong</div>
+          <div class="fc-hint">👫 informal greeting</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">Hi! / Hey!</div>
+          <div class="fc-example">친구들끼리<br>between friends</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean" style="font-size:16px;">안녕히 가세요.</div>
+          <div class="fc-romanize">an-nyeong-hi ga-se-yo</div>
+          <div class="fc-hint">🏠 I'm staying</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">Goodbye (to person leaving)</div>
+          <div class="fc-example">내가 남아 있을 때<br>"Go well!"</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean" style="font-size:16px;">안녕히 계세요.</div>
+          <div class="fc-romanize">an-nyeong-hi gye-se-yo</div>
+          <div class="fc-hint">🚶 I'm leaving</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">Goodbye (to person staying)</div>
+          <div class="fc-example">내가 떠날 때<br>"Stay well!"</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean" style="font-size:16px;">이름이 뭐예요?</div>
+          <div class="fc-romanize">i-reum-i mwo-ye-yo</div>
+          <div class="fc-hint">📛 asking name</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">What is your name?</div>
+          <div class="fc-example">→ 저는 ___예요/이에요.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean" style="font-size:15px;">저는 ___예요.</div>
+          <div class="fc-romanize">jeo-neun ___ye-yo</div>
+          <div class="fc-hint">모음 끝 이름</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">My name is ___ (vowel ending)</div>
+          <div class="fc-example">사라<strong style="color:#FFD700;">예요</strong><br>미라<strong style="color:#FFD700;">예요</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-korean" style="font-size:14px;">저는 ___이에요.</div>
+          <div class="fc-romanize">jeo-neun ___i-e-yo</div>
+          <div class="fc-hint">자음 끝 이름</div>
+          <div class="fc-flip-hint">클릭 →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-answer">My name is ___ (consonant ending)</div>
+          <div class="fc-example">스티븐<strong style="color:#FFD700;">이에요</strong><br>민수<strong style="color:#FFD700;">이에요</strong></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="divider">
+
+  <!-- HOMEWORK -->
+  <h2 class="section-heading">
+    <span class="icon">📋</span> 숙제 (Homework)
+  </h2>
+
+  <div class="homework-box">
+    <div class="hw-title">📝 다음 수업 전까지 — Before next class</div>
+    <ul class="hw-list">
+      <li>오늘 배운 단어, 표현 큰 소리로 읽어보기 — Read today's expressions out loud</li>
+      <li>읽으면서 써보기 — Write while reading: p.56, 57, 62, 63, 67, 68</li>
+      <li>교재 p.70–75 복습하기 — Review textbook pages 70–75</li>
+      <li>안녕하세요 / 안녕히 가세요 / 안녕히 계세요 차이 말할 수 있도록 연습하기</li>
+      <li>자기 이름 한국어로 소개하는 문장 만들기: 저는 ___예요/이에요.</li>
+    </ul>
+  </div>
+
+  <div class="callout callout-yellow" style="margin-top:20px;">
+    <span class="callout-icon">💡</span>
+    <div class="callout-body">
+      <strong>가장 중요한 건? 복습!</strong> 수업 끝나고 딱 10분만 복습해요.<br>
+      <small style="color:#805900;">The most important thing? Review! Just 10 minutes after class goes a long way.</small>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    맞춤 한국어 1 · 정규 수업 4 · 제11과 안녕하세요? · p.70–75
+  </div>
+
+</div>
+</body>
+</html>
