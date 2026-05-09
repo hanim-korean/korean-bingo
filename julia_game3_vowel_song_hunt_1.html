@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>모음송 가사 사냥 / Polowanie na samogłoski</title>
+<style>
+  :root {
+    --orange: #ff6b35;
+    --orange-soft: #fff3ed;
+    --orange-border: #ffd8c7;
+    --pink: #f9a8d4;
+    --blue: #7dd3fc;
+    --muted: #f2f2f2;
+    --text: #2f2f2f;
+    --text-mid: #666;
+    --shadow: 0 8px 24px rgba(0,0,0,.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif;
+    background: linear-gradient(180deg, #fffaf7 0%, #fff 100%);
+    color: var(--text);
+    padding: 24px;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; }
+
+  .hero {
+    background: linear-gradient(135deg, #ff8a5c 0%, #ff6b35 60%, #ff9f68 100%);
+    color: white;
+    border-radius: 28px;
+    padding: 32px 36px;
+    box-shadow: var(--shadow);
+    margin-bottom: 24px;
+  }
+  .hero h1 { font-size: 44px; font-weight: 800; margin-bottom: 10px; }
+  .hero p { font-size: 20px; opacity: 0.95; }
+
+  .panel {
+    background: white;
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    padding: 32px;
+  }
+
+  .instruction {
+    background: var(--orange-soft);
+    border: 2px solid var(--orange-border);
+    border-radius: 18px;
+    padding: 18px 22px;
+    margin-bottom: 22px;
+    font-size: 18px;
+    line-height: 1.7;
+  }
+  .instruction .step { display: block; margin-bottom: 4px; }
+  .instruction .ko { font-weight: 700; }
+  .instruction .pl { color: var(--text-mid); font-size: 16px; }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+  button {
+    border: 0;
+    border-radius: 16px;
+    background: var(--muted);
+    color: #333;
+    padding: 14px 20px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s ease;
+  }
+  button:hover { transform: translateY(-1px); }
+  button.active {
+    background: var(--orange);
+    color: white;
+    box-shadow: 0 6px 16px rgba(255,107,53,0.3);
+  }
+  button.blue {
+    background: #1d9bf0;
+    color: white;
+    box-shadow: 0 6px 16px rgba(29,155,240,0.25);
+  }
+
+  .line-num {
+    display: inline-block;
+    background: var(--orange);
+    color: white;
+    padding: 9px 18px;
+    border-radius: 999px;
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 22px;
+  }
+
+  .lyrics-block {
+    margin-bottom: 24px;
+  }
+
+  .lyrics-short {
+    font-size: 64px;
+    font-weight: 800;
+    line-height: 1.4;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+    min-height: 90px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .lyrics-long {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.5;
+    color: #555;
+    border-top: 2px dashed var(--orange-border);
+    padding-top: 18px;
+    min-height: 60px;
+  }
+
+  /* 색상 팔레트 — 모음별 */
+  .v-a, .v-ya { background: #ffd3cc; }
+  .v-eo, .v-yeo { background: #ffe6b8; }
+  .v-o, .v-yo { background: #fff0a8; }
+  .v-u, .v-yu { background: #d4f7dc; }
+  .v-eu { background: #d6f0ff; }
+  .v-i { background: #e5ddff; }
+  .v-a, .v-ya, .v-eo, .v-yeo, .v-o, .v-yo, .v-u, .v-yu, .v-eu, .v-i {
+    display: inline-block;
+    border-radius: 14px;
+    padding: 2px 8px;
+    margin: 0 2px;
+  }
+
+  .mini-guide {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .mini {
+    background: #fff7f1;
+    border: 2px solid var(--orange-border);
+    border-radius: 18px;
+    padding: 18px 16px;
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.5;
+  }
+  .mini .pl {
+    display: block;
+    font-size: 14px;
+    color: var(--text-mid);
+    font-weight: 600;
+    margin-top: 6px;
+  }
+
+  @media (max-width: 720px) {
+    .lyrics-short { font-size: 44px; min-height: 70px; }
+    .lyrics-long { font-size: 26px; }
+    .mini-guide { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <h1>모음송 가사 사냥 / Polowanie na samogłoski</h1>
+    <p>색깔 모음을 찾고, 같이 읽어요 / Znajdź kolorowe samogłoski i czytaj razem</p>
+  </section>
+
+  <section class="panel">
+    <div class="instruction">
+      <span class="step"><span class="ko">1) 색깔 있는 모음을 봐요.</span></span>
+      <span class="step"><span class="pl">1) Popatrz na kolorowe samogłoski.</span></span>
+      <span class="step"><span class="ko">2) 같은 모음을 아래 줄에서도 찾아요.</span></span>
+      <span class="step"><span class="pl">2) Znajdź te same samogłoski w drugiej linii.</span></span>
+      <span class="step"><span class="ko">3) 같이 읽어요!</span></span>
+      <span class="step"><span class="pl">3) Czytajmy razem!</span></span>
+    </div>
+
+    <div class="controls">
+      <button class="blue" id="prevBtn">← 이전 / Poprzednia</button>
+      <button class="blue" id="nextBtn">다음 / Następna →</button>
+    </div>
+
+    <span class="line-num" id="lineNum">Line 1</span>
+
+    <div class="lyrics-block">
+      <div class="lyrics-short" id="lyricsShort"></div>
+      <div class="lyrics-long" id="lyricsLong"></div>
+    </div>
+
+    <div class="mini-guide" id="miniGuide"></div>
+  </section>
+</div>
+
+<script>
+// 가사 데이터 — 짧은 줄(색칠) + 긴 줄(색 없음) + 타겟 모음
+const lyrics = [
+  {
+    short: '아야어여오요우유으이 예!',
+    long: '',
+    target: 'all',
+    targetLabel: ''
+  },
+  {
+    short: '아기 아장아장',
+    long: '아기가 아장아장 걸음마해요',
+    target: 'a',
+    targetLabel: 'ㅏ'
+  },
+  {
+    short: '야구 야자나무',
+    long: '야자나무 아래에서 야구를 해요',
+    target: 'ya',
+    targetLabel: 'ㅑ'
+  },
+  {
+    short: '어린이 어른',
+    long: '어린이가 어서 어서 어른 되고 싶대요',
+    target: 'eo',
+    targetLabel: 'ㅓ'
+  },
+  {
+    short: '여우 여름',
+    long: '여름에 여우가 수영을 해요',
+    target: 'yeo',
+    targetLabel: 'ㅕ'
+  },
+  {
+    short: '오리 오이',
+    long: '오리가 오물오물 오이 먹어요',
+    target: 'o',
+    targetLabel: 'ㅗ'
+  },
+  {
+    short: '요리사 요트',
+    long: '요리사가 요트에서 요리를 해요',
+    target: 'yo',
+    targetLabel: 'ㅛ'
+  },
+  {
+    short: '우산 우체국',
+    long: '우산 쓰고 우리 함께 우체국 가요',
+    target: 'u',
+    targetLabel: 'ㅜ'
+  },
+  {
+    short: '유치원 유리창',
+    long: '유치원 유리창에 우유 묻었어요',
+    target: 'yu',
+    targetLabel: 'ㅠ'
+  },
+  {
+    short: '으르렁 으라차차',
+    long: '으르렁 사자가 으라차차 으라차차',
+    target: 'eu',
+    targetLabel: 'ㅡ'
+  },
+  {
+    short: '이구아나 이야기',
+    long: '이야기를 좋아하는 이구아나',
+    target: 'i',
+    targetLabel: 'ㅣ'
+  }
+];
+
+// 음절 → 모음 클래스 매핑 (받침 있어도 모음만 보고 매핑)
+const syllableMap = {
+  // ㅏ
+  '아':'a','가':'a','나':'a','다':'a','라':'a','마':'a','바':'a','사':'a',
+  '자':'a','차':'a','카':'a','타':'a','파':'a','하':'a',
+  // ㅑ
+  '야':'ya','갸':'ya','냐':'ya','댜':'ya','랴':'ya','먀':'ya',
+  // ㅓ
+  '어':'eo','거':'eo','너':'eo','더':'eo','러':'eo','머':'eo','버':'eo',
+  '서':'eo','저':'eo','처':'eo','커':'eo','터':'eo','퍼':'eo','허':'eo',
+  // ㅕ
+  '여':'yeo','겨':'yeo','녀':'yeo','뎌':'yeo','려':'yeo','며':'yeo',
+  '벼':'yeo','셔':'yeo','져':'yeo','쳐':'yeo','켜':'yeo',
+  // ㅗ
+  '오':'o','고':'o','노':'o','도':'o','로':'o','모':'o','보':'o','소':'o',
+  '조':'o','초':'o','코':'o','토':'o','포':'o','호':'o',
+  // ㅛ
+  '요':'yo','교':'yo','뇨':'yo','됴':'yo','료':'yo','묘':'yo','뵤':'yo',
+  '쇼':'yo','죠':'yo','쵸':'yo','쿄':'yo','툐':'yo','표':'yo','효':'yo',
+  // ㅜ
+  '우':'u','구':'u','누':'u','두':'u','루':'u','무':'u','부':'u','수':'u',
+  '주':'u','추':'u','쿠':'u','투':'u','푸':'u','후':'u',
+  // ㅠ
+  '유':'yu','규':'yu','뉴':'yu','듀':'yu','류':'yu','뮤':'yu','뷰':'yu',
+  '슈':'yu','쥬':'yu','츄':'yu','큐':'yu','튜':'yu','퓨':'yu',
+  // ㅡ
+  '으':'eu','그':'eu','느':'eu','드':'eu','르':'eu','므':'eu','브':'eu',
+  '스':'eu','즈':'eu','츠':'eu','크':'eu','트':'eu','프':'eu','흐':'eu',
+  // ㅣ
+  '이':'i','기':'i','니':'i','디':'i','리':'i','미':'i','비':'i','시':'i',
+  '지':'i','치':'i','키':'i','티':'i','피':'i','히':'i'
+};
+
+// 받침 있는 글자도 추가 (모음만 보고 매핑)
+const batchimChars = {
+  // ㅏ + 받침
+  '간':'a','갈':'a','감':'a','갑':'a','강':'a','각':'a',
+  '난':'a','날':'a','남':'a','낮':'a','낯':'a',
+  '단':'a','달':'a','담':'a','답':'a','당':'a',
+  '란':'a','람':'a','랄':'a','맘':'a','맏':'a','말':'a','맘':'a','망':'a',
+  '반':'a','발':'a','밤':'a','밥':'a','방':'a','밭':'a',
+  '산':'a','살':'a','삼':'a','상':'a','잠':'a','잡':'a','장':'a','짠':'a',
+  '찬':'a','찰':'a','참':'a','창':'a','칸':'a','탄':'a','판':'a','팔':'a',
+  '한':'a','할':'a','함':'a','합':'a','항':'a','악':'a','안':'a','앞':'a',
+  '받':'a','밝':'a','맘':'a','막':'a','망':'a',
+  '걸':'eo','겁':'eo','검':'eo','겠':'eo','건':'eo','걷':'eo',
+  '넌':'eo','넓':'eo','널':'eo','넘':'eo','넋':'eo',
+  '덤':'eo','덜':'eo','덧':'eo','덮':'eo',
+  '럼':'eo','런':'eo','럴':'eo','릴':'eo',
+  '먼':'eo','먹':'eo','멀':'eo','멈':'eo','멍':'eo','멋':'eo',
+  '번':'eo','벌':'eo','범':'eo','법':'eo','벗':'eo',
+  '선':'eo','설':'eo','섬':'eo','섭':'eo','성':'eo',
+  '전':'eo','절':'eo','점':'eo','접':'eo','정':'eo','젓':'eo','첫':'eo',
+  '컨':'eo','컬':'eo','컴':'eo','컵':'eo','컸':'eo',
+  '턱':'eo','털':'eo','텀':'eo','턴':'eo',
+  '펀':'eo','펄':'eo','퍽':'eo',
+  '헌':'eo','험':'eo','혼':'eo',
+  '엇':'eo','얼':'eo','엄':'eo','업':'eo','없':'eo','엇':'eo','엉':'eo',
+  // ㅓ
+  // ㅗ
+  '곤':'o','골':'o','곰':'o','곱':'o','공':'o','곶':'o','곳':'o',
+  '논':'o','놀':'o','놈':'o','농':'o',
+  '돈':'o','돌':'o','돔':'o','동':'o','돕':'o',
+  '롤':'o','롬':'o','롱':'o',
+  '몫':'o','몬':'o','몸':'o','몹':'o','몽':'o',
+  '본':'o','볼':'o','봄':'o','봉':'o','볶':'o',
+  '손':'o','솔':'o','솜':'o','솝':'o','송':'o','솥':'o',
+  '존':'o','졸':'o','종':'o','좀':'o',
+  '촌':'o','총':'o','콘':'o','콩':'o','쿵':'o',
+  '톤':'o','톱':'o','통':'o','퐁':'o','퐃':'o',
+  '혼':'o','홍':'o','옥':'o','온':'o','올':'o','옴':'o','옷':'o','옹':'o',
+  // ㅜ
+  '군':'u','굴':'u','굽':'u','국':'u',
+  '눈':'u','눌':'u','눔':'u',
+  '둔':'u','둠':'u','둘':'u','둥':'u','둣':'u',
+  '룬':'u','룰':'u','룸':'u',
+  '문':'u','물':'u','뭍':'u','뭉':'u',
+  '분':'u','불':'u','붕':'u','붓':'u','붙':'u',
+  '순':'u','술':'u','숨':'u','숩':'u','숭':'u',
+  '준':'u','줄':'u','줌':'u','줍':'u',
+  '춘':'u','출':'u','춤':'u','충':'u','츳':'u',
+  '쿵':'u','퉁':'u','풀':'u','품':'u','풍':'u','훈':'u','훌':'u','훔':'u','훗':'u',
+  '운':'u','울':'u','움':'u','웁':'u','웅':'u','웃':'u',
+  // ㅡ
+  '근':'eu','글':'eu','금':'eu','급':'eu','긋':'eu',
+  '는':'eu','늘':'eu','늘':'eu','늠':'eu','능':'eu',
+  '든':'eu','들':'eu','듬':'eu','듯':'eu','등':'eu',
+  '른':'eu','를':'eu',
+  '믄':'eu','믈':'eu','믐':'eu',
+  '븐':'eu','블':'eu','븜':'eu',
+  '슨':'eu','슬':'eu','슴':'eu','습':'eu','승':'eu',
+  '즌':'eu','즐':'eu','즘':'eu','증':'eu',
+  '큰':'eu','클':'eu','킁':'eu',
+  '튼':'eu','틀':'eu','틈':'eu',
+  '픈':'eu','플':'eu','픔':'eu',
+  '흔':'eu','흘':'eu','흠':'eu','흡':'eu','응':'eu','은':'eu','을':'eu','음':'eu','읍':'eu',
+  // ㅣ
+  '긴':'i','길':'i','김':'i','깁':'i',
+  '닌':'i','닐':'i','님':'i','닢':'i',
+  '딘':'i','딜':'i','딤':'i','딥':'i',
+  '린':'i','릴':'i','림':'i','립':'i',
+  '민':'i','밀':'i','밈':'i','밉':'i',
+  '빈':'i','빌':'i','빔':'i','빗':'i','빛':'i','빙':'i',
+  '신':'i','실':'i','심':'i','십':'i','싱':'i','싶':'i',
+  '진':'i','질':'i','짐':'i','집':'i','징':'i',
+  '친':'i','칠':'i','침':'i','칩':'i','칭':'i',
+  '킨':'i','킬':'i','킴':'i','킹':'i',
+  '틴':'i','틸':'i','팁':'i','픽':'i','핀':'i','필':'i','핌':'i','핍':'i','힐':'i','힘':'i','힙':'i','힝':'i',
+  '인':'i','일':'i','임':'i','입':'i','잇':'i','있':'i','잎':'i','잉':'i'
+};
+
+// 합치기
+Object.assign(syllableMap, batchimChars);
+
+let index = 0;
+
+const lyricsShort = document.getElementById('lyricsShort');
+const lyricsLong = document.getElementById('lyricsLong');
+const lineNum = document.getElementById('lineNum');
+const miniGuide = document.getElementById('miniGuide');
+
+function colorizeShort(text, target) {
+  // 짧은 줄: 타겟 모음만 색칠 (target='all'이면 모든 모음 색칠)
+  return [...text].map(ch => {
+    if (ch === ' ') return ' ';
+    const cls = syllableMap[ch];
+    if (!cls) return `<span>${ch}</span>`;
+    if (target === 'all') {
+      return `<span class="v-${cls}">${ch}</span>`;
+    } else if (cls === target) {
+      return `<span class="v-${cls}">${ch}</span>`;
+    } else {
+      return `<span>${ch}</span>`;
+    }
+  }).join('');
+}
+
+function plainText(text) {
+  // 긴 줄: 색 없이 그대로
+  return [...text].map(ch => `<span>${ch}</span>`).join('');
+}
+
+function render() {
+  const data = lyrics[index];
+  lineNum.textContent = `Line ${index + 1}`;
+  lyricsShort.innerHTML = colorizeShort(data.short, data.target);
+  lyricsLong.innerHTML = data.long ? plainText(data.long) : '<em style="color:#aaa;font-size:20px;font-style:normal;">(오프닝 — 모든 모음이 다 있어요!)</em>';
+
+  if (data.target === 'all') {
+    miniGuide.innerHTML = `
+      <div class="mini">다 같이 읽어요!<span class="pl">Czytajmy razem!</span></div>
+      <div class="mini">아는 모음 골라봐!<span class="pl">Wybierz znaną samogłoskę!</span></div>
+      <div class="mini">좋아하는 모음 말해봐!<span class="pl">Powiedz ulubioną samogłoskę!</span></div>
+    `;
+  } else {
+    const t = data.targetLabel;
+    miniGuide.innerHTML = `
+      <div class="mini">${t} 찾아봐!<span class="pl">Znajdź ${t}!</span></div>
+      <div class="mini">${t} 몇 개 있어?<span class="pl">Ile razy jest ${t}?</span></div>
+      <div class="mini">같이 읽어요<span class="pl">Czytajmy razem</span></div>
+    `;
+  }
+}
+
+document.getElementById('prevBtn').onclick = () => {
+  index = (index - 1 + lyrics.length) % lyrics.length;
+  render();
+};
+document.getElementById('nextBtn').onclick = () => {
+  index = (index + 1) % lyrics.length;
+  render();
+};
+
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>무엇이 사라졌을까요? / Co zniknęło?</title>
+<style>
+  :root {
+    --orange: #ff6b35;
+    --orange-soft: #fff3ed;
+    --orange-border: #ffd8c7;
+    --green: #21b573;
+    --green-soft: #ddf9e7;
+    --pink: #f9a8d4;
+    --hide-bg: #ffe7db;
+    --hide-border: #ffc9b2;
+    --muted: #f2f2f2;
+    --text: #2f2f2f;
+    --text-mid: #666;
+    --shadow: 0 8px 24px rgba(0,0,0,.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif;
+    background: linear-gradient(180deg, #fffaf7 0%, #fff 100%);
+    color: var(--text);
+    padding: 24px;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; }
+
+  .hero {
+    background: linear-gradient(135deg, #ff8a5c 0%, #ff6b35 60%, #ff9f68 100%);
+    color: white;
+    border-radius: 28px;
+    padding: 32px 36px;
+    box-shadow: var(--shadow);
+    margin-bottom: 24px;
+  }
+  .hero h1 { font-size: 44px; font-weight: 800; margin-bottom: 10px; }
+  .hero p { font-size: 20px; opacity: 0.95; }
+
+  .panel {
+    background: white;
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    padding: 32px;
+  }
+
+  .instruction {
+    background: var(--orange-soft);
+    border: 2px solid var(--orange-border);
+    border-radius: 18px;
+    padding: 18px 22px;
+    margin-bottom: 22px;
+    font-size: 18px;
+    line-height: 1.7;
+  }
+  .instruction .step { display: block; margin-bottom: 4px; }
+  .instruction .ko { font-weight: 700; }
+  .instruction .pl { color: var(--text-mid); font-size: 16px; }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+  button {
+    border: 0;
+    border-radius: 16px;
+    background: var(--muted);
+    color: #333;
+    padding: 14px 20px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s ease;
+  }
+  button:hover { transform: translateY(-1px); }
+  button.active {
+    background: var(--orange);
+    color: white;
+    box-shadow: 0 6px 16px rgba(255,107,53,0.3);
+  }
+  button.green {
+    background: var(--green);
+    color: white;
+    box-shadow: 0 6px 16px rgba(33,181,115,0.25);
+  }
+
+  .difficulty-badge {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 999px;
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .difficulty-easy { background: var(--green); }
+  .difficulty-medium { background: var(--orange); }
+  .difficulty-hard { background: var(--pink); }
+
+  .status {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 22px;
+    color: var(--orange);
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .card {
+    aspect-ratio: 5/4;
+    background: white;
+    border: 3px solid #f1f1f1;
+    border-radius: 22px;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 14px;
+    font-weight: 800;
+    color: var(--orange);
+    transition: all 0.3s ease;
+  }
+  .card.short-text { font-size: 80px; }
+  .card.medium-text { font-size: 60px; }
+  .card.long-text { font-size: 44px; }
+
+  .card.hide {
+    background: repeating-linear-gradient(-45deg, var(--hide-bg), var(--hide-bg) 14px, #fff5f0 14px, #fff5f0 28px);
+    border-color: var(--hide-border);
+    color: var(--orange);
+  }
+  .card.answer {
+    background: var(--green-soft);
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  .choices {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  .choice {
+    background: #fff7f1;
+    border: 3px solid var(--orange-border);
+    color: var(--text);
+    border-radius: 20px;
+    padding: 22px;
+    font-size: 32px;
+    font-weight: 800;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .choice:hover { transform: translateY(-2px); }
+  .choice.correct {
+    background: var(--green-soft);
+    border-color: var(--green);
+    color: var(--green);
+  }
+  .choice.wrong {
+    background: #ffe1e1;
+    border-color: #ff5a5a;
+    color: #cc3333;
+  }
+
+  @media (max-width: 820px) {
+    .cards { grid-template-columns: repeat(2, 1fr); }
+    .choices { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <h1>무엇이 사라졌을까요? / Co zniknęło?</h1>
+    <p>잘 보고, 사라진 것을 찾아요 / Patrz uważnie i znajdź to, czego nie ma</p>
+  </section>
+
+  <section class="panel">
+    <div class="instruction">
+      <span class="step"><span class="ko">1) 먼저 잘 봐요.</span></span>
+      <span class="step"><span class="pl">1) Najpierw patrz uważnie.</span></span>
+      <span class="step"><span class="ko">2) 하나가 사라져요.</span></span>
+      <span class="step"><span class="pl">2) Jedno znika.</span></span>
+      <span class="step"><span class="ko">3) 정답을 한국어로 말해요!</span></span>
+      <span class="step"><span class="pl">3) Powiedz odpowiedź po koreańsku!</span></span>
+    </div>
+
+    <div class="controls">
+      <button id="themeVowelBtn" class="active">모음 / Samogłoski</button>
+      <button id="themeFoodBtn">한식 / Jedzenie</button>
+      <button id="themeSkzBtn">스키즈 / Stray Kids</button>
+      <button class="green" id="hideOneBtn">하나 숨기기 / Schowaj jedno</button>
+      <button id="resetBtn">리셋 / Reset</button>
+    </div>
+
+    <div id="badgeContainer"></div>
+    <div class="status" id="status">잘 보고 기억해요! / Patrz i zapamiętaj!</div>
+    <div class="cards" id="cards"></div>
+    <div class="choices" id="choices"></div>
+  </section>
+</div>
+
+<script>
+const themesBase = {
+  vowel: {
+    items: ['ㅏ','ㅓ','ㅗ','ㅜ','ㅡ','ㅣ','ㅑ','ㅕ'],
+    name: '모음 / Samogłoski',
+    badge: '난이도: 하 / Łatwy',
+    badgeClass: 'difficulty-easy'
+  },
+  food: {
+    items: ['김밥','떡볶이','김치','삼겹살','비빔밥','라면','불고기','우유'],
+    name: '한식 / Jedzenie',
+    badge: '난이도: 중 / Średni',
+    badgeClass: 'difficulty-medium'
+  },
+  skz: {
+    items: ['한','현진','방찬','필릭스','리노','창빈','승민','아이엔'],
+    name: '스키즈 / Stray Kids',
+    badge: '난이도: 상 / Trudny',
+    badgeClass: 'difficulty-hard'
+  }
+};
+
+// 현재 테마의 섞인 배열을 저장 (테마 바꾸거나 리셋할 때 새로 섞음)
+let themes = JSON.parse(JSON.stringify(themesBase));
+
+let currentTheme = 'vowel';
+let hiddenIndex = null;
+let answerRevealed = false;
+
+const cards = document.getElementById('cards');
+const choices = document.getElementById('choices');
+const status = document.getElementById('status');
+const badgeContainer = document.getElementById('badgeContainer');
+
+const themeButtons = {
+  vowel: document.getElementById('themeVowelBtn'),
+  food: document.getElementById('themeFoodBtn'),
+  skz: document.getElementById('themeSkzBtn')
+};
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function getTextSizeClass(text) {
+  if (text.length <= 1) return 'short-text';
+  if (text.length <= 3) return 'medium-text';
+  return 'long-text';
+}
+
+function setActiveTheme() {
+  Object.values(themeButtons).forEach(btn => btn.classList.remove('active'));
+  themeButtons[currentTheme].classList.add('active');
+}
+
+function renderBadge() {
+  const t = themes[currentTheme];
+  badgeContainer.innerHTML = `<span class="difficulty-badge ${t.badgeClass}">${t.badge}</span>`;
+}
+
+function renderCards() {
+  const items = themes[currentTheme].items;
+  cards.innerHTML = '';
+  items.forEach((item, i) => {
+    const div = document.createElement('div');
+    let cls = 'card ' + getTextSizeClass(item);
+    let content = item;
+    if (hiddenIndex === i && !answerRevealed) {
+      cls += ' hide';
+      content = '?';
+    } else if (hiddenIndex === i && answerRevealed) {
+      cls += ' answer';
+    }
+    div.className = cls;
+    div.textContent = content;
+    cards.appendChild(div);
+  });
+}
+
+function renderChoices() {
+  choices.innerHTML = '';
+  if (hiddenIndex === null) return;
+  const items = themes[currentTheme].items;
+  const answer = items[hiddenIndex];
+  // 정답 + 오답 3개 = 4개 선택지
+  const wrong = shuffle(items.filter(x => x !== answer)).slice(0, 3);
+  const pool = shuffle([answer, ...wrong]);
+  pool.forEach(text => {
+    const div = document.createElement('div');
+    div.className = 'choice';
+    div.textContent = text;
+    div.onclick = () => {
+      document.querySelectorAll('.choice').forEach(el => el.classList.remove('correct', 'wrong'));
+      if (text === answer) {
+        div.classList.add('correct');
+        status.textContent = `정답! "${answer}" 가 사라졌어요! / Brawo!`;
+        answerRevealed = true;
+        renderCards();
+      } else {
+        div.classList.add('wrong');
+        status.textContent = `다시 한 번! / Spróbuj jeszcze raz!`;
+      }
+    };
+    choices.appendChild(div);
+  });
+}
+
+function setTheme(theme) {
+  currentTheme = theme;
+  // 매번 items 배열을 새로 섞어서 적용
+  themes[theme].items = shuffle(themesBase[theme].items);
+  hiddenIndex = null;
+  answerRevealed = false;
+  status.textContent = '잘 보고 기억해요! / Patrz i zapamiętaj!';
+  setActiveTheme();
+  renderBadge();
+  renderCards();
+  renderChoices();
+}
+
+themeButtons.vowel.onclick = () => setTheme('vowel');
+themeButtons.food.onclick = () => setTheme('food');
+themeButtons.skz.onclick = () => setTheme('skz');
+
+document.getElementById('hideOneBtn').onclick = () => {
+  const items = themes[currentTheme].items;
+  hiddenIndex = Math.floor(Math.random() * items.length);
+  answerRevealed = false;
+  status.textContent = '뭐가 없어요? / Czego nie ma?';
+  renderCards();
+  renderChoices();
+};
+
+document.getElementById('resetBtn').onclick = () => setTheme(currentTheme);
+
+setTheme('vowel');
+</script>
+</body>
+</html>
