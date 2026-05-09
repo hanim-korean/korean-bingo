@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>그림 공개 게임 / Odkryj obrazek</title>
+<style>
+  :root {
+    --orange: #ff6b35;
+    --orange-soft: #fff3ed;
+    --orange-border: #ffd8c7;
+    --green: #21b573;
+    --pink: #f9a8d4;
+    --muted: #f2f2f2;
+    --text: #2f2f2f;
+    --text-mid: #666;
+    --shadow: 0 8px 24px rgba(0,0,0,.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif;
+    background: linear-gradient(180deg, #fffaf7 0%, #fff 100%);
+    color: var(--text);
+    padding: 24px;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; }
+
+  .hero {
+    background: linear-gradient(135deg, #ff8a5c 0%, #ff6b35 60%, #ff9f68 100%);
+    color: white;
+    border-radius: 28px;
+    padding: 32px 36px;
+    box-shadow: var(--shadow);
+    margin-bottom: 24px;
+  }
+  .hero h1 { font-size: 44px; font-weight: 800; margin-bottom: 10px; }
+  .hero p { font-size: 20px; opacity: 0.95; }
+
+  .panel {
+    background: white;
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+  }
+
+  .instruction {
+    background: var(--orange-soft);
+    border: 2px solid var(--orange-border);
+    border-radius: 18px;
+    padding: 18px 22px;
+    margin-bottom: 22px;
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+  .instruction .step { display: block; margin-bottom: 4px; }
+  .instruction .ko { font-weight: 700; }
+  .instruction .pl { color: var(--text-mid); font-size: 16px; }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+  button {
+    border: 0;
+    border-radius: 16px;
+    background: var(--muted);
+    color: #333;
+    padding: 14px 20px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+  }
+  button:hover { transform: translateY(-1px); }
+  button.active {
+    background: var(--orange);
+    color: white;
+    box-shadow: 0 6px 16px rgba(255,107,53,0.3);
+  }
+  button.green {
+    background: var(--green);
+    color: white;
+    box-shadow: 0 6px 16px rgba(33,181,115,0.25);
+  }
+
+  .status {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 18px;
+    color: var(--orange);
+  }
+
+  .reveal-wrap {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 24px;
+    align-items: start;
+  }
+
+  .board {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: 24px;
+    overflow: hidden;
+    background: #f0f0f0;
+    border: 4px solid #fff4ef;
+    box-shadow: 0 6px 20px rgba(0,0,0,.08);
+  }
+  .board img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .overlay {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    gap: 5px;
+    padding: 5px;
+  }
+  .tile {
+    background: rgba(255,107,53,0.96);
+    color: white;
+    display: grid;
+    place-items: center;
+    font-size: 56px;
+    font-weight: 800;
+    user-select: none;
+    transition: opacity 0.4s ease, transform 0.2s ease;
+    border-radius: 14px;
+    cursor: pointer;
+    position: relative;
+  }
+  .tile:hover { transform: scale(0.97); }
+  .tile.open { opacity: 0; pointer-events: none; }
+  .tile small {
+    position: absolute;
+    bottom: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    opacity: 0.85;
+  }
+
+  .word-list {
+    display: grid;
+    gap: 14px;
+  }
+  .word-card {
+    border-radius: 20px;
+    padding: 18px 20px;
+    background: #fff8f4;
+    border: 2px solid var(--orange-border);
+    transition: all 0.2s ease;
+  }
+  .word-card .ko {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--orange);
+    line-height: 1.1;
+  }
+  .word-card .roman {
+    font-size: 18px;
+    color: #7a706b;
+    margin-top: 6px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  .word-card .pl {
+    font-size: 16px;
+    color: #8a5b4a;
+    margin-top: 8px;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 900px) {
+    .reveal-wrap { grid-template-columns: 1fr; }
+    .tile { font-size: 40px; }
+    .hero h1 { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <h1>그림 공개 게임 / Odkryj obrazek</h1>
+    <p>모음을 읽고 칸을 열어요 / Przeczytaj samogłoskę i otwórz pole</p>
+  </section>
+
+  <section class="panel">
+    <div class="instruction">
+      <span class="step"><span class="ko">1) 모음(또는 숫자)을 읽어요.</span></span>
+      <span class="step"><span class="pl">1) Przeczytaj samogłoskę albo numer.</span></span>
+      <span class="step"><span class="ko">2) 그 칸이 열려요.</span></span>
+      <span class="step"><span class="pl">2) To pole się otwiera.</span></span>
+      <span class="step"><span class="ko">3) 그림을 보고 단어를 말해요.</span></span>
+      <span class="step"><span class="pl">3) Popatrz na obrazek i powiedz słowo.</span></span>
+    </div>
+
+    <div class="controls">
+      <button id="modeVowel9Btn" class="active">3×3 기본 모음 / 3×3 samogłoski</button>
+      <button id="modeBonus12Btn">3×4 보너스 / 3×4 bonus</button>
+      <button id="modeNum9Btn">3×3 숫자 / 3×3 numery</button>
+      <button class="green" id="nextImageBtn">다음 사진 / Następne zdjęcie</button>
+      <button id="resetBtn">다시 시작 / Reset</button>
+    </div>
+
+    <div class="status" id="status">사진 / Zdjęcie: 김밥 포스터</div>
+
+    <div class="reveal-wrap">
+      <div class="board">
+        <img id="revealImage" src="kimbap.jpg" alt="reveal">
+        <div class="overlay" id="overlay"></div>
+      </div>
+      <div class="word-list" id="wordList"></div>
+    </div>
+  </section>
+</div>
+
+<script>
+const images = [
+  {
+    src: 'kimbap.jpg',
+    name: '김밥 포스터',
+    words: [
+      ['김밥', 'gim-bap', 'koreański roladka z ryżu'],
+      ['젓가락', 'jeot-ga-rak', 'pałeczki'],
+      ['한국 음식', 'han-guk eum-sik', 'koreańskie jedzenie']
+    ]
+  },
+  {
+    src: 'tteokbokki.png',
+    name: '떡볶이 메뉴',
+    words: [
+      ['떡볶이', 'tteok-bokki', 'tokpokki (kluski ryżowe)'],
+      ['세 개', 'se gae', 'trzy (rodzaje)'],
+      ['매워요', 'mae-wo-yo', 'jest ostre']
+    ]
+  },
+  {
+    src: 'namdaemun.png',
+    name: '남대문 간판',
+    words: [
+      ['남대문', 'nam-dae-mun', 'Namdaemun (nazwa)'],
+      ['한식', 'han-sik', 'koreańskie jedzenie'],
+      ['식당', 'sik-dang', 'restauracja']
+    ]
+  },
+  {
+    src: 'samgyeopsal.jpg',
+    name: '삼겹살 포스터',
+    words: [
+      ['삼겹살', 'sam-gyeop-sal', 'samgyeopsal (boczek)'],
+      ['고기', 'go-gi', 'mięso'],
+      ['맛있어요', 'ma-si-sseo-yo', 'smaczne']
+    ]
+  },
+  {
+    src: 'kimchi.png',
+    name: '김치 글씨',
+    words: [
+      ['김치', 'kim-chi', 'kimchi'],
+      ['글자', 'geul-ja', 'litery'],
+      ['한국 글자', 'han-guk geul-ja', 'koreańskie litery']
+    ]
+  }
+];
+
+const modes = {
+  vowel9: {
+    cols: 3, rows: 3,
+    labels: ['ㅏ','ㅑ','ㅓ','ㅕ','ㅗ','ㅛ','ㅜ','ㅠ','ㅣ']
+  },
+  bonus12: {
+    cols: 3, rows: 4,
+    labels: ['ㅏ','ㅑ','ㅓ','ㅕ','ㅗ','ㅛ','ㅜ','ㅠ','ㅡ','ㅣ','★','♡']
+  },
+  num9: {
+    cols: 3, rows: 3,
+    labels: ['1','2','3','4','5','6','7','8','9']
+  }
+};
+
+let currentMode = 'vowel9';
+let currentImage = 0;
+
+const overlay = document.getElementById('overlay');
+const revealImage = document.getElementById('revealImage');
+const status = document.getElementById('status');
+const wordList = document.getElementById('wordList');
+
+const modeButtons = {
+  vowel9: document.getElementById('modeVowel9Btn'),
+  bonus12: document.getElementById('modeBonus12Btn'),
+  num9: document.getElementById('modeNum9Btn')
+};
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function setActiveMode() {
+  Object.values(modeButtons).forEach(btn => btn.classList.remove('active'));
+  modeButtons[currentMode].classList.add('active');
+}
+
+function renderBoard() {
+  const mode = modes[currentMode];
+  const shuffledLabels = shuffle(mode.labels);
+
+  overlay.style.gridTemplateColumns = `repeat(${mode.cols}, 1fr)`;
+  overlay.style.gridTemplateRows = `repeat(${mode.rows}, 1fr)`;
+  overlay.innerHTML = '';
+
+  shuffledLabels.forEach(label => {
+    const tile = document.createElement('div');
+    tile.className = 'tile';
+    if (currentMode === 'bonus12' && (label === '★' || label === '♡')) {
+      tile.innerHTML = `${label}<small>bonus</small>`;
+    } else {
+      tile.textContent = label;
+    }
+    tile.onclick = () => tile.classList.add('open');
+    overlay.appendChild(tile);
+  });
+
+  const img = images[currentImage];
+  revealImage.src = img.src;
+  status.textContent = `사진 / Zdjęcie: ${img.name}`;
+  wordList.innerHTML = img.words.map(([ko, roman, pl]) => `
+    <div class="word-card">
+      <div class="ko">${ko}</div>
+      <div class="roman">${roman}</div>
+      <div class="pl">${pl}</div>
+    </div>
+  `).join('');
+
+  setActiveMode();
+}
+
+modeButtons.vowel9.onclick = () => { currentMode = 'vowel9'; renderBoard(); };
+modeButtons.bonus12.onclick = () => { currentMode = 'bonus12'; renderBoard(); };
+modeButtons.num9.onclick = () => { currentMode = 'num9'; renderBoard(); };
+document.getElementById('nextImageBtn').onclick = () => {
+  currentImage = (currentImage + 1) % images.length;
+  renderBoard();
+};
+document.getElementById('resetBtn').onclick = renderBoard;
+
+renderBoard();
+</script>
+</body>
+</html>
