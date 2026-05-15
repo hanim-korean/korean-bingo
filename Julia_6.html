@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Julia's Korean Lesson 6 🌟</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&family=Noto+Sans+KR:wght@700;900&display=swap');
+
+  :root {
+    --yellow: #FFD93D;
+    --coral: #FF6B6B;
+    --mint: #6BCB77;
+    --blue: #4D96FF;
+    --purple: #C77DFF;
+    --dark: #1a1a2e;
+    --white: #FFFFFF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito', 'Noto Sans KR', sans-serif;
+    background: var(--dark);
+    color: var(--white);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── SLIDE SYSTEM ── */
+  .slide {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 20px;
+    text-align: center;
+    animation: fadeIn 0.4s ease;
+    position: relative;
+  }
+  .slide.active { display: flex; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.97); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  /* ── NAV ── */
+  .nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 28px;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(8px);
+    z-index: 100;
+  }
+  .nav button {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 900;
+    padding: 10px 28px;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.15s;
+  }
+  .nav button:active { transform: scale(0.94); }
+  .nav button:disabled { opacity: 0.2; cursor: default; }
+  .btn-prev { background: var(--white); color: var(--dark); }
+  .btn-next { background: var(--yellow); color: var(--dark); }
+  .slide-counter {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 1px;
+  }
+
+  /* ── TITLE SLIDE ── */
+  .slide-title { background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%); }
+  .slide-title .badge {
+    background: var(--yellow);
+    color: var(--dark);
+    font-size: 0.85rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    padding: 6px 18px;
+    border-radius: 999px;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+  }
+  .slide-title h1 {
+    font-size: clamp(2.2rem, 9vw, 3.8rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .slide-title h1 span { color: var(--yellow); }
+  .slide-title .sub {
+    font-size: clamp(1rem, 4vw, 1.4rem);
+    color: rgba(255,255,255,0.65);
+    line-height: 1.5;
+  }
+  .slide-title .emoji-row {
+    font-size: 2.8rem;
+    margin-top: 28px;
+    letter-spacing: 6px;
+  }
+
+  /* ── BODY PART CARD SLIDE ── */
+  .slide-word { }
+  .word-bg {
+    position: absolute;
+    inset: 0;
+    opacity: 0.07;
+    font-size: 38vw;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    line-height: 1;
+  }
+  .body-emoji {
+    font-size: clamp(5rem, 22vw, 9rem);
+    margin-bottom: 12px;
+    filter: drop-shadow(0 4px 20px rgba(0,0,0,0.4));
+    animation: bounce 2s ease-in-out infinite;
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-10px); }
+  }
+  .korean-word {
+    font-size: clamp(3.5rem, 16vw, 7rem);
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+  .romanization {
+    font-size: clamp(1rem, 4.5vw, 1.6rem);
+    color: rgba(255,255,255,0.55);
+    font-style: italic;
+    margin-bottom: 20px;
+  }
+  .lang-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .lang-pill {
+    padding: 8px 20px;
+    border-radius: 999px;
+    font-size: clamp(0.9rem, 3.5vw, 1.15rem);
+    font-weight: 700;
+  }
+  .lang-en  { background: var(--blue);   color: #fff; }
+  .lang-pl  { background: var(--mint);   color: #1a1a2e; }
+
+  /* ── SONG SLIDE ── */
+  .slide-song { background: linear-gradient(160deg, #1a1a2e 0%, #2d1b69 100%); }
+  .song-title {
+    font-size: clamp(1.1rem, 5vw, 1.6rem);
+    font-weight: 900;
+    color: var(--yellow);
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+  }
+  .lyrics-box {
+    background: rgba(255,255,255,0.07);
+    border: 2px solid rgba(255,255,255,0.12);
+    border-radius: 24px;
+    padding: 24px 28px;
+    max-width: 520px;
+    width: 100%;
+    margin-bottom: 18px;
+  }
+  .lyric-line {
+    font-size: clamp(1.4rem, 6vw, 2.2rem);
+    font-weight: 900;
+    line-height: 1.5;
+    margin-bottom: 4px;
+  }
+  .lyric-line .highlight { color: var(--yellow); }
+  .lyric-sub {
+    font-size: clamp(0.8rem, 3vw, 1rem);
+    color: rgba(255,255,255,0.45);
+    margin-top: 12px;
+    line-height: 1.6;
+  }
+  .note-row {
+    font-size: clamp(0.85rem, 3.2vw, 1.05rem);
+    color: rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 10px 18px;
+  }
+
+  /* ── QUIZ / TEACHER SLIDE ── */
+  .slide-quiz { }
+  .quiz-crown { font-size: clamp(3rem, 14vw, 6rem); margin-bottom: 8px; animation: spin 3s ease-in-out infinite; }
+  @keyframes spin {
+    0%,90%,100% { transform: rotate(0deg); }
+    45% { transform: rotate(-15deg); }
+    50% { transform: rotate(15deg); }
+  }
+  .quiz-heading {
+    font-size: clamp(1.6rem, 7vw, 2.8rem);
+    font-weight: 900;
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+  .quiz-heading .name { color: var(--yellow); }
+  .quiz-sub {
+    font-size: clamp(0.95rem, 3.8vw, 1.3rem);
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 26px;
+    line-height: 1.5;
+  }
+  .quiz-instruction {
+    background: rgba(255,255,255,0.08);
+    border-left: 4px solid var(--coral);
+    border-radius: 0 16px 16px 0;
+    padding: 16px 22px;
+    max-width: 480px;
+    text-align: left;
+    font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+    line-height: 1.7;
+  }
+  .quiz-instruction strong { color: var(--coral); }
+
+  /* ── FINISH SLIDE ── */
+  .slide-finish { background: radial-gradient(ellipse at center, #2d1b69 0%, #1a1a2e 70%); }
+  .star-burst { font-size: clamp(3rem, 14vw, 6rem); margin-bottom: 8px; animation: pulse 1.5s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+  .finish-heading {
+    font-size: clamp(2rem, 9vw, 3.5rem);
+    font-weight: 900;
+    margin-bottom: 16px;
+    line-height: 1.1;
+  }
+  .finish-heading span { color: var(--yellow); }
+  .words-recap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    max-width: 480px;
+    margin-bottom: 20px;
+  }
+  .recap-chip {
+    background: rgba(255,255,255,0.1);
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 999px;
+    padding: 8px 18px;
+    font-size: clamp(1rem, 4vw, 1.3rem);
+    font-weight: 700;
+  }
+  .finish-sub {
+    font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+    color: rgba(255,255,255,0.55);
+    line-height: 1.6;
+  }
+
+  /* ── PER-SLIDE COLORS ── */
+  .color-coral   { background: linear-gradient(145deg, #2d0a0a, #1a1a2e); }
+  .color-coral   .korean-word { color: var(--coral); }
+  .color-coral   .word-bg { color: var(--coral); }
+
+  .color-yellow  { background: linear-gradient(145deg, #2d2200, #1a1a2e); }
+  .color-yellow  .korean-word { color: var(--yellow); }
+  .color-yellow  .word-bg { color: var(--yellow); }
+
+  .color-mint    { background: linear-gradient(145deg, #0a2d14, #1a1a2e); }
+  .color-mint    .korean-word { color: var(--mint); }
+  .color-mint    .word-bg { color: var(--mint); }
+
+  .color-blue    { background: linear-gradient(145deg, #0a1a2d, #1a1a2e); }
+  .color-blue    .korean-word { color: var(--blue); }
+  .color-blue    .word-bg { color: var(--blue); }
+
+  .color-purple  { background: linear-gradient(145deg, #1e0a2d, #1a1a2e); }
+  .color-purple  .korean-word { color: var(--purple); }
+  .color-purple  .word-bg { color: var(--purple); }
+</style>
+</head>
+<body>
+
+<!-- ─────────── SLIDE 1: TITLE ─────────── -->
+<div class="slide slide-title active" id="slide-1">
+  <div class="badge">LESSON 6 · JULIA</div>
+  <h1>신체 부위<br><span>Body Parts</span></h1>
+  <p class="sub">Części ciała<br>오늘 스키즈랑 같이 배워요! 🎵</p>
+  <div class="emoji-row">🧠💪🦵🦶</div>
+</div>
+
+<!-- ─────────── SLIDE 2: 머리 ─────────── -->
+<div class="slide slide-word color-coral" id="slide-2">
+  <div class="word-bg">머리</div>
+  <div class="body-emoji">🧠</div>
+  <div class="korean-word">머리</div>
+  <div class="romanization">meo-ri</div>
+  <div class="lang-row">
+    <span class="lang-pill lang-en">head</span>
+    <span class="lang-pill lang-pl">głowa</span>
+  </div>
+</div>
+
+<!-- ─────────── SLIDE 3: 어깨 ─────────── -->
+<div class="slide slide-word color-yellow" id="slide-3">
+  <div class="word-bg">어깨</div>
+  <div class="body-emoji">🤷</div>
+  <div class="korean-word">어깨</div>
+  <div class="romanization">eo-kkae</div>
+  <div class="lang-row">
+    <span class="lang-pill lang-en">shoulder</span>
+    <span class="lang-pill lang-pl">ramię</span>
+  </div>
+</div>
+
+<!-- ─────────── SLIDE 4: 무릎 ─────────── -->
+<div class="slide slide-word color-mint" id="slide-4">
+  <div class="word-bg">무릎</div>
+  <div class="body-emoji">🦵</div>
+  <div class="korean-word">무릎</div>
+  <div class="romanization">mu-reup</div>
+  <div class="lang-row">
+    <span class="lang-pill lang-en">knee</span>
+    <span class="lang-pill lang-pl">kolano</span>
+  </div>
+</div>
+
+<!-- ─────────── SLIDE 5: 발 ─────────── -->
+<div class="slide slide-word color-blue" id="slide-5">
+  <div class="word-bg">발</div>
+  <div class="body-emoji">🦶</div>
+  <div class="korean-word">발</div>
+  <div class="romanization">bal</div>
+  <div class="lang-row">
+    <span class="lang-pill lang-en">foot</span>
+    <span class="lang-pill lang-pl">stopa</span>
+  </div>
+</div>
+
+<!-- ─────────── SLIDE 6: 귀 ─────────── -->
+<div class="slide slide-word color-purple" id="slide-6">
+  <div class="word-bg">귀</div>
+  <div class="body-emoji">👂</div>
+  <div class="korean-word">귀</div>
+  <div class="romanization">gwi</div>
+  <div class="lang-row">
+    <span class="lang-pill lang-en">ear</span>
+    <span class="lang-pill lang-pl">ucho</span>
+  </div>
+</div>
+
+<!-- ─────────── SLIDE 7: 코 ─────────── -->
+<div class="slide slide-word color-coral" id="slide-7">
+  <div class="word-bg">코</div>
+  <div class="body-emoji">👃</div>
+  <div class="korean-word">코</div>
+  <div class="romanization">ko</div>
+  <div class="lang-row">
+    <span class="lang-pill lang-en">nose</span>
+    <span class="lang-pill lang-pl">nos</span>
+  </div>
+</div>
+
+<!-- ─────────── SLIDE 8: 입 ─────────── -->
+<div class="slide slide-word color-yellow" id="slide-8">
+  <div class="word-bg">입</div>
+  <div class="body-emoji">👄</div>
+  <div class="korean-word">입</div>
+  <div class="romanization">ip</div>
+  <div class="lang-row">
+    <span class="lang-pill lang-en">mouth</span>
+    <span class="lang-pill lang-pl">usta</span>
+  </div>
+</div>
+
+<!-- ─────────── SLIDE 9: SONG ─────────── -->
+<div class="slide slide-song" id="slide-9">
+  <div class="song-title">🎵 같이 따라해요! / Śpiewajmy razem!</div>
+  <div class="lyrics-box">
+    <div class="lyric-line"><span class="highlight">머리</span> <span class="highlight">어깨</span> <span class="highlight">무릎</span> <span class="highlight">발</span>, 무릎 발</div>
+    <div class="lyric-line">머리 어깨 무릎 발, 무릎 발</div>
+    <div class="lyric-line"><span class="highlight">눈</span>, <span class="highlight">코</span>, <span class="highlight">귀</span>, <span class="highlight">입</span></div>
+    <div class="lyric-line">머리 어깨 무릎 발, 무릎 발</div>
+    <div class="lyric-sub">
+      głowa, ramię, kolano, stopa<br>
+      head, shoulder, knee, foot<br>
+      눈 = eye 👁 · 코 = nose 👃 · 귀 = ear 👂 · 입 = mouth 👄
+    </div>
+  </div>
+  <div class="note-row">💡 노래하면서 몸을 짚어봐요! Touch as you sing!</div>
+</div>
+
+<!-- ─────────── SLIDE 10: JULIA IS TEACHER ─────────── -->
+<div class="slide slide-quiz color-mint" id="slide-10">
+  <div class="quiz-crown">👑</div>
+  <div class="quiz-heading"><span class="name">Julia</span>가<br>선생님이에요!</div>
+  <div class="quiz-sub">
+    Julia jest nauczycielką! / Julia is the teacher!
+  </div>
+  <div class="quiz-instruction">
+    <strong>어떻게 해요?</strong><br>
+    줄리아가 신체 부위를 짚어요.<br>
+    Julia wskazuje część ciała.<br><br>
+    하님이 틀리게 짚으면 — <strong>고쳐줘요!</strong><br>
+    Jeśli Hanim się myli — popraw ją! 😄<br><br>
+    <strong>예시:</strong> 하님이 귀를 만지면서 "코?" →<br>
+    줄리아: "아니요! 귀!" 🎉
+  </div>
+</div>
+
+<!-- ─────────── SLIDE 11: FINISH ─────────── -->
+<div class="slide slide-finish" id="slide-11">
+  <div class="star-burst">🌟</div>
+  <div class="finish-heading">잘했어요,<br><span>Julia!</span></div>
+  <div class="words-recap">
+    <span class="recap-chip">머리</span>
+    <span class="recap-chip">어깨</span>
+    <span class="recap-chip">무릎</span>
+    <span class="recap-chip">발</span>
+    <span class="recap-chip">귀</span>
+    <span class="recap-chip">코</span>
+    <span class="recap-chip">입</span>
+  </div>
+  <p class="finish-sub">
+    Świetna robota! / Great job!<br>
+    오늘 배운 단어를 가족한테 가르쳐줘요 🎵<br>
+    <em style="font-size:0.85em; color:rgba(255,255,255,0.35);">Naucz rodzinę tych słów po koreańsku!</em>
+  </p>
+</div>
+
+<!-- ─────────── NAV ─────────── -->
+<div class="nav">
+  <button class="btn-prev" id="btnPrev" onclick="changeSlide(-1)" disabled>◀ 이전</button>
+  <span class="slide-counter" id="counter">1 / 11</span>
+  <button class="btn-next" id="btnNext" onclick="changeSlide(1)">다음 ▶</button>
+</div>
+
+<script>
+  const total = 11;
+  let current = 1;
+
+  function changeSlide(dir) {
+    document.getElementById('slide-' + current).classList.remove('active');
+    current = Math.max(1, Math.min(total, current + dir));
+    document.getElementById('slide-' + current).classList.add('active');
+    document.getElementById('counter').textContent = current + ' / ' + total;
+    document.getElementById('btnPrev').disabled = (current === 1);
+    document.getElementById('btnNext').disabled = (current === total);
+  }
+
+  // swipe support
+  let startX = 0;
+  document.addEventListener('touchstart', e => { startX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) changeSlide(diff > 0 ? 1 : -1);
+  });
+  // keyboard
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   changeSlide(-1);
+  });
+</script>
+</body>
+</html>
