@@ -1,0 +1,308 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:1rem 0;font-family:var(--font-sans)}
+.top-bar{display:flex;gap:8px;margin-bottom:1.25rem;flex-wrap:wrap;align-items:center}
+.top-bar input{flex:1;min-width:180px;font-size:14px}
+select{font-size:13px;padding:0 10px;height:36px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary)}
+.gen-btn{padding:0 18px;height:36px;border-radius:var(--border-radius-md);border:0.5px solid #534AB7;background:#534AB7;color:#EEEDFE;font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap}
+.gen-btn:hover{background:#3C3489}
+.gen-btn:disabled{opacity:0.5;cursor:default}
+.mode-bar{display:flex;gap:6px;margin-bottom:1.25rem;flex-wrap:wrap}
+.mode-btn{padding:6px 14px;border-radius:999px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);font-size:12px;cursor:pointer}
+.mode-btn.active{background:#E1F5EE;border-color:#0F6E56;color:#085041;font-weight:500}
+.output{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;min-height:200px;color:var(--color-text-primary)}
+.output.loading{color:var(--color-text-secondary);font-size:14px;display:flex;align-items:center;justify-content:center;min-height:200px}
+.lesson-section{margin-bottom:1.25rem;padding-bottom:1.25rem;border-bottom:0.5px solid var(--color-border-tertiary)}
+.lesson-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.section-title{font-size:13px;font-weight:500;color:var(--color-text-secondary);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.04em}
+.section-body{font-size:15px;color:var(--color-text-primary);line-height:1.7;white-space:pre-wrap}
+.badge-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.badge{padding:4px 12px;border-radius:999px;font-size:12px;font-weight:500}
+.badge-purple{background:#EEEDFE;color:#3C3489}
+.badge-teal{background:#E1F5EE;color:#085041}
+.badge-coral{background:#FAECE7;color:#712B13}
+.praise-box{background:#E1F5EE;border-radius:var(--border-radius-md);padding:12px 16px;margin-top:8px}
+.praise-box p{font-size:14px;color:#085041;margin:2px 0}
+.quiz-item{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px 14px;margin-bottom:8px}
+.quiz-q{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px}
+.quiz-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.quiz-opt{padding:8px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary);font-size:14px;cursor:pointer;text-align:center}
+.quiz-opt:hover{background:var(--color-background-secondary)}
+.quiz-opt.correct{background:#EAF3DE;border-color:#639922;color:#27500A}
+.quiz-opt.wrong{background:#FCEBEB;border-color:#A32D2D;color:#501313}
+.activity-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:12px 14px;margin-bottom:8px}
+.activity-num{font-size:11px;font-weight:500;color:var(--color-text-secondary);margin-bottom:4px}
+.activity-title{font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.activity-body{font-size:13px;color:var(--color-text-secondary);line-height:1.6}
+.teacher-line{font-size:13px;color:#185FA5;margin-top:4px}
+.student-line{font-size:13px;color:#0F6E56;margin-top:2px}
+.praise-line{font-size:13px;color:#854F0B;margin-top:2px}
+.score-row{display:flex;gap:10px;margin-bottom:1.25rem}
+.scard{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 14px;flex:1;text-align:center}
+.scard-label{font-size:11px;color:var(--color-text-secondary);margin-bottom:2px}
+.scard-val{font-size:20px;font-weight:500;color:var(--color-text-primary)}
+.error-msg{color:var(--color-text-danger,#A32D2D);font-size:14px;padding:1rem}
+</style>
+
+<div class="wrap">
+<h2 class="sr-only">어린이 온라인 한국어 수업 자동 생성기</h2>
+
+<div class="top-bar">
+  <input type="text" id="topicInput" placeholder="수업 주제 입력 (예: 과일 이름, 색깔, 신체 부위...)" />
+  <select id="levelSel">
+    <option value="beginner">초급</option>
+    <option value="intermediate">중급</option>
+  </select>
+  <select id="timeSel">
+    <option value="30">30분</option>
+    <option value="50" selected>50분</option>
+  </select>
+  <button class="gen-btn" id="genBtn" onclick="generate()">수업 생성</button>
+</div>
+
+<div class="mode-bar">
+  <button class="mode-btn active" data-mode="lesson" onclick="switchMode('lesson')">전체 수업안</button>
+  <button class="mode-btn" data-mode="activities" onclick="switchMode('activities')">5분 활동 카드</button>
+  <button class="mode-btn" data-mode="quiz" onclick="switchMode('quiz')">Final Boss Quiz</button>
+</div>
+
+<div id="output" class="output">
+  <div style="text-align:center;color:var(--color-text-secondary);font-size:14px;padding:2rem 0">
+    주제를 입력하고 <strong>수업 생성</strong> 버튼을 누르세요
+  </div>
+</div>
+</div>
+
+<script>
+let currentMode = 'lesson';
+let quizData = [];
+let quizIndex = 0;
+let quizScore = 0;
+let quizAnswered = false;
+
+function switchMode(m) {
+  currentMode = m;
+  document.querySelectorAll('.mode-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.mode === m);
+  });
+  const topic = document.getElementById('topicInput').value.trim();
+  if (topic) generate();
+}
+
+async function generate() {
+  const topic = document.getElementById('topicInput').value.trim();
+  if (!topic) { alert('주제를 입력해 주세요!'); return; }
+  const level = document.getElementById('levelSel').value;
+  const time = document.getElementById('timeSel').value;
+  const btn = document.getElementById('genBtn');
+  const out = document.getElementById('output');
+  btn.disabled = true;
+  out.innerHTML = '<div class="loading">AI가 수업을 만들고 있어요... 잠깐만요!</div>';
+
+  const prompts = {
+    lesson: `너는 외국인 어린이(10세 내외)를 위한 한국어 수업 전문가다.
+주제: "${topic}", 수준: ${level === 'beginner' ? '초급' : '중급'}, 수업시간: ${time}분
+
+다음 JSON 형식으로만 응답해라 (다른 텍스트 없이):
+{
+  "title": "수업 제목 (흥미롭게)",
+  "warmup": "워밍업 도입 질문 2~3개 (교사 말투로)",
+  "objectives": ["학습목표1","학습목표2","학습목표3"],
+  "vocab": [{"kr":"단어","en":"뜻","example":"예문"}],
+  "grammar": "핵심 문법 1개 설명 (쉽게, 예문 포함)",
+  "dialogue": "A/B 짧은 대화문 (주제 관련)",
+  "culture": "문화 포인트 1개 (비교문화 관점)",
+  "homework": "간단한 숙제 1개",
+  "summary": "강의 요약 2~3줄",
+  "praise": ["칭찬 표현1(영어)","칭찬 표현2(영어)","칭찬 표현3(한국어)"]
+}
+vocab는 6개, 모든 내용은 한국어로, praise만 영어/한국어 혼용.`,
+
+    activities: `너는 어린이 한국어 온라인 수업 전문가다.
+주제 "${topic}"으로 5분짜리 미니 활동 6개를 만들어라.
+
+다음 JSON 형식으로만 응답해라:
+{"activities":[
+  {"num":1,"title":"활동 제목","desc":"활동 설명","teacher":"교사 멘트","student":"학생 행동","praise":"칭찬 멘트(영어)"},
+  ...
+]}
+모든 내용은 한국어로, praise만 영어. 활동은 몸동작/게임/퀴즈/노래/그림 등 다양하게.`,
+
+    quiz: `너는 어린이 한국어 게임 퀴즈 제작자다.
+주제 "${topic}"으로 Final Boss Quiz 8문제를 만들어라.
+
+다음 JSON 형식으로만 응답해라:
+{"quizTitle":"퀴즈 제목","questions":[
+  {"q":"문제","opts":["보기1","보기2","보기3","보기4"],"answer":0,"praise":"정답 칭찬(영어)","hint":"오답 힌트(한국어)"},
+  ...
+]}
+answer는 정답 인덱스(0~3). 문제는 한국어, 보기는 한국어 또는 영어 혼용.`
+  };
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{role:'user', content: prompts[currentMode]}]
+      })
+    });
+    const data = await res.json();
+    const raw = data.content.map(c => c.text || '').join('');
+    const clean = raw.replace(/```json|```/g,'').trim();
+    const parsed = JSON.parse(clean);
+    render(parsed);
+  } catch(e) {
+    out.innerHTML = `<div class="error-msg">오류가 발생했어요. 다시 시도해 주세요.<br><small>${e.message}</small></div>`;
+  }
+  btn.disabled = false;
+}
+
+function render(d) {
+  const out = document.getElementById('output');
+  if (currentMode === 'lesson') renderLesson(out, d);
+  else if (currentMode === 'activities') renderActivities(out, d);
+  else renderQuiz(out, d);
+}
+
+function renderLesson(out, d) {
+  out.innerHTML = `
+    <div class="lesson-section">
+      <div class="section-title">수업 제목</div>
+      <div style="font-size:18px;font-weight:500;color:var(--color-text-primary)">${d.title}</div>
+    </div>
+    <div class="lesson-section">
+      <div class="section-title">워밍업</div>
+      <div class="section-body">${d.warmup}</div>
+    </div>
+    <div class="lesson-section">
+      <div class="section-title">학습 목표</div>
+      <div class="badge-row">${(d.objectives||[]).map(o=>`<span class="badge badge-purple">${o}</span>`).join('')}</div>
+    </div>
+    <div class="lesson-section">
+      <div class="section-title">핵심 어휘</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-top:6px">
+        ${(d.vocab||[]).map(v=>`<div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px"><div style="font-size:16px;font-weight:500;color:var(--color-text-primary)">${v.kr}</div><div style="font-size:12px;color:var(--color-text-secondary)">${v.en}</div><div style="font-size:12px;color:var(--color-text-secondary);margin-top:4px">${v.example}</div></div>`).join('')}
+      </div>
+    </div>
+    <div class="lesson-section">
+      <div class="section-title">핵심 문법</div>
+      <div class="section-body">${d.grammar}</div>
+    </div>
+    <div class="lesson-section">
+      <div class="section-title">실생활 대화</div>
+      <div class="section-body">${d.dialogue}</div>
+    </div>
+    <div class="lesson-section">
+      <div class="section-title">문화 포인트</div>
+      <div style="background:#E6F1FB;border-radius:var(--border-radius-md);padding:12px 14px">
+        <div style="font-size:14px;color:#0C447C">${d.culture}</div>
+      </div>
+    </div>
+    <div class="lesson-section">
+      <div class="section-title">숙제</div>
+      <div class="section-body">${d.homework}</div>
+    </div>
+    <div class="lesson-section">
+      <div class="section-title">강의 요약</div>
+      <div class="section-body">${d.summary}</div>
+    </div>
+    <div class="lesson-section">
+      <div class="section-title">칭찬 표현 모음</div>
+      <div class="praise-box">${(d.praise||[]).map(p=>`<p>${p}</p>`).join('')}</div>
+    </div>
+  `;
+}
+
+function renderActivities(out, d) {
+  const acts = d.activities || [];
+  out.innerHTML = `<div style="display:flex;flex-direction:column;gap:0">
+    ${acts.map(a=>`
+    <div class="activity-card">
+      <div class="activity-num">활동 ${a.num} · 5분</div>
+      <div class="activity-title">${a.title}</div>
+      <div class="activity-body">${a.desc}</div>
+      <div class="teacher-line">Teacher: ${a.teacher}</div>
+      <div class="student-line">Student: ${a.student}</div>
+      <div class="praise-line">Praise: "${a.praise}"</div>
+    </div>`).join('')}
+  </div>`;
+}
+
+function renderQuiz(out, d) {
+  quizData = d.questions || [];
+  quizIndex = 0;
+  quizScore = 0;
+  out.innerHTML = `
+    <div style="margin-bottom:1rem">
+      <div style="font-size:16px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">${d.quizTitle}</div>
+    </div>
+    <div class="score-row">
+      <div class="scard"><div class="scard-label">점수</div><div class="scard-val" id="qScore">0</div></div>
+      <div class="scard"><div class="scard-label">문제</div><div class="scard-val" id="qNum">1 / ${quizData.length}</div></div>
+    </div>
+    <div id="quizBody"></div>
+  `;
+  renderQuizQ();
+}
+
+function renderQuizQ() {
+  if (quizIndex >= quizData.length) { renderQuizResult(); return; }
+  quizAnswered = false;
+  const q = quizData[quizIndex];
+  const body = document.getElementById('quizBody');
+  if (!body) return;
+  body.innerHTML = `
+    <div class="quiz-item">
+      <div class="quiz-q">Q${quizIndex+1}. ${q.q}</div>
+      <div class="quiz-opts">
+        ${q.opts.map((o,i)=>`<button class="quiz-opt" onclick="checkQ(this,${i},${q.answer},'${(q.praise||'').replace(/'/g,"\\'")}','${(q.hint||'').replace(/'/g,"\\'")}')">
+          ${o}</button>`).join('')}
+      </div>
+      <div id="qFeedback" style="font-size:13px;margin-top:8px;min-height:20px;color:var(--color-text-secondary)"></div>
+    </div>
+  `;
+}
+
+function checkQ(btn, chosen, correct, praise, hint) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+  const opts = document.querySelectorAll('.quiz-opt');
+  opts.forEach(b => b.disabled = true);
+  const fb = document.getElementById('qFeedback');
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    quizScore += 10;
+    document.getElementById('qScore').textContent = quizScore;
+    fb.textContent = praise + ' +10점!';
+    fb.style.color = '#27500A';
+  } else {
+    btn.classList.add('wrong');
+    opts[correct].classList.add('correct');
+    fb.textContent = hint;
+    fb.style.color = '#A32D2D';
+  }
+  document.getElementById('qNum').textContent = `${quizIndex+1} / ${quizData.length}`;
+  setTimeout(() => { quizIndex++; renderQuizQ(); }, 1400);
+}
+
+function renderQuizResult() {
+  const body = document.getElementById('quizBody');
+  if (!body) return;
+  const pct = Math.round((quizScore / (quizData.length * 10)) * 100);
+  let msg = '잘 했어요!', sub = '다시 한 번 도전해 봐요!';
+  if (pct === 100) { msg = 'Perfect! 완벽해요!'; sub = 'You are a Korean star!'; }
+  else if (pct >= 70) { msg = 'Amazing! 아주 잘 했어요!'; sub = 'Almost there, keep going!'; }
+  body.innerHTML = `
+    <div style="text-align:center;padding:1.5rem 0">
+      <div style="font-size:28px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px">${msg}</div>
+      <div style="font-size:14px;color:var(--color-text-secondary);margin-bottom:1rem">${quizScore}점 · ${pct}% 정답</div>
+      <div style="font-size:14px;color:var(--color-text-secondary);margin-bottom:1.5rem">${sub}</div>
+      <button class="gen-btn" onclick="generate()" style="margin:0 auto">다시 도전하기</button>
+    </div>
+  `;
+}
+</script>
